@@ -98,15 +98,16 @@ mod mod_a {
 
 proc_macro_api! {
     mod_a::{
-        //alias
+        // alias and document
+        /// A function-like macro.
         #[fn] an_fn_api,
-        
+
         // forwarding
         #[proc_macro_attribute]
         mod_b::{
             // use the forwarded annotation
             an_attr_api as the_attr_api,
-            
+
             // override
             #[dr(Something)] a_derive_api,
         },
