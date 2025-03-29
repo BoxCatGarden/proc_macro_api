@@ -74,6 +74,8 @@ to annotate the supplied function as `#[inline(always)]`.
 // doctest is ignored because the crate is not in a proc_macro context.
 
 // in 'lib.rs'
+#[no_link]
+extern crate proc_macro_api;
 use proc_macro_api::proc_macro_api;
 
 mod mod_a {
