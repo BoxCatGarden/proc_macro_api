@@ -4,15 +4,15 @@
 #[macro_export]
 macro_rules! proc_macro_api_err {
     ($attr:tt [ $($seg:ident)* ] $api:ident) => {
-        ::std::compile_error!(::std::concat!(
+        std::compile_error!(std::concat!(
             "unknown proc_macro type `#",
-            ::std::stringify!($attr),
+            std::stringify!($attr),
             "` for `",
             $(
-                ::std::stringify!($seg),
+                std::stringify!($seg),
                 "::",
             )*
-            ::std::stringify!($api),
+            std::stringify!($api),
             "`",
         ));
     };
@@ -53,8 +53,8 @@ macro_rules! proc_macro_api_fn {
     ) => {
         #$attr
         pub fn $api (
-            $($arg: ::proc_macro::TokenStream),*
-        ) -> ::proc_macro::TokenStream {
+            $($arg: proc_macro::TokenStream),*
+        ) -> proc_macro::TokenStream {
             $($seg::)* $api ( $($arg),* )
         }
     };
