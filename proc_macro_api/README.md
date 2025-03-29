@@ -1,8 +1,24 @@
-A crate help with structuring the library crate of a proc_macro package.
+A crate helping with structuring the library crate of a proc_macro package.
 
 The major function of this crate is macro [`proc_macro_api!`],
-which can export functions in submodules of a proc_macro as
-Application Programing Interfaces (APIs) of that proc_macro.
+which can export functions in submodules of a proc_macro crate as
+the Application Programing Interfaces (APIs) of that proc_macro crate.
+
+For example, assuming there is a submodule `sub` of the root of
+a proc_macro crate, in order to export
+`pub fn proc_fn(input: TokenStream) -> TokenStream` in the `sub`
+as a function-like macro, [`proc_macro_api!`] can be used in the
+root of that crate like:
+```ignore
+proc_macro_api! {
+    sub::{
+        #[proc_macro]
+        proc_fn,
+    },
+}
+```
+Then, a function-like macro, `proc_fn!()`, is available from that
+proc_macro crate.
 
 The macro should be used at somewhere that the proc_macro annotation
 (i.e., `#[proc_macro]`, `#[proc_macro_attribute]`, etc.) is allowed.
