@@ -39,33 +39,42 @@ and the new annotation will be forwarded then.
 # Expansion
 
 Each function path will be expanded to a `pub fn` annotated with the
-specific proc_macro annotation. The `pub fn` will have
-the same name as the name of the function supplied by the path.
+specific proc_macro annotation.
 
-The expanded `pub fn` will and only will directly call the supplied
+The expanded `pub fn` will have a name provided with by the path.
+
+* If there isn't an `as`: the same name as the name of the function
+  supplied by the path.
+* If there is an `as`: the name after the `as`.
+
+For the function supplied by a path, the expanded `pub fn` will
+and only will directly call the supplied
 function with the arguments that input to it. It is recommended
 to annotate the supplied function as `#[inline(always)]`.
 
 # Examples
 
 ```ignore
-// doctest is ignored because the package is not in a proc_macro context.
+// doctest is ignored because the crate is not in a proc_macro context.
 
 // in 'lib.rs'
-use proc_macro::TokenStream;
 use proc_macro_api::proc_macro_api;
 
 mod mod_a {
-    fn an_fn_api(input: TokenStream) -> TokenStream {
+    use proc_macro::TokenStream;
+
+    pub fn an_fn_api(input: TokenStream) -> TokenStream {
         TokenStream::new()
     }
 
-    mod mod_b {
-        fn an_attr_api(args: TokenStream, item: TokenStream) -> TokenStream {
+    pub mod mod_b {
+        use proc_macro::TokenStream;
+
+        pub fn an_attr_api(args: TokenStream, item: TokenStream) -> TokenStream {
             TokenStream::new()
         }
-        
-        fn a_derive_api(item: TokenStream) -> TokenStream {
+
+        pub fn a_derive_api(item: TokenStream) -> TokenStream {
             TokenStream::new()
         }
     }
@@ -79,12 +88,24 @@ proc_macro_api! {
         // forwarding
         #[proc_macro_attribute]
         mod_b::{
-            an_attr_api,
+            // use the forwarded annotation
+            an_attr_api as the_attr_api,
+            
             // override
             #[dr(Something)] a_derive_api,
         },
     },
 }
 // It will expand to three `pub fn` in 'lib.rs' naming
-// `an_fn_api`, `an_attr_api`, and `a_derive_api`, respectively.
+// `an_fn_api`, `the_attr_api`, and `a_derive_api`, respectively.
 ```
+
+# Extern requirement
+
+The macro requires some external _names_ available in the scope
+where it is used:
+
+* The name `proc_macro`. Optional if compiled successfully.
+  Most of the time, it is needed because of `proc_macro::TokenStream`.
+* The name `std`. Optional if compiled successfully.
+  Mainly for reporting `compile_err!`.
