@@ -3,16 +3,15 @@
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_err {
-    ($attr:tt [ $($seg:ident)* ] $api:ident) => {
+    ([ $($cc:tt)? ] [ $($seg:ident)* ] $api:ident $(as $alias:ident)?) => {
         std::compile_error!(std::concat!(
-            "unknown proc_macro type `#",
-            std::stringify!($attr),
-            "` for `",
-            $(
-                std::stringify!($seg),
-                "::",
-            )*
-            std::stringify!($api),
+            "expected a proc_macro annotation for `", $(
+            std::stringify!($cc),)? $(
+            std::stringify!($seg),
+            "::",)*
+            std::stringify!($api), $(
+            " as ",
+            std::stringify!($alias),)?
             "`",
         ));
     };
@@ -102,9 +101,79 @@ macro_rules! proc_macro_api_parse {
 /// See the [document at module level][self].
 #[macro_export]
 macro_rules! proc_macro_api {
-    ($( $(# $attr:tt)? $api_or_seg:ident $(:: $body:tt)? ),* $(,)?) => {$(
-        $crate::proc_macro_api_parse! {
-            $(# $attr => [])? $api_or_seg $($body)?
+    ($($tt:tt)+) => {
+        $crate::proc_macro_api_top! {
+            [] $($tt)+
         }
-    )*};
+    };
+    () => {};
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_top {
+    ([ $($line:tt)* ]
+        $(# $at:tt)*
+        $seg:ident $(:: $rest:tt)* $(as $al:ident)? $(,
+            $($tt:tt)*
+        )?
+    ) => {
+        $crate::proc_macro_api_top! {
+            [
+                $($line)*
+                [ [ $($at)* ] [ $($al)? ] [] $seg $($rest)* ]
+            ]
+            $($($tt)*)?
+        }
+    };
+
+    ([ $($line:tt)* ]
+        $(# $at:tt)*
+        $(:: $seg:tt)+ $(as $al:ident)? $(,
+            $($tt:tt)*
+        )?
+    ) => {
+        $crate::proc_macro_api_top! {
+            [
+                $($line)*
+                [ [ $($at)* ] [ $($al)? ] [ :: ] $($seg)+ ]
+            ]
+            $($($tt)*)?
+        }
+    };
+
+    ([$([ $at:tt $al:tt $cc:tt $($seg:tt)* ])*]) => {
+        $(println!("at = {}, al = {}, cc = {}, path = {}",
+            stringify!($at),
+            stringify!($al),
+            stringify!($cc),
+            concat!($(stringify!($seg), "::",)*),
+        );)*
+    };
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test() {
+        proc_macro_api! {
+            /// a
+            /// b
+            ab,
+            ::cd,
+            /// a
+            /// b
+            ::de::ar::{qq},
+            ab::cd::ef::{},
+            rr as mm,
+            ::dd as pp,
+            rr::ab as de,
+            ::ee::df as cc
+        }
+        proc_macro_api! {}
+        proc_macro_api! {a,}
+        proc_macro_api! {a::b,}
+        proc_macro_api! {::a,}
+        proc_macro_api! {::a::b,}
+    }
 }
