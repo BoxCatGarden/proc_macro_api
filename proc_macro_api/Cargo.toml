@@ -8,3 +8,7 @@ readme = "README.md"
 keywords = ["proc_macro", "api", "export", "submodule"]
 
 [dependencies]
+
+[[example]]
+name = "tests"
+crate-type = ["proc-macro"]
