@@ -9,6 +9,9 @@ keywords = ["proc_macro", "api", "export", "submodule"]
 
 [dependencies]
 
+[features]
+allow_shadow = []
+
 [[example]]
 name = "tests"
 crate-type = ["proc-macro"]

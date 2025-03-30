@@ -121,7 +121,7 @@ macro_rules! proc_macro_api_top {
         $crate::proc_macro_api_top! {
             [
                 $($line)*
-                [ [ $($at)* ] [ $($al)? ] [] $seg $($rest)* ]
+                [ [ $($at)* ] [ $($al)? ] [] [ $seg $($rest)* ] ]
             ]
             $($($tt)*)?
         }
@@ -136,19 +136,118 @@ macro_rules! proc_macro_api_top {
         $crate::proc_macro_api_top! {
             [
                 $($line)*
-                [ [ $($at)* ] [ $($al)? ] [ :: ] $($seg)+ ]
+                [ [ $($at)* ] [ $($al)? ] [ :: ] [ $($seg)+ ] ]
             ]
             $($($tt)*)?
         }
     };
 
-    ([$([ $at:tt $al:tt $cc:tt $($seg:tt)* ])*]) => {
-        $(println!("at = {}, al = {}, cc = {}, path = {}",
-            stringify!($at),
-            stringify!($al),
-            stringify!($cc),
-            concat!($(stringify!($seg), "::",)*),
-        );)*
+    ([ $([ $at:tt $al:tt $cc:tt $seg:tt ])* ]) => {
+
+    };
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_parse_attr {
+    ($bag:tt
+        [ $($doc:tt)* ] $other:tt $proc:tt
+        [ doc $($doc_arg:tt)* ] $($at:tt)*
+    ) => {
+        $crate::proc_macro_api_parse_attr! {
+            $bag
+                [ $($doc)* [ doc $($doc_arg)* ] ]
+                $other
+                $proc
+            $($at)*
+        }
+    };
+
+    ($bag:tt
+        $doc:tt [ $($other:tt)* ] $proc:tt
+        [] $($at:tt)*
+    ) => {
+        $crate::proc_macro_api_parse_attr! {
+            $bag
+                $doc
+                [ $($other)* [] ]
+                $proc
+            $($at)*
+        }
+    };
+
+    ($bag:tt
+        $doc:tt $other:tt [ $($proc:tt)? ]
+        [ $(proc_macro)? $(fn)? ] $($at:tt)*
+    ) => {
+        $crate::proc_macro_api_parse_attr! {
+            $bag
+                $doc
+                $other
+                [[ proc_macro ]]
+            $($at)*
+        }
+        $(
+        #[cfg(not(feature = "allow_shadow"))]
+        $crate::proc_macro_api_err! { 'shadow =>
+            $bag $proc proc_macro fn
+        }
+        )?
+    };
+
+    ($bag:tt
+        $doc:tt $other:tt [ $($proc:tt)? ]
+        [ $(proc_macro_attribute)? $(at)? ] $($at:tt)*
+    ) => {
+        $crate::proc_macro_api_parse_attr! {
+            $bag
+                $doc
+                $other
+                [[ proc_macro_attribute ]]
+            $($at)*
+        }
+        $(
+        #[cfg(not(feature = "allow_shadow"))]
+        $crate::proc_macro_api_err! { 'shadow =>
+            $bag $proc proc_macro_attribute at
+        }
+        )?
+    };
+
+    ($bag:tt
+        $doc:tt $other:tt [ $($proc:tt)? ]
+        [ $(proc_macro_derive)? $(dr)? ( $($drv:tt)* ) ] $($at:tt)*
+    ) => {
+        $crate::proc_macro_api_parse_attr! {
+            $bag
+                $doc
+                $other
+                [[ proc_macro_derive ( $($drv)* ) ]]
+            $($at)*
+        }
+        $(
+        #[cfg(not(feature = "allow_shadow"))]
+        $crate::proc_macro_api_err! { 'shadow =>
+            $bag $proc proc_macro_derive dr
+        }
+        )?
+    };
+
+    ($bag:tt
+        $doc:tt [ $($other:tt)* ] $proc:tt
+        $any:tt $($at:tt)*
+    ) => {
+        $crate::proc_macro_api_parse_attr! {
+            $bag
+                $doc
+                [ $($other)* $any ]
+                $proc
+            $($at)*
+        }
+    };
+
+    ($bag:tt $doc:tt $other:tt $proc:tt) => {
+
     };
 }
 
@@ -156,24 +255,15 @@ macro_rules! proc_macro_api_top {
 mod tests {
     #[test]
     fn test() {
-        proc_macro_api! {
-            /// a
-            /// b
-            ab,
-            ::cd,
-            /// a
-            /// b
-            ::de::ar::{qq},
-            ab::cd::ef::{},
-            rr as mm,
-            ::dd as pp,
-            rr::ab as de,
-            ::ee::df as cc
+        println!("a = {}", a());
+    }
+
+    fn a() -> i32 {
+        #[cfg(test)]
+        {
+            3
         }
-        proc_macro_api! {}
-        proc_macro_api! {a,}
-        proc_macro_api! {a::b,}
-        proc_macro_api! {::a,}
-        proc_macro_api! {::a::b,}
+        #[cfg(not(test))]
+        6
     }
 }
