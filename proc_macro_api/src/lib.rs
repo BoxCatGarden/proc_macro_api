@@ -145,7 +145,7 @@ macro_rules! proc_macro_api_top {
     ([ $([ [ $($at:tt)* ] $al:tt $cc:tt $($seg:tt)* ])* ]) => {$(
         $crate::proc_macro_api_parse_attr! {
             [ [ $al $cc ] [ [/*doc*/] [/*other;proc*/] ] [/*seg*/] ]
-            [ [/*doc*/] [/*other*/] [/*proc*/] $($at)* ]
+            [ [/*doc*/] [/*other*/] [/*proc*/] $($at),* ]
             [ [/*prev*/] [/*last*/] $($seg),* ]
         }
     )*};
@@ -153,48 +153,55 @@ macro_rules! proc_macro_api_top {
 
 #[doc(hidden)]
 #[macro_export]
+macro_rules! proc_macro_api_err_shadow {
+    ([] $($tt:tt)*) => {};
+    ([ $proc:tt ] $name:ident $alias:ident
+    $seg:tt $($rest:ident)* $({ $($_0:tt)* } $($_1:tt)*)?
+    ) => {
+        std::compile_error!(std::concat!(
+            "multiple proc_macro attributes on the same sub-path:\n",
+            "  #", std::stringify!($proc), " <---- the first annotation\n",
+            "  #[ ",
+                std::stringify!($name), " OR ",
+                std::stringify!($alias),
+            " ] <---- the second annotation\n",
+            "  ... ", std::stringify!($seg),
+            $("::", std::stringify!($rest),)*
+            " ...",
+        ));
+    };
+}
+
+#[doc(hidden)]
+#[macro_export]
 macro_rules! proc_macro_api_parse_attr {
+    // doc
     ($bag:tt
-    [ [ $($doc:tt)* ] $other:tt $proc:tt [ doc $($doc_arg:tt)* ] $($at:tt)* ]
+    [ [ $($doc:tt)* ] $other:tt $proc:tt [ doc $($doc_arg:tt)* ] $(, $at:tt)* ]
     [ [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ] $($seg:tt)? $(, $rest:tt)* ]
     ) => {
         $crate::proc_macro_api_parse_attr! {
             $bag
-            [ [ $($doc)* [ doc $($doc_arg)* ] ] $other $proc $($at)* ]
+            [ [ $($doc)* [ doc $($doc_arg)* ] ] $other $proc $($at),* ]
             [ [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ] $($rest),* ]
         }
     };
 
+    // proc_macro
     ($bag:tt
-        $doc:tt [ $($other:tt)* ] $proc:tt
-        [] $($at:tt)*
+    [ $doc:tt [ $($other:tt)* ] [ $($proc:tt)? ] $([ proc_macro ])? $([ fn ])? $(, $at:tt)* ]
+    [ [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ] $($seg:tt)? $(, $rest:tt)* ]
     ) => {
         $crate::proc_macro_api_parse_attr! {
             $bag
-                $doc
-                [ $($other)* [] ]
-                $proc
-            $($at)*
+            [ $doc [ $($other)* [ proc_macro ] ] [[ proc_macro ]] $($at),* ]
+            [ [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ] $($rest),* ]
         }
-    };
-
-    ($bag:tt
-        $doc:tt $other:tt [ $($proc:tt)? ]
-        [ $(proc_macro)? $(fn)? ] $($at:tt)*
-    ) => {
-        $crate::proc_macro_api_parse_attr! {
-            $bag
-                $doc
-                $other
-                [[ proc_macro ]]
-            $($at)*
+        #[cfg(feature = "report_shadow")]
+        $crate::proc_macro_api_err_shadow! {
+            [ $($proc)? ] proc_macro fn
+            $($prv)* $($to_prv)? $($last)? $($seg)? $($rest)*
         }
-        $(
-        #[cfg(not(feature = "allow_shadow"))]
-        $crate::proc_macro_api_err! { 'shadow =>
-            $bag $proc proc_macro fn
-        }
-        )?
     };
 
     ($bag:tt

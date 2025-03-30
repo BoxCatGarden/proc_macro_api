@@ -10,9 +10,9 @@ keywords = ["proc_macro", "api", "export", "submodule"]
 [dependencies]
 
 [features]
-default = ["allow_override"]
-allow_override = []
-allow_shadow = []
+default = ["override_attr", "report_shadow"]
+override_attr = []
+report_shadow = []
 
 [[example]]
 name = "tests"
