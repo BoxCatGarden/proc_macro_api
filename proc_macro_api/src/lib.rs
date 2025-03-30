@@ -121,7 +121,7 @@ macro_rules! proc_macro_api_top {
         $crate::proc_macro_api_top! {
             [
                 $($line)*
-                [ [ $($at)* ] [ $($al)? ] [] [ $seg $($rest)* ] ]
+                [ [ $($at)* ] [ $($al)? ] [] $seg $($rest)* ]
             ]
             $($($tt)*)?
         }
@@ -136,30 +136,32 @@ macro_rules! proc_macro_api_top {
         $crate::proc_macro_api_top! {
             [
                 $($line)*
-                [ [ $($at)* ] [ $($al)? ] [ :: ] [ $($seg)+ ] ]
+                [ [ $($at)* ] [ $($al)? ] [ :: ] $($seg)+ ]
             ]
             $($($tt)*)?
         }
     };
 
-    ([ $([ $at:tt $al:tt $cc:tt $seg:tt ])* ]) => {
-
-    };
+    ([ $([ [ $($at:tt)* ] $al:tt $cc:tt $($seg:tt)* ])* ]) => {$(
+        $crate::proc_macro_api_parse_attr! {
+            [ [ $al $cc ] [ [/*doc*/] [/*other;proc*/] ] [/*seg*/] ]
+            [ [/*doc*/] [/*other*/] [/*proc*/] $($at)* ]
+            [ [/*prev*/] [/*last*/] $($seg),* ]
+        }
+    )*};
 }
 
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_parse_attr {
     ($bag:tt
-        [ $($doc:tt)* ] $other:tt $proc:tt
-        [ doc $($doc_arg:tt)* ] $($at:tt)*
+    [ [ $($doc:tt)* ] $other:tt $proc:tt [ doc $($doc_arg:tt)* ] $($at:tt)* ]
+    [ [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ] $($seg:tt)? $(, $rest:tt)* ]
     ) => {
         $crate::proc_macro_api_parse_attr! {
             $bag
-                [ $($doc)* [ doc $($doc_arg)* ] ]
-                $other
-                $proc
-            $($at)*
+            [ [ $($doc)* [ doc $($doc_arg)* ] ] $other $proc $($at)* ]
+            [ [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ] $($rest),* ]
         }
     };
 
