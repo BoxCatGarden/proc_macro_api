@@ -147,7 +147,7 @@ macro_rules! proc_macro_api_top {
             [ [ $($at),* ] [/*[doc]*/] [/*[other]+[proc]*/] [/*[proc]*/] ]
             [ [ $($seg),* ] [/*prv*/] [/*last*/] ]
             [
-                [ [/*[proc_ty]*/] [/*[doc]*/] [/*[[other]+[proc]]*/] ]
+                [/*[proc]*/] [/*[doc]*/] [/*[[other]+[proc]]*/]
                 [ $cc [/*seg*/] $($al)? ]
             ]
         }
@@ -200,8 +200,41 @@ macro_rules! proc_macro_api_parse_attr {
     };
 
     // -> out
-    () => {
-
+    ([
+        [] [ $($doc:tt)* ] [ $($($other:tt)+)? ] [
+            $([ proc_macro $($arg_fn_0:tt)* ])?
+            $([ fn $($arg_fn:tt)* ])?
+            $([ proc_macro_attribute $($arg_at_0:tt)* ])?
+            $([ at $($arg_at:tt)* ])?
+            $([ proc_macro_derive $($arg_dr_0:tt)* ])?
+            $([ dr $($arg_dr:tt)* ])?
+        ]
+    ] [
+        [ $($seg:tt)? $(, $rest:tt)* ]
+        [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ]
+    ] [
+        [ $($bg_proc:tt)? ] [ $($bg_doc:tt)* ] [ $($bg_oth:tt)? ] $path:tt
+    ]) => {
+        $crate::proc_macro_api_parse_seg! {
+            [ $($rest),* ] [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ]
+            [
+                [
+                    $([ proc_macro $($arg_fn_0)* ] ;)?
+                    $([ proc_macro $($arg_fn)* ] ;)?
+                    $([ proc_macro_attribute $($arg_at_0)* ] ;)?
+                    $([ proc_macro_attribute $($arg_at)* ] ;)?
+                    $([ proc_macro_derive $($arg_dr_0)* ] ;)?
+                    $([ proc_macro_derive $($arg_dr)* ] ;)?
+                    $($bg_proc)?
+                ] [
+                    $($bg_doc)*
+                    $($doc)*
+                ] [
+                    $([ $($other)+ ] ;)?
+                    $($bg_oth)?
+                ] $path
+            ]
+        }
     };
 
     // [proc_macro]
@@ -282,14 +315,16 @@ macro_rules! proc_macro_api_parse_seg {
 #[cfg(test)]
 mod tests {
     macro_rules! aaa {
-        ($($($a:literal)+)?) => {
-            6 $($(+ $a)+)?
+        ($tt:tt $t1:tt $t2:tt) => {
+            stringify!($tt)
         };
-        () => {3};
+        (r#fn) => {
+            6
+        };
     }
     #[test]
     fn test() {
-        println!("a = {}", aaa!(1 2 3));
+        println!("a = {}", aaa!(r#fn));
     }
 
     fn a() -> i32 {
