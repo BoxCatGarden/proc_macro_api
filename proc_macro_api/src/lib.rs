@@ -144,8 +144,8 @@ macro_rules! proc_macro_api_top {
 
     ([] [ $([ [ $($at:tt)* ] [ $($al:tt)? ] $cc:tt $($seg:tt)* ])* ]) => {$(
         $crate::proc_macro_api_parse_attr! {
-            [ [ $($at),* ] [/*[doc]*/] [/*[other]+[proc]*/] [/*[proc]*/] ]
-            [ [ $($seg),* ] [/*prv*/] [/*last*/] ]
+            [ $($at),* ] [/*[doc]*/] [/*[other]+[proc]*/] [/*[proc]*/]
+            [ $($seg),* ] [/*prv*/] [/*last*/]
             [
                 [/*[proc]*/] [/*[doc]*/] [/*[[other]+[proc]]*/]
                 [ $cc [/*seg*/] $($al)? ]
@@ -167,7 +167,7 @@ macro_rules! proc_macro_api_err_shadow {
 macro_rules! proc_macro_api_err_shadow {
     ([] $($tt:tt)*) => {};
     ([ $proc:tt ] $cover:tt
-    $seg:tt $($rest:ident)* $({ $($_0:tt)* } $($_1:tt)*)?
+    [ $seg:tt $($rest:ident)* $({ $($_0:tt)* } $($_1:tt)*)? ]
     ) => {
         std::compile_error!(std::concat!(
             "multiple proc_macro attributes on one sub-path:\n",
@@ -184,37 +184,34 @@ macro_rules! proc_macro_api_err_shadow {
 #[macro_export]
 macro_rules! proc_macro_api_parse_attr {
     // [doc]
-    ([
-        [ [ doc $($arg_doc:tt)* ] $(, $at:tt)* ]
-        [ $($doc:tt)* ] $other:tt $proc:tt
-    ] [
-        [ $($seg:tt)? $(, $rest:tt)* ]
-        [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ]
-    ] $bag:tt
+    (
+    [ [ doc $($arg_doc:tt)* ] $(, $at:tt)* ]
+    [ $($doc:tt)* ] $other:tt $proc:tt
+    [ $($seg:tt)? $(, $rest:tt)* ]
+    [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ]
+    $bag:tt
     ) => {
         $crate::proc_macro_api_parse_attr! {
-            [ [ $($at),* ] [ $($doc)* [ doc $($arg_doc)* ] ] $other $proc ]
-            [ [ $($rest),* ] [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ] ]
+            [ $($at),* ] [ $($doc)* [ doc $($arg_doc)* ] ] $other $proc
+            [ $($rest),* ] [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ]
             $bag
         }
     };
 
     // -> out
-    ([
-        [] [ $($doc:tt)* ] [ $($($other:tt)+)? ] [
-            $([ proc_macro $($arg_fn_0:tt)* ])?
-            $([ fn $($arg_fn:tt)* ])?
-            $([ proc_macro_attribute $($arg_at_0:tt)* ])?
-            $([ at $($arg_at:tt)* ])?
-            $([ proc_macro_derive $($arg_dr_0:tt)* ])?
-            $([ dr $($arg_dr:tt)* ])?
-        ]
-    ] [
-        [ $($seg:tt)? $(, $rest:tt)* ]
-        [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ]
-    ] [
-        [ $($bg_proc:tt)? ] [ $($bg_doc:tt)* ] [ $($bg_oth:tt)? ] $path:tt
-    ]) => {
+    (
+    [] [ $($doc:tt)* ] [ $($($other:tt)+)? ] [
+        $([ proc_macro $($arg_fn_0:tt)* ])?
+        $([ fn $($arg_fn:tt)* ])?
+        $([ proc_macro_attribute $($arg_at_0:tt)* ])?
+        $([ at $($arg_at:tt)* ])?
+        $([ proc_macro_derive $($arg_dr_0:tt)* ])?
+        $([ dr $($arg_dr:tt)* ])?
+    ]
+    [ $($seg:tt)? $(, $rest:tt)* ]
+    [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ]
+    [ [ $($bg_proc:tt)? ] [ $($bg_doc:tt)* ] [ $($bg_oth:tt)? ] $path:tt ]
+    ) => {
         $crate::proc_macro_api_parse_seg! {
             [ $($rest),* ] [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ]
             [
@@ -240,41 +237,39 @@ macro_rules! proc_macro_api_parse_attr {
     // [proc_macro]
     // [proc_macro_attribute]
     // [proc_macro_derive]
-    ([
-        [
-            $([ proc_macro $($arg_fn_0:tt)* ])?
-            $([ fn $($arg_fn:tt)* ])?
-            $([ proc_macro_attribute $($arg_at_0:tt)* ])?
-            $([ at $($arg_at:tt)* ])?
-            $([ proc_macro_derive $($arg_dr_0:tt)* ])?
-            $([ dr $($arg_dr:tt)* ])?
-            $(, $at:tt)*
-        ] $doc:tt [ $($other:tt)* ] [ $($proc:tt)? ]
-    ] [
-        [ $($seg:tt)? $(, $rest:tt)* ]
-        [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ]
-    ] $bag:tt
+    (
+    [
+        $([ proc_macro $($arg_fn_0:tt)* ])?
+        $([ fn $($arg_fn:tt)* ])?
+        $([ proc_macro_attribute $($arg_at_0:tt)* ])?
+        $([ at $($arg_at:tt)* ])?
+        $([ proc_macro_derive $($arg_dr_0:tt)* ])?
+        $([ dr $($arg_dr:tt)* ])?
+        $(, $at:tt)*
+    ]
+    $doc:tt [ $($other:tt)* ] [ $($proc:tt)? ]
+    [ $($seg:tt)? $(, $rest:tt)* ]
+    [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ]
+    $bag:tt
     ) => {
         $crate::proc_macro_api_parse_attr! {
-            [
-                [ $($at),* ] $doc
-                [ $($other)*
-                    $([ proc_macro $($arg_fn_0)* ])?
-                    $([ proc_macro $($arg_fn)* ])?
-                    $([ proc_macro_attribute $($arg_at_0)* ])?
-                    $([ proc_macro_attribute $($arg_at)* ])?
-                    $([ proc_macro_derive $($arg_dr_0)* ])?
-                    $([ proc_macro_derive $($arg_dr)* ])?
-                ] [
-                    $([proc_macro$($arg_fn_0)*])?
-                    $([fn$($arg_fn)*])?
-                    $([proc_macro_attribute$($arg_at_0)*])?
-                    $([at$($arg_at)*])?
-                    $([proc_macro_derive$($arg_dr_0)*])?
-                    $([dr$($arg_dr)*])?
-                ]
+            [ $($at),* ] $doc
+            [ $($other)*
+                $([ proc_macro $($arg_fn_0)* ])?
+                $([ proc_macro $($arg_fn)* ])?
+                $([ proc_macro_attribute $($arg_at_0)* ])?
+                $([ proc_macro_attribute $($arg_at)* ])?
+                $([ proc_macro_derive $($arg_dr_0)* ])?
+                $([ proc_macro_derive $($arg_dr)* ])?
+            ] [
+                $([proc_macro$($arg_fn_0)*])?
+                $([fn$($arg_fn)*])?
+                $([proc_macro_attribute$($arg_at_0)*])?
+                $([at$($arg_at)*])?
+                $([proc_macro_derive$($arg_dr_0)*])?
+                $([dr$($arg_dr)*])?
             ]
-            [ [ $($rest),* ] [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ] ]
+            [ $($rest),* ] [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ]
             $bag
         }
         $crate::proc_macro_api_err_shadow! {
@@ -285,22 +280,21 @@ macro_rules! proc_macro_api_parse_attr {
             $([at$($arg_at)*])?
             $([proc_macro_derive$($arg_dr_0)*])?
             $([dr$($arg_dr)*])?
-            $($prv)* $($to_prv)? $($last)? $($seg)? $($rest)*
+            [ $($prv)* $($to_prv)? $($last)? $($seg)? $($rest)* ]
         }
     };
 
     // [`any`]
-    ([
-        [ $any:tt $(, $at:tt)* ]
-        $doc:tt [ $($other:tt)* ] $proc:tt
-    ] [
-        [ $($seg:tt)? $(, $rest:tt)* ]
-        [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ]
-    ] $bag:tt
+    (
+    [ $any:tt $(, $at:tt)* ]
+    $doc:tt [ $($other:tt)* ] $proc:tt
+    [ $($seg:tt)? $(, $rest:tt)* ]
+    [ $($prv:tt)* ] [ $($last:tt)? $(; $to_prv:tt)? $(;)? ]
+    $bag:tt
     ) => {
         $crate::proc_macro_api_parse_attr! {
-            [ [ $($at),* ] $doc [ $($other)* $any ] $proc ]
-            [ [ $($rest),* ] [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ] ]
+            [ $($at),* ] $doc [ $($other)* $any ] $proc
+            [ $($rest),* ] [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ]
             $bag
         }
     };
