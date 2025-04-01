@@ -10,8 +10,8 @@ keywords = ["proc_macro", "api", "export", "submodule"]
 [dependencies]
 
 [features]
-default = ["override_attr", "no_shadow"]
-override_attr = []
+default = ["no_shadow"]
+no_override = []
 no_shadow = []
 
 [[example]]

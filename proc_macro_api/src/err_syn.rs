@@ -19,13 +19,12 @@ macro_rules! proc_macro_api_err_unknown {
 macro_rules! proc_macro_api_err_syn_gt_one {
     ($($_0:tt)?) => {};
 
-    ([ $($first:tt)* ] [ $($err:tt)* ] $([ $($rest:tt)* ])*) => {
+    ([ $($first:tt)* ] [ $($err:tt)* ] $($_0:tt)*) => {
         std::compile_error!(std::concat!(
-            "no rules expected `", $(std::stringify!($err),)* " ...`",
+            "no rules expected `", $(std::stringify!($err),)* "`",
             "\n/ ", $(std::stringify!($first),)* " ...",
             "\n| ", $(std::stringify!($err),)* " ...",
-            $("\n| ", $(std::stringify!($rest),)* " ...",)*
-            "\n|_^",
+            "\n|_^ this is unexpected",
         ));
     };
 
