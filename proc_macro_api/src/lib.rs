@@ -1,20 +1,6 @@
 #![doc = include_str!("../README.md")]
 
-#[doc(hidden)]
-#[macro_export]
-macro_rules! proc_macro_api_err_unknown {
-    (
-        mac: $mac:ident ,
-        tt: [ $($tt:tt)* ] $(,)?
-    ) => {
-        std::compile_error!(std::concat!(
-            "unknown error inside of `proc_macro_api!`",
-            "\n  inner macro: ", std::stringify!($mac),
-            "\n  tokens: ",
-            $("\n    ", std::stringify!($tt),)*
-        ));
-    };
-}
+mod err_syn;
 
 #[doc(hidden)]
 #[macro_export]
@@ -170,7 +156,6 @@ macro_rules! proc_macro_api_top {
     )*};
 }
 
-#[cfg(any(feature = "no_shadow", feature = "no_override"))]
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_err_attr_mul {
