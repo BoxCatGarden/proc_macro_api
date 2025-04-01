@@ -160,22 +160,23 @@ macro_rules! proc_macro_api_top {
 #[macro_export]
 macro_rules! proc_macro_api_err_attr_mul {
     // [first] [second]
-    ($msg:expr, $plural_s:expr =>
+    ($msg:expr , [ $($note:expr),* $(,)? ] , $plural_s:expr =>
         [ $first_0:tt $($first:tt)* ] [ $second_0:tt $($second:tt)* ]
         [ $seg:tt $($rest:ident)* $({ $($_0:tt)* } $($_1:tt)*)? ]
     ) => {
         std::compile_error!(std::concat!(
             $msg,
-            "\n   -> #", std::stringify!($first_0),
-            $("\n      #", std::stringify!($first),)*
-            " <---- the first attribute", $plural_s,
-            "\n       ...",
-            "\n   -> #", std::stringify!($second_0),
-            $("\n      #", std::stringify!($second),)*
-            " <---- the second attribute", $plural_s,
-            "\n  ... ", std::stringify!($seg),
+            "\n/ #", std::stringify!($first_0),
+            $("\n| #", std::stringify!($first),)*
+            "\n|_^ the first attribute", $plural_s,
+            "\n...",
+            "\n/ #", std::stringify!($second_0),
+            $("\n| #", std::stringify!($second),)*
+            "\n|_^ the second attribute", $plural_s,
+            "\n\n... ", std::stringify!($seg),
             $("::", std::stringify!($rest),)*
-            " ...",
+            " ...\n",
+            $("\n= note: ", $note,)*
         ));
     };
 
@@ -203,9 +204,12 @@ macro_rules! proc_macro_api_err_attr_shadow {
     // [[proc]] [cover] [path]
     ($proc:tt $cover:tt $path:tt) => {
         $crate::proc_macro_api_err_attr_mul! {
-            "multiple proc_macro attributes on one piece of path\n\
-note: disabling feature `no_shadow` can omit this check and\n\
-      let the compiler check the attributes on the final expanded functions",
+            "multiple proc_macro attributes on one piece of a path",
+            [
+                "feature `no_shadow` is enabled",
+                "disabling the feature to \
+leave the possible error to the compiler",
+            ],
             "" =>
             $proc [ $cover ] $path
         }
@@ -235,8 +239,8 @@ macro_rules! proc_macro_api_err_attr_override {
     // [[old]] [[new]] [path]
     ($old:tt $new:tt $path:tt) => {
         $crate::proc_macro_api_err_attr_mul! {
-            "attributes are overridden inside one path\n\
-note: overriding is denied because feature `no_override` is enabled",
+            "attributes are overridden inside one path",
+            [ "feature `no_override` is enabled" ],
             "(s)" =>
             $old $new $path
         }
