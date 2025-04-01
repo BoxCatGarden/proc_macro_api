@@ -2,10 +2,26 @@
 
 #[doc(hidden)]
 #[macro_export]
+macro_rules! proc_macro_api_err_unknown {
+    (
+        mac: $mac:ident ,
+        tt: [ $($tt:tt)* ] $(,)?
+    ) => {
+        std::compile_error!(std::concat!(
+            "unknown error inside of `proc_macro_api!`",
+            "\n  inner macro: ", std::stringify!($mac),
+            "\n  tokens: ",
+            $("\n    ", std::stringify!($tt),)*
+        ));
+    };
+}
+
+#[doc(hidden)]
+#[macro_export]
 macro_rules! proc_macro_api_err {
     ([ $($cc:tt)? ] [ $($seg:ident)* ] $api:ident $(as $alias:ident)?) => {
         std::compile_error!(std::concat!(
-            "expected a proc_macro annotation for `", $(
+            "expected a proc_macro attribute for `", $(
             std::stringify!($cc),)? $(
             std::stringify!($seg),
             "::",)*
@@ -123,12 +139,12 @@ macro_rules! proc_macro_api_top {
     };
 
     ([ $(# $at:tt)*
-        { $($inner:tt)* } $(, $($tt:tt)*)?
+        { $($inner:tt)* } $(:: $rest:tt)* $(as $al:ident)? $(, $($tt:tt)*)?
     ] [ $($line:tt)* ]
     ) => {
         $crate::proc_macro_api_top! {
             [ $($($tt)*)? ]
-            [ $($line)* [ [ $($at)* ] [] [] { $($inner)* } ] ]
+            [ $($line)* [ [ $($at)* ] [ $($al)? ] [] { $($inner)* } $($rest)* ] ]
         }
     };
 
@@ -154,29 +170,98 @@ macro_rules! proc_macro_api_top {
     )*};
 }
 
+#[cfg(any(feature = "no_shadow", feature = "no_override"))]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_err_attr_mul {
+    // [first] [second]
+    ($msg:expr, $plural_s:expr =>
+        [ $first_0:tt $($first:tt)* ] [ $second_0:tt $($second:tt)* ]
+        [ $seg:tt $($rest:ident)* $({ $($_0:tt)* } $($_1:tt)*)? ]
+    ) => {
+        std::compile_error!(std::concat!(
+            $msg,
+            "\n   -> #", std::stringify!($first_0),
+            $("\n      #", std::stringify!($first),)*
+            " <---- the first attribute", $plural_s,
+            "\n       ...",
+            "\n   -> #", std::stringify!($second_0),
+            $("\n      #", std::stringify!($second),)*
+            " <---- the second attribute", $plural_s,
+            "\n  ... ", std::stringify!($seg),
+            $("::", std::stringify!($rest),)*
+            " ...",
+        ));
+    };
+
+    ($($tt:tt)*) => {
+        $crate::proc_macro_api_err_unknown!(
+            mac: proc_macro_api_err_attr_mul,
+            tt: [ $($tt)* ],
+        );
+    };
+}
+
 #[cfg(not(feature = "no_shadow"))]
 #[doc(hidden)]
 #[macro_export]
-macro_rules! proc_macro_api_err_shadow {
+macro_rules! proc_macro_api_err_attr_shadow {
     ($($tt:tt)*) => {};
 }
 
 #[cfg(feature = "no_shadow")]
 #[doc(hidden)]
 #[macro_export]
-macro_rules! proc_macro_api_err_shadow {
-    ([] $($tt:tt)*) => {};
-    ([ $proc:tt ] $cover:tt
-    [ $seg:tt $($rest:ident)* $({ $($_0:tt)* } $($_1:tt)*)? ]
-    ) => {
-        std::compile_error!(std::concat!(
-            "multiple proc_macro attributes on one sub-path:\n",
-            "      #", std::stringify!($proc), " <---- the first annotation\n",
-            "      #", std::stringify!($cover), " <---- the second annotation\n",
-            "  ... ", std::stringify!($seg),
-            $("::", std::stringify!($rest),)*
-            " ...",
-        ));
+macro_rules! proc_macro_api_err_attr_shadow {
+    ([] $_0:tt $_1:tt) => {};
+
+    // [[proc]] [cover] [path]
+    ($proc:tt $cover:tt $path:tt) => {
+        $crate::proc_macro_api_err_attr_mul! {
+            "multiple proc_macro attributes on one piece of path\n\
+note: disabling feature `no_shadow` can omit this check and\n\
+      let the compiler check the attributes on the final expanded functions",
+            "" =>
+            $proc [ $cover ] $path
+        }
+    };
+
+    ($($tt:tt)*) => {
+        $crate::proc_macro_api_err_unknown!(
+            mac: proc_macro_api_err_attr_shadow,
+            tt: [ $($tt)* ],
+        );
+    };
+}
+
+#[cfg(not(feature = "no_override"))]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_err_attr_override {
+    ($($tt:tt)*) => {};
+}
+
+#[cfg(feature = "no_override")]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_err_attr_override {
+    ($_0:tt $($_1:tt)?) => {};
+
+    // [[old]] [[new]] [path]
+    ($old:tt $new:tt $path:tt) => {
+        $crate::proc_macro_api_err_attr_mul! {
+            "attributes are overridden inside one path\n\
+note: overriding is denied because feature `no_override` is enabled",
+            "(s)" =>
+            $old $new $path
+        }
+    };
+
+    ($($tt:tt)*) => {
+        $crate::proc_macro_api_err_unknown!(
+            mac: proc_macro_api_err_attr_override,
+            tt: [ $($tt)* ],
+        );
     };
 }
 
@@ -232,6 +317,10 @@ macro_rules! proc_macro_api_parse_attr {
                 ] $path
             ]
         }
+        $crate::proc_macro_api_err_attr_override! {
+            $($bg_oth)? $([ $($other)+ ])?
+            [ $($prv)* $($to_prv)? $($last)? $($seg)? $($rest)* ]
+        }
     };
 
     // [proc_macro]
@@ -272,7 +361,7 @@ macro_rules! proc_macro_api_parse_attr {
             [ $($rest),* ] [ $($prv)* $($to_prv)? ] [ $($seg ;)? $($last)? ]
             $bag
         }
-        $crate::proc_macro_api_err_shadow! {
+        $crate::proc_macro_api_err_attr_shadow! {
             [ $($proc)? ]
             $([proc_macro$($arg_fn_0)*])?
             $([fn$($arg_fn)*])?
