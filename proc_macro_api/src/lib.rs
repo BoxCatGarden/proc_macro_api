@@ -16,10 +16,10 @@ macro_rules! proc_macro_api {
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_top {
-    (* [ $($at:tt)* ] [ $($al:tt)? ] $cc:tt $($seg:tt)*) => {
+    (* [ $($at:tt)* ] [ $($al:tt)? ] $cc:tt $seg:tt $($rest:tt)*) => {
         $crate::proc_macro_api_parse_attr! {
             [ $($at),* ] [/*[doc]*/] [/*[other]+[proc]*/] [/*[proc]*/]
-            [ $($seg),* ] [/*prv*/] [/*last*/]
+            [ $($rest),* ] [/*prv*/] [/*last*/ $seg ]
             [
                 [/*[proc]*/] [/*[doc]*/] [/*[[other]+[proc]]*/]
                 [ $cc [/*seg*/] $($al)? ]
