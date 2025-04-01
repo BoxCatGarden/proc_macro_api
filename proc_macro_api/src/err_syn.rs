@@ -7,8 +7,8 @@ macro_rules! proc_macro_api_err_unknown {
     ) => {
         std::compile_error!(std::concat!(
             "unknown error inside of `proc_macro_api!`",
-            "\n  inner macro: ", std::stringify!($mac),
-            "\n  tokens: ",
+            "\n= inner macro: ", std::stringify!($mac),
+            "\n= tokens: ",
             $("\n    ", std::stringify!($tt),)*
         ));
     };
@@ -24,7 +24,7 @@ macro_rules! proc_macro_api_err_syn_gt_one {
             "no rules expected `", $(std::stringify!($err),)* "`",
             "\n/ ", $(std::stringify!($first),)* " ...",
             "\n| ", $(std::stringify!($err),)* " ...",
-            "\n|_^ this is unexpected",
+            "\n|_^ this is not expected",
         ));
     };
 
