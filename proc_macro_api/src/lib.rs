@@ -1,5 +1,10 @@
 #![doc = include_str!("../README.md")]
 
+//!
+//! TODO!()
+//! ERR - `:: ::`, `{} as al`, `proc = []`,
+//!
+
 mod err_syn;
 
 /// See the [document at module level][self].
