@@ -320,9 +320,9 @@ macro_rules! proc_macro_api_parse_seg {
         $($api:ident)?
         $({$(
             $(# $at:tt)*
-            $(:: $seg_0:tt $(:: $rest_0:tt)*)?
-            $($seg_1:ident $(:: $rest_1:tt)*)?
-            $({ $($seg_2:tt)* } $(:: $rest_2:tt)*)?
+            $($seg_id:ident)?
+            $({ $($seg_blk:tt)* })?
+            $(:: $seg_cc:tt $(:: $rest:tt)*)?
             $(as $al:tt)?
         ),*})?
     ] $prv:tt
@@ -335,13 +335,13 @@ macro_rules! proc_macro_api_parse_seg {
         )?
         $($(
         $crate::proc_macro_api_parse_seg_call_attr! {
+            [
+                $([] $seg_id)?
+                $([] { $($seg_blk)* })?
+                $([ :: ] $seg_cc ; [ $($rest)* ])?
+            ]
             [ $($at),* ] [ $($al)? ]
-            $([ :: ] $seg_0 [ $($rest_0),* ]
-                $prv $bg_cc $bg_proc $bg_doc $bg_oth)?
-            $([] $seg_1 [ $($rest_1),* ]
-                $prv $bg_cc $bg_proc $bg_doc $bg_oth)?
-            $([] { $($seg_2)* } [ $($rest_2),* ]
-                $prv $bg_cc $bg_proc $bg_doc $bg_oth)?
+            [ $prv $bg_cc $bg_proc $bg_doc $bg_oth ]
         }
         )*)?
     };
@@ -351,14 +351,22 @@ macro_rules! proc_macro_api_parse_seg {
 #[macro_export]
 macro_rules! proc_macro_api_parse_seg_call_attr {
     (
-    $at:tt $al:tt $cc:tt $seg:tt $rest:tt $prv:tt
-    [ $($bg_cc:tt)? ]
-    [ $($bg_proc:tt)? $(; $_0:tt)? $(;)? ] $bg_doc:tt
-    [ $($bg_oth:tt)? $(; $_1:tt)? $(;)? ]
+    [
+        $cc:tt $seg:tt
+        $([ :: ] $seg_cc:tt ; [ $($rest_0:tt)* ])?
+        $(; [ $($rest_1:tt)* ])?
+    ]
+    $at:tt $al:tt
+    [
+        $prv:tt
+        [ $($bg_cc:tt)? ]
+        [ $($bg_proc:tt)? $(; $_0:tt)? $(;)? ] $bg_doc:tt
+        [ $($bg_oth:tt)? $(; $_1:tt)? $(;)? ]
+    ]
     ) => {
         $crate::proc_macro_api_parse_attr! {
             $at [/*[doc]*/] [/*[other]+[proc]*/] [/*[proc]*/]
-            $rest $prv [ $seg ]
+            [ $($seg_cc $(, $rest_0)*)? $($($rest_1),*)? ] $prv [ $seg ]
             [
                 [ $($bg_proc)? ] $bg_doc [ $($bg_oth)? ]
                 [ $cc $al ]
@@ -366,9 +374,14 @@ macro_rules! proc_macro_api_parse_seg_call_attr {
         }
     };
 
-    ([] []) => { /* empty comma (`,,`) and trailing comma (`... ,`) */ };
+    ([] [] [] $_:tt) => { /* empty comma (`,,`) and trailing comma (`... ,`) */ };
 
-    ($at:tt $al:tt) => {};
+    ([] $at:tt $al:tt $_:tt) => {};
+
+    (
+    [ [] $seg_0:tt [] $seg_1:tt $($_0:tt)* ]
+    $at:tt $al:tt $_1:tt
+    ) => {};
 }
 
 #[doc(hidden)]
@@ -391,8 +404,8 @@ macro_rules! proc_macro_api_err_fn_no_proc {
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_fn {
-    ($bag:tt) => {
-        $crate::proc_macro_api_err!([] $seg $api);
+    ([] $bag:tt $al:tt $api:tt) => {
+        $crate::proc_macro_api_err_fn_no_proc!([] $seg $api);
     };
 
     ([ proc_macro_attribute ] $bag:tt) => {
