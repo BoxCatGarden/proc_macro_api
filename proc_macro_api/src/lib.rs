@@ -11,8 +11,12 @@ mod err_syn;
 #[macro_export]
 macro_rules! proc_macro_api {
     ($($tt:tt)+) => {
-        $crate::proc_macro_api_top! {
-            [ $($tt)+ ]
+        $crate::proc_macro_api_parse_seg! {
+            [/*rest*/] [ { $($tt)+ } ] [/*prv*/]
+            [
+                [/*[proc]*/] [/*[doc]*/] [/*[[other]+[proc]]*/]
+                [ [/*cc*/] [/*al*/] ]
+            ]
         }
     };
     () => {};
@@ -414,8 +418,10 @@ macro_rules! proc_macro_api_parse_fn {
         $([ proc_macro $($arg_fn:tt)* ])?
         $([ proc_macro_attribute $($arg_at:tt)* ])?
         $([ proc_macro_derive $($arg_dr:tt)* ])?
+        $(; $_0:tt)? $(;)?
     ]
-    [ $doc:tt $other:tt $cc:tt $prv:tt ] [ $($al:tt)? ] $api:tt
+    [ $doc:tt [ $other:tt $(; $_1:tt)? $(;)? ] $cc:tt $prv:tt ]
+    [ $($al:tt)? ] $api:tt
     ) => {
         $crate::proc_macro_api_fn! {
             $doc $other $cc $prv $api [ $($al)? $api ]
@@ -430,9 +436,9 @@ macro_rules! proc_macro_api_parse_fn {
 #[macro_export]
 macro_rules! proc_macro_api_fn {
     (
-    [ $($doc:tt)* ] [ [ $($other:tt)* ] $(; $_0:tt)? $(;)? ]
-    [ $($cc:tt)? ] [ $($prv:tt)* ] $api:tt [ $name:tt $($_1:tt)? ]
-    ( $($args:tt),* $(,)? ) $_2:tt
+    [ $($doc:tt)* ] [ $($other:tt)* ]
+    [ $($cc:tt)? ] [ $($prv:tt)* ] $api:tt [ $name:tt $($_0:tt)? ]
+    ( $($args:tt),* $(,)? ) $_1:tt
     ) => {
         $(# $doc)*
         $(# $other)*
