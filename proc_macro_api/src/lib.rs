@@ -405,13 +405,23 @@ macro_rules! proc_macro_api_err_fn_no_proc {
 #[macro_export]
 macro_rules! proc_macro_api_parse_fn {
     ([] $bag:tt $al:tt $api:tt) => {
-        $crate::proc_macro_api_err_fn_no_proc!([] $seg $api);
+        // $crate::proc_macro_api_err_fn_no_proc!([] $seg $api);
     };
 
     // $bg_proc [ $bg_doc $bg_oth $bg_cc $prv ] $bg_al $api
-    ([ proc_macro_attribute ] $bag:tt) => {
+    (
+    [
+        $([ proc_macro $($arg_fn:tt)* ])?
+        $([ proc_macro_attribute $($arg_at:tt)* ])?
+        $([ proc_macro_derive $($arg_dr:tt)* ])?
+    ]
+    [ $doc:tt $other:tt $cc:tt $prv:tt ] [ $($al:tt)? ] $api:tt
+    ) => {
         $crate::proc_macro_api_fn! {
-            ( args, item ) [ proc_macro_attribute ] $seg $api
+            $doc $other $cc $prv $api [ $($al)? $api ]
+            $((input) [ $($arg_fn)* ])?
+            $((args, item) [ $($arg_at)* ])?
+            $((item) [ $($arg_dr)* ])?
         }
     };
 }
@@ -420,11 +430,12 @@ macro_rules! proc_macro_api_parse_fn {
 #[macro_export]
 macro_rules! proc_macro_api_fn {
     (
-    [ $($at:tt)* ]
-    [ $($cc:tt)? ] [ $($prv:tt)* ] $api:tt [ $name:tt $($_0:tt)? ]
-    ( $($args:tt),* $(,)? ) $_1:tt
+    [ $($doc:tt)* ] [ [ $($other:tt)* ] $(; $_0:tt)? $(;)? ]
+    [ $($cc:tt)? ] [ $($prv:tt)* ] $api:tt [ $name:tt $($_1:tt)? ]
+    ( $($args:tt),* $(,)? ) $_2:tt
     ) => {
-        $(#$at)*
+        $(# $doc)*
+        $(# $other)*
         pub fn $name (
             $($args : proc_macro::TokenStream),*
         ) -> proc_macro::TokenStream {
