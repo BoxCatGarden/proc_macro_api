@@ -329,7 +329,7 @@ macro_rules! proc_macro_api_parse_seg {
     [ $bg_proc:tt $bg_doc:tt $bg_oth:tt [ $bg_cc:tt $bg_al:tt ] ]
     ) => {
         $(
-        $crate::proc_macro_api_fn! {
+        $crate::proc_macro_api_parse_fn! {
             $bg_proc [ $bg_doc $bg_oth $bg_cc $prv ] $bg_al $api
         }
         )?
@@ -403,42 +403,32 @@ macro_rules! proc_macro_api_err_fn_no_proc {
 
 #[doc(hidden)]
 #[macro_export]
-macro_rules! proc_macro_api_fn {
+macro_rules! proc_macro_api_parse_fn {
     ([] $bag:tt $al:tt $api:tt) => {
         $crate::proc_macro_api_err_fn_no_proc!([] $seg $api);
     };
 
+    // $bg_proc [ $bg_doc $bg_oth $bg_cc $prv ] $bg_al $api
     ([ proc_macro_attribute ] $bag:tt) => {
         $crate::proc_macro_api_fn! {
             ( args, item ) [ proc_macro_attribute ] $seg $api
         }
     };
+}
 
-    ([ $(proc_macro)? $(fn)? ] $seg:tt $api:ident) => {
-        $crate::proc_macro_api_fn! {
-            ( input ) [ proc_macro ] $seg $api
-        }
-    };
-
-    ([ $(proc_macro_derive)? $(dr)? ( $($drv:tt)* ) ] $seg:tt $api:ident) => {
-        $crate::proc_macro_api_fn! {
-            ( item ) [ proc_macro_derive ( $($drv)* ) ] $seg $api
-        }
-    };
-
-    ($attr:tt $seg:tt $api:ident) => {
-        $crate::proc_macro_api_err!($attr $seg $api);
-    };
-
-    // api_fn
-    (( $($arg:ident),* $(,)? ) $attr:tt
-        [ $($seg:ident)* ] $api:ident
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_fn {
+    (
+    [ $($at:tt)* ]
+    [ $($cc:tt)? ] [ $($prv:tt)* ] $api:tt [ $name:tt $($_0:tt)? ]
+    ( $($args:tt),* $(,)? ) $_1:tt
     ) => {
-        #$attr
-        pub fn $api (
-            $($arg: proc_macro::TokenStream),*
+        $(#$at)*
+        pub fn $name (
+            $($args : proc_macro::TokenStream),*
         ) -> proc_macro::TokenStream {
-            $($seg::)* $api ( $($arg),* )
+            $($cc)? $($prv ::)* $api ( $($args),* )
         }
     };
 }
