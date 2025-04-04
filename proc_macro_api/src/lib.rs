@@ -281,11 +281,14 @@ macro_rules! proc_macro_api_parse_seg {
         }
         )?
         $(
+        $crate::proc_macro_api_err_seg_blk_al! {
+            $bg_al
+        }
         $crate::proc_macro_api_parse_seg_call_attr! {
             [
-                $($bg_cc $seg_id_0)?
-                $($bg_cc { $($seg_blk_0)* })?
-                $([ :: ] $seg_cc_0 ; [ $($rest_0)* ])?
+                $($bg_cc [] $seg_id_0)?
+                $($bg_cc [] { $($seg_blk_0)* })?
+                $([ :: ] [ :: ] $seg_cc_0 ; [ $($rest_0)* ])?
             ]
             [ $($at_0),* ] [ $($al_0)? ]
             [ $prv $bg_cc $bg_proc $bg_doc $bg_oth ]
@@ -293,9 +296,9 @@ macro_rules! proc_macro_api_parse_seg {
         $(
         $crate::proc_macro_api_parse_seg_call_attr! {
             [
-                $($bg_cc $seg_id)?
-                $($bg_cc { $($seg_blk)* })?
-                $([ :: ] $seg_cc ; [ $($rest)* ])?
+                $($bg_cc [] $seg_id)?
+                $($bg_cc [] { $($seg_blk)* })?
+                $([ :: ] [ :: ] $seg_cc ; [ $($rest)* ])?
             ]
             [ $($at),* ] [ $($al)? ]
             [ $prv $bg_cc $bg_proc $bg_doc $bg_oth ]
@@ -331,18 +334,20 @@ macro_rules! proc_macro_api_err_seg_blk_al {
 macro_rules! proc_macro_api_parse_seg_call_attr {
     (
     [
-        $cc:tt $seg:tt
-        $([ :: ] $seg_cc:tt ; [ $($rest_0:tt)* ])?
+        $cc:tt $cc_tag:tt $seg:tt
+        $([ :: ] [ :: ] $seg_cc:tt ; [ $($rest_0:tt)* ])?
         $(; [ $($rest_1:tt)* ])?
     ]
     $at:tt $al:tt
     [
-        $prv:tt
-        [ $($bg_cc:tt)? ]
+        $prv:tt $bg_cc:tt
         [ $($bg_proc:tt)? $(; $_0:tt)? $(;)? ] $bg_doc:tt
         [ $($bg_oth:tt)? $(; $_1:tt)? $(;)? ]
     ]
     ) => {
+        $crate::proc_macro_api_err_seg_inner_cc! {
+            $cc_tag $bg_cc $prv [ $seg ]
+        }
         $crate::proc_macro_api_parse_attr! {
             $at [/*[doc]*/] [/*[other]+[proc]*/] [/*[proc]*/]
             [ $($seg_cc $(, $rest_0)*)? $($($rest_1),*)? ] $prv [ $seg ]
@@ -364,7 +369,11 @@ macro_rules! proc_macro_api_parse_seg_call_attr {
 
     // err: multiple seg
     (
-    [ $_0:tt $seg_0:tt $_1:tt $seg_1:tt $($_2:tt)* ]
+    [
+        $_0:tt $_1:tt $seg_0:tt
+        $_2:tt $_3:tt $seg_1:tt
+        $($_4:tt)*
+    ]
     $at:tt $al:tt $_:tt
     ) => {
         $crate::proc_macro_api_err_syn_gt_one! {
@@ -379,6 +388,7 @@ macro_rules! proc_macro_api_err_seg_inner_cc {
     ([] $_0:tt $_1:tt $_:tt) => {};
     ([ :: ] [] [] $_:tt) => {};
 
+    // [path]
     ([ :: ] $_0:tt $_1:tt $path:tt) => {
         std::compile_error!(std::concat!(
             "leading `::` in the middle of a path",
