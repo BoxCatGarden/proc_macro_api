@@ -307,6 +307,27 @@ macro_rules! proc_macro_api_parse_seg {
 
 #[doc(hidden)]
 #[macro_export]
+macro_rules! proc_macro_api_err_seg_blk_al {
+    ([]) => {};
+
+    ([ $al:tt ]) => {
+        std::compile_error!(std::concat!(
+            "alias for curly braces",
+            "\n  {...} as ", std::stringify!($al),
+            "\n           ^",
+        ));
+    };
+
+    ($($tt:tt)*) => {
+        $crate::proc_macro_api_err_unknown!(
+            mac: proc_macro_api_err_seg_blk_al,
+            tt: [ $($tt)* ],
+        );
+    };
+}
+
+#[doc(hidden)]
+#[macro_export]
 macro_rules! proc_macro_api_parse_seg_call_attr {
     (
     [
@@ -399,25 +420,30 @@ macro_rules! proc_macro_api_err_seg_no_seg {
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_err_fn_no_proc {
-    ([ $($cc:tt)? ] [ $($seg:ident)* ] $api:ident $(as $alias:ident)?) => {
+    ([ $($cc:tt)? ] [ $($prv:tt)* ] [ $($al:tt)? ] $api:tt) => {
         std::compile_error!(std::concat!(
-            "expected a proc_macro attribute for `", $(
-            std::stringify!($cc),)? $(
-            std::stringify!($seg),
-            "::",)*
-            std::stringify!($api), $(
-            " as ",
-            std::stringify!($alias),)?
-            "`",
+            "expected a proc_macro attribute",
+            "\n/ ", $(std::stringify!($cc),)?
+            $(std::stringify!($prv), "::",)*
+            std::stringify!($api),
+            $("\n| as ", std::stringify!($al),)?
+            "\n|_^",
         ));
+    };
+
+    ($($tt:tt)*) => {
+        $crate::proc_macro_api_err_unknown!(
+            mac: proc_macro_api_err_fn_no_proc,
+            tt: [ $($tt)* ],
+        );
     };
 }
 
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_parse_fn {
-    ([] $bag:tt $al:tt $api:tt) => {
-        // $crate::proc_macro_api_err_fn_no_proc!([] $seg $api);
+    ([] [ $_0:tt $_1:tt $cc:tt $prv:tt ] $al:tt $api:tt) => {
+        $crate::proc_macro_api_err_fn_no_proc!($cc $prv $al $api);
     };
 
     // $bg_proc [ $bg_doc $bg_oth $bg_cc $prv ] $bg_al $api
