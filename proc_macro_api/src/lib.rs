@@ -328,7 +328,7 @@ macro_rules! proc_macro_api_parse_seg {
             $({ $($seg_blk:tt)* })?
             $(:: $seg_cc:tt $(:: $rest:tt)*)?
             $(as $al:tt)?
-        ),*})?
+        ),+})?
     ] $prv:tt
     [ $bg_proc:tt $bg_doc:tt $bg_oth:tt [ $bg_cc:tt $bg_al:tt ] ]
     ) => {
@@ -347,7 +347,7 @@ macro_rules! proc_macro_api_parse_seg {
             [ $($at),* ] [ $($al)? ]
             [ $prv $bg_cc $bg_proc $bg_doc $bg_oth ]
         }
-        )*)?
+        )+)?
     };
 }
 
@@ -453,16 +453,34 @@ macro_rules! proc_macro_api_fn {
 #[cfg(test)]
 mod tests {
     macro_rules! aaa {
-        ($tt:tt $t1:tt $t2:tt) => {
-            stringify!($tt)
+        ([] [
+            $({
+                // $(
+                $(# $at:tt)*
+                $($seg_id:ident)?
+                $({ $($seg_blk:tt)* })?
+                $(:: $seg_cc:tt $(:: $rest:tt)*)?
+                $(as $al:tt)?
+            // ),*
+            })?
+        ] $prv:tt
+        [ $bg_proc:tt $bg_doc:tt $bg_oth:tt [ $bg_cc:tt $bg_al:tt ] ]) => {
+            println!(stringify!($prv));
         };
-        (r#fn) => {
-            6
-        };
+
+        ({$(
+        $(# $at:tt)*
+                $($seg_id:ident)?
+                $({ $($seg_blk:tt)* })?
+                $(:: $seg_cc:tt $(:: $rest:tt)*)?
+                $(as $al:tt)?
+        ),+}) => { };
     }
+
     #[test]
     fn test() {
-        println!("a = {}", aaa!(r#fn));
+        aaa!([] [ {} ] [ mod_a ] [[] [] [] [[] []]]);
+        // aaa!({});
     }
 
     fn a() -> i32 {
