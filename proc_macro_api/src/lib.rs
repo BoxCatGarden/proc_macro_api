@@ -398,12 +398,44 @@ macro_rules! proc_macro_api_parse_seg_call_attr {
 
     ([] [] [] $_:tt) => { /* empty comma (`,,`) and trailing comma (`... ,`) */ };
 
-    ([] $at:tt $al:tt $_:tt) => {};
+    // err: no seg
+    ([] $at:tt $al:tt $_:tt) => {
+        $crate::proc_macro_api_err_seg_no_seg! {
+            $at $al
+        }
+    };
 
+    // err: multiple seg
     (
-    [ [] $seg_0:tt [] $seg_1:tt $($_0:tt)* ]
-    $at:tt $al:tt $_1:tt
-    ) => {};
+    [ $_0:tt $seg_0:tt $_1:tt $seg_1:tt $($_2:tt)* ]
+    $at:tt $al:tt $_:tt
+    ) => {
+        $crate::proc_macro_api_err_syn_gt_one! {
+            $([ $seg_0 ])? $([ $seg_1 ])?
+        }
+    };
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_err_seg_no_seg {
+    // [at] al
+    ([ $($at:tt)* ] [ $($al:tt)? ]) => {
+        std::compile_error!(std::concat!(
+            "expected path segments",
+            "\n/",
+            $("\n| #", std::stringify!($at),)*
+            $("\n| as ", std::stringify!($al),)?
+            "\n|\n|_^ expected path segments",
+        ));
+    };
+
+    ($($tt:tt)*) => {
+        $crate::proc_macro_api_err_unknown!(
+            mac: proc_macro_api_err_seg_no_seg,
+            tt: [ $($tt)* ],
+        );
+    };
 }
 
 #[doc(hidden)]
