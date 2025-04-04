@@ -6,6 +6,7 @@
 //!
 
 mod err_syn;
+mod fmt;
 
 /// See the [document at module level][self].
 #[macro_export]
@@ -24,75 +25,11 @@ macro_rules! proc_macro_api {
 
 #[doc(hidden)]
 #[macro_export]
-macro_rules! proc_macro_api_top {
-    (* [ $($at:tt)* ] [ $($al:tt)? ] $cc:tt $seg:tt $($rest:tt)*) => {
-        $crate::proc_macro_api_parse_attr! {
-            [ $($at),* ] [/*[doc]*/] [/*[other]+[proc]*/] [/*[proc]*/]
-            [ $($rest),* ] [/*prv*/] [/*last*/ $seg ]
-            [
-                [/*[proc]*/] [/*[doc]*/] [/*[[other]+[proc]]*/]
-                [ $cc [/*seg*/] $($al)? ]
-            ]
-        }
-    };
-
-    (* [] []) => { /* empty comma (`,,`) and trailing comma (`... ,`) */ };
-
-    ([$(
-        $(# $at:tt)*
-        $(:: $seg_0:tt $(:: $rest_0:tt)*)?
-        $($seg_1:ident $(:: $rest_1:tt)*)?
-        $({ $($seg_2:tt)* } $(:: $rest_2:tt)*)?
-        $(as $al:ident)?
-    ),*]) => {$(
-        $crate::proc_macro_api_err_syn_gt_one! {
-            $([ :: $seg_0 ])? $([ $seg_1 ])? $([ { $($seg_2)* } ])?
-        }
-        $crate::proc_macro_api_top! {
-            * [ $($at)* ] [ $($al)? ]
-            $([ :: ] $seg_0 $($rest_0)*)?
-            $([] $seg_1 $($rest_1)*)?
-            $([] { $($seg_2)* } $($rest_2)*)?
-        }
-    )*};
-
-    // [[at]] [al]
-    (* $at:tt $al:tt) => {
-        $crate::proc_macro_api_err_top_no_seg! {
-            $at $al
-        }
-    };
-}
-
-#[doc(hidden)]
-#[macro_export]
-macro_rules! proc_macro_api_err_top_no_seg {
-    // [at] al
-    ([ $($at:tt)* ] [ $($al:tt)? ]) => {
-        std::compile_error!(std::concat!(
-            "expected path segments",
-            "\n/",
-            $("\n| #", std::stringify!($at),)*
-            $("\n| as ", std::stringify!($al),)?
-            "\n|\n|_^ expected path segments",
-        ));
-    };
-
-    ($($tt:tt)*) => {
-        $crate::proc_macro_api_err_unknown!(
-            mac: proc_macro_api_err_top_no_seg,
-            tt: [ $($tt)* ],
-        );
-    };
-}
-
-#[doc(hidden)]
-#[macro_export]
 macro_rules! proc_macro_api_err_attr_mul {
     // [first] [second]
     ($msg:expr , [ $($note:expr),* $(,)? ] , $plural_s:expr =>
         [ $first_0:tt $($first:tt)* ] [ $second_0:tt $($second:tt)* ]
-        [ $seg:tt $($rest:ident)* $({ $($_0:tt)* } $($_1:tt)*)? ]
+        $path:tt
     ) => {
         std::compile_error!(std::concat!(
             $msg,
@@ -103,9 +40,8 @@ macro_rules! proc_macro_api_err_attr_mul {
             "\n/ #", std::stringify!($second_0),
             $("\n| #", std::stringify!($second),)*
             "\n|_^ the second attribute", $plural_s,
-            "\n\n... ", std::stringify!($seg),
-            $("::", std::stringify!($rest),)*
-            " ...\n",
+            "\n\n  ", $crate::proc_macro_api_fmt_path!($path),
+            "\n  ^\n",
             $("\n= note: ", $note,)*
         ));
     };
@@ -418,6 +354,28 @@ macro_rules! proc_macro_api_parse_seg_call_attr {
 
 #[doc(hidden)]
 #[macro_export]
+macro_rules! proc_macro_api_err_seg_inner_cc {
+    ([] $_0:tt $_1:tt $_:tt) => {};
+    ([ :: ] [] [] $_:tt) => {};
+
+    ([ :: ] $_0:tt $_1:tt $path:tt) => {
+        std::compile_error!(std::concat!(
+            "leading `::` in the middle of a path",
+            "\n  ::", $crate::proc_macro_api_fmt_path!($path),
+            "\n  ^^",
+        ));
+    };
+
+    ($($tt:tt)*) => {
+        $crate::proc_macro_api_err_unknown!(
+            mac: proc_macro_api_err_seg_inner_cc,
+            tt: [ $($tt)* ],
+        );
+    };
+}
+
+#[doc(hidden)]
+#[macro_export]
 macro_rules! proc_macro_api_err_seg_no_seg {
     // [at] al
     ([ $($at:tt)* ] [ $($al:tt)? ]) => {
@@ -524,7 +482,7 @@ mod tests {
                 $({ $($seg_blk:tt)* })?
                 $(:: $seg_cc:tt $(:: $rest:tt)*)?
                 $(as $al:tt)?
-        ),+}) => { };
+        ),+}) => {};
     }
 
     #[test]
