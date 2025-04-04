@@ -322,13 +322,20 @@ macro_rules! proc_macro_api_parse_seg {
     (
     [] [
         $($api:ident)?
-        $({$(
-            $(# $at:tt)*
-            $($seg_id:ident)?
-            $({ $($seg_blk:tt)* })?
-            $(:: $seg_cc:tt $(:: $rest:tt)*)?
-            $(as $al:tt)?
-        ),+})?
+        $({
+            $(# $at_0:tt)*
+            $($seg_id_0:ident)?
+            $({ $($seg_blk_0:tt)* })?
+            $(:: $seg_cc_0:tt $(:: $rest_0:tt)*)?
+            $(as $al_0:tt)?
+            $(,
+                $(# $at:tt)*
+                $($seg_id:ident)?
+                $({ $($seg_blk:tt)* })?
+                $(:: $seg_cc:tt $(:: $rest:tt)*)?
+                $(as $al:tt)?
+            )*
+        })?
     ] $prv:tt
     [ $bg_proc:tt $bg_doc:tt $bg_oth:tt [ $bg_cc:tt $bg_al:tt ] ]
     ) => {
@@ -337,17 +344,28 @@ macro_rules! proc_macro_api_parse_seg {
             $bg_proc [ $bg_doc $bg_oth $bg_cc $prv ] $bg_al $api
         }
         )?
-        $($(
+        $(
         $crate::proc_macro_api_parse_seg_call_attr! {
             [
-                $([] $seg_id)?
-                $([] { $($seg_blk)* })?
+                $($bg_cc $seg_id_0)?
+                $($bg_cc { $($seg_blk_0)* })?
+                $([ :: ] $seg_cc_0 ; [ $($rest_0)* ])?
+            ]
+            [ $($at_0),* ] [ $($al_0)? ]
+            [ $prv $bg_cc $bg_proc $bg_doc $bg_oth ]
+        }
+        $(
+        $crate::proc_macro_api_parse_seg_call_attr! {
+            [
+                $($bg_cc $seg_id)?
+                $($bg_cc { $($seg_blk)* })?
                 $([ :: ] $seg_cc ; [ $($rest)* ])?
             ]
             [ $($at),* ] [ $($al)? ]
             [ $prv $bg_cc $bg_proc $bg_doc $bg_oth ]
         }
-        )+)?
+        )*
+        )?
     };
 }
 
