@@ -70,7 +70,7 @@ macro_rules! proc_macro_api_err_attr_shadow {
     // [[proc]] [cover] [path]
     ($proc:tt $cover:tt $path:tt) => {
         $crate::proc_macro_api_err_attr_mul! {
-            "multiple proc_macro attributes on one piece of a path",
+            "multiple proc_macro attributes are applied to one piece of a path",
             [
                 "feature `no_shadow` is enabled",
                 "disabling the feature to \
@@ -315,9 +315,9 @@ macro_rules! proc_macro_api_err_seg_blk_al {
 
     ([ $al:tt ]) => {
         std::compile_error!(std::concat!(
-            "alias for curly braces",
+            "no rules expected `as`",
             "\n  {...} as ", std::stringify!($al),
-            "\n           ^",
+            "\n        ^^",
         ));
     };
 
@@ -377,7 +377,7 @@ macro_rules! proc_macro_api_parse_seg_call_attr {
     $at:tt $al:tt $_:tt
     ) => {
         $crate::proc_macro_api_err_syn_gt_one! {
-            $([ $seg_0 ])? $([ $seg_1 ])?
+            [ $seg_0 ] [ $seg_1 ]
         }
     };
 }
@@ -391,8 +391,8 @@ macro_rules! proc_macro_api_err_seg_inner_cc {
     // [path]
     ([ :: ] $_0:tt $_1:tt $path:tt) => {
         std::compile_error!(std::concat!(
-            "leading `::` in the middle of a path",
-            "\n  ::", $crate::proc_macro_api_fmt_path!($path),
+            "leading `::` is in the middle of a path",
+            "\n  :: ", $crate::proc_macro_api_fmt_path!($path),
             "\n  ^^",
         ));
     };
