@@ -1,10 +1,5 @@
 #![doc = include_str!("../README.md")]
 
-//!
-//! TODO!()
-//! ERR - `:: ::`, `{} as al`, `proc = []`,
-//!
-
 mod err_syn;
 mod fmt;
 
@@ -70,7 +65,7 @@ macro_rules! proc_macro_api_err_attr_shadow {
     // [[proc]] [cover] [path]
     ($proc:tt $cover:tt $path:tt) => {
         $crate::proc_macro_api_err_attr_mul! {
-            "multiple proc_macro attributes are applied to one piece of a path",
+            "multiple proc-macro attributes are applied together",
             [
                 "feature `no_shadow` is enabled",
                 "disabling the feature to \
@@ -444,7 +439,7 @@ macro_rules! proc_macro_api_err_seg_no_seg {
 macro_rules! proc_macro_api_err_fn_no_proc {
     ([ $($cc:tt)? ] [ $($prv:tt)* ] [ $($al:tt)? ] $api:tt) => {
         std::compile_error!(std::concat!(
-            "expected a proc_macro attribute",
+            "expected a proc-macro attribute",
             "\n/ ", $(std::stringify!($cc),)?
             $(std::stringify!($prv), "::",)*
             std::stringify!($api),
