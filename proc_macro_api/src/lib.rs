@@ -457,29 +457,3 @@ macro_rules! proc_macro_api_fn {
         }
     };
 }
-
-#[cfg(test)]
-mod tests {
-    macro_rules! aaa {
-        ([[]]) => {};
-
-        ([,$a:tt]) => {
-            aaa!([[$a]])
-        };
-    }
-
-    #[test]
-    fn test() {
-        // aaa!([,a]);
-        // aaa!({});
-    }
-
-    fn a() -> i32 {
-        #[cfg(test)]
-        {
-            3
-        }
-        #[cfg(not(test))]
-        6
-    }
-}
