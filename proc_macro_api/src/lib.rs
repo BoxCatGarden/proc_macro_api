@@ -42,14 +42,14 @@ macro_rules! proc_macro_api_err_attr_mul {
     };
 }
 
-#[cfg(not(feature = "no_shadow"))]
+#[cfg(not(feature = "deny_shadow"))]
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_err_attr_shadow {
     ($($tt:tt)*) => {};
 }
 
-#[cfg(feature = "no_shadow")]
+#[cfg(feature = "deny_shadow")]
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_err_attr_shadow {
@@ -60,7 +60,7 @@ macro_rules! proc_macro_api_err_attr_shadow {
         $crate::proc_macro_api_err_attr_mul! {
             "multiple proc-macro attributes are applied together",
             [
-                "feature `no_shadow` is enabled",
+                "feature `deny_shadow` is enabled",
                 "disabling the feature to \
 leave the possible error to the compiler",
             ],
@@ -70,14 +70,14 @@ leave the possible error to the compiler",
     };
 }
 
-#[cfg(not(feature = "no_override"))]
+#[cfg(not(feature = "deny_override"))]
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_err_attr_override {
     ($($tt:tt)*) => {};
 }
 
-#[cfg(feature = "no_override")]
+#[cfg(feature = "deny_override")]
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_err_attr_override {
@@ -87,7 +87,7 @@ macro_rules! proc_macro_api_err_attr_override {
     ($old:tt $new:tt $path:tt) => {
         $crate::proc_macro_api_err_attr_mul! {
             "attributes are overridden inside one path",
-            [ "feature `no_override` is enabled" ],
+            [ "feature `deny_override` is enabled" ],
             "(s)" =>
             $old $new $path
         }
