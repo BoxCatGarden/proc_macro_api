@@ -145,14 +145,17 @@ macro_rules! proc_macro_api_parse_attr {
     ]
     [ $($seg:tt)* ]
     [ $($prv:tt)* ] [ $last:tt $($to_prv:tt)? ]
-    [ [ $($bg_proc:tt)? ] [ $($bg_doc:tt)* ] [ $($bg_oth:tt)? ] $path:tt ]
+    [
+        [ $($bg_proc:tt)? ] [ $($bg_doc:tt)* ] [ $($bg_oth:tt)? ]
+        [ $($bg_prv:tt)* ] $path:tt
+    ]
     ) => {
         $crate::proc_macro_api_err_attr_override! {
             $($bg_oth)? $([ $($other)+ ])?
             [ $($prv)* $($to_prv)? $last $($seg)* ]
         }
         $crate::proc_macro_api_parse_seg! {
-            [ $($seg)* ] [ $last ] [ $($prv)* $($to_prv)? ]
+            [ $($seg)* ] [ $last ] [ $($bg_prv)* $($prv)* $($to_prv)? ]
             [
                 [
                     $([ proc_macro $($arg_fn_0)* ] ;)?
@@ -350,10 +353,10 @@ macro_rules! proc_macro_api_parse_seg_call_attr {
         }
         $crate::proc_macro_api_parse_attr! {
             $at [/*[doc]*/] [/*[other]+[proc]*/] [/*[proc]*/]
-            [ $($seg_cc)? $($($rest)*)? $($seg_blk_cc)? ] $prv [ $seg ]
+            [ $($seg_cc)? $($($rest)*)? $($seg_blk_cc)? ] [/*prv*/] [ $seg ]
             [
                 [ $($bg_proc)? ] $bg_doc [ $($bg_oth)? ]
-                [ $cc $al ]
+                $prv [ $cc $al ]
             ]
         }
     };
