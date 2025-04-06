@@ -256,7 +256,7 @@ macro_rules! proc_macro_api_parse_seg {
     ) => {
         $(
         $crate::proc_macro_api_parse_fn! {
-            $bg_proc [ $bg_doc $bg_oth $bg_cc $prv ] $bg_al $api
+            $bg_al $bg_proc [ $bg_doc $bg_oth $bg_cc $prv ] $api
         }
         )?
         $(
@@ -413,12 +413,15 @@ macro_rules! proc_macro_api_err_fn_no_proc {
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_parse_fn {
-    ([] [ $_0:tt $_1:tt $cc:tt $prv:tt ] $al:tt $api:tt) => {
+    ([ _ ] $proc:tt $bag:tt $api:tt) => { /* wildcard alias */ };
+
+    ($al:tt [] [ $_0:tt $_1:tt $cc:tt $prv:tt ] $api:tt) => {
         $crate::proc_macro_api_err_fn_no_proc!($cc $prv $al $api);
     };
 
-    // $bg_proc [ $bg_doc $bg_oth $bg_cc $prv ] $bg_al $api
+    // $bg_al $bg_proc [ $bg_doc $bg_oth $bg_cc $prv ] $api
     (
+    [ $($al:tt)? ]
     [
         $([ proc_macro $($arg_fn:tt)* ])?
         $([ proc_macro_attribute $($arg_at:tt)* ])?
@@ -426,7 +429,7 @@ macro_rules! proc_macro_api_parse_fn {
         $(; $_0:tt)? $(;)?
     ]
     [ $doc:tt [ $other:tt $(; $_1:tt)? $(;)? ] $cc:tt $prv:tt ]
-    [ $($al:tt)? ] $api:tt
+    $api:tt
     ) => {
         $crate::proc_macro_api_fn! {
             $doc $other $cc $prv $api [ $($al)? $api ]
