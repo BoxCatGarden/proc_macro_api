@@ -27,11 +27,4 @@ macro_rules! proc_macro_api_err_syn_gt_one {
             "\n|_^ this is not expected",
         ));
     };
-
-    ($($tt:tt)*) => {
-        $crate::proc_macro_api_err_unknown!(
-            mac: proc_macro_api_err_syn_gt_one,
-            tt: [ $($tt)* ],
-        );
-    };
 }

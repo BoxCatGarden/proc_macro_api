@@ -7,11 +7,4 @@ macro_rules! proc_macro_api_fmt_path {
             $("::", std::stringify!($rest),)*
         )
     };
-
-    ($($tt:tt)*) => {
-        $crate::proc_macro_api_err_unknown!(
-            mac: proc_macro_api_fmt_path,
-            tt: [ $($tt)* ],
-        );
-    };
 }

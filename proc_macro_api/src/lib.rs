@@ -40,13 +40,6 @@ macro_rules! proc_macro_api_err_attr_mul {
             $("\n= note: ", $note,)*
         ));
     };
-
-    ($($tt:tt)*) => {
-        $crate::proc_macro_api_err_unknown!(
-            mac: proc_macro_api_err_attr_mul,
-            tt: [ $($tt)* ],
-        );
-    };
 }
 
 #[cfg(not(feature = "no_shadow"))]
@@ -75,13 +68,6 @@ leave the possible error to the compiler",
             $proc [ $cover ] $path
         }
     };
-
-    ($($tt:tt)*) => {
-        $crate::proc_macro_api_err_unknown!(
-            mac: proc_macro_api_err_attr_shadow,
-            tt: [ $($tt)* ],
-        );
-    };
 }
 
 #[cfg(not(feature = "no_override"))]
@@ -105,13 +91,6 @@ macro_rules! proc_macro_api_err_attr_override {
             "(s)" =>
             $old $new $path
         }
-    };
-
-    ($($tt:tt)*) => {
-        $crate::proc_macro_api_err_unknown!(
-            mac: proc_macro_api_err_attr_override,
-            tt: [ $($tt)* ],
-        );
     };
 }
 
@@ -322,13 +301,6 @@ macro_rules! proc_macro_api_err_seg_blk_al {
             "\n        ^^",
         ));
     };
-
-    ($($tt:tt)*) => {
-        $crate::proc_macro_api_err_unknown!(
-            mac: proc_macro_api_err_seg_blk_al,
-            tt: [ $($tt)* ],
-        );
-    };
 }
 
 #[doc(hidden)]
@@ -376,8 +348,8 @@ macro_rules! proc_macro_api_parse_seg_call_attr {
         $(0 $cc_0:tt [] $seg:tt)?
         $(1 [ :: ] [ :: ] $seg_cc:tt)?
         $(2 [ $($rest:tt)* ])?
-        $(3 [ :: ] [ :: ] { $($seg_blk_cc:tt $($blk_cc_rest:tt)*)? })?
-        4 $cc_1:tt [] { $($seg_blk:tt $($blk_rest:tt)*)? }
+        $(3 [ :: ] [ :: ] $seg_blk_cc:tt)?
+        4 $cc_1:tt [] $seg_blk:tt
     ]
     $at:tt $al:tt $_:tt
     ) => {
@@ -385,9 +357,9 @@ macro_rules! proc_macro_api_parse_seg_call_attr {
             "" =>
             [
                 $($seg)? $(:: $seg_cc)? $($(:: $rest)*)?
-                $(:: { $($seg_blk_cc ...)? })?
+                $(:: $seg_blk_cc)?
             ]
-            [ { $($seg_blk ...)? } ]
+            [ $seg_blk ]
         }
     };
 }
@@ -406,13 +378,6 @@ macro_rules! proc_macro_api_err_seg_inner_cc {
             "\n  ^^",
         ));
     };
-
-    ($($tt:tt)*) => {
-        $crate::proc_macro_api_err_unknown!(
-            mac: proc_macro_api_err_seg_inner_cc,
-            tt: [ $($tt)* ],
-        );
-    };
 }
 
 #[doc(hidden)]
@@ -428,13 +393,6 @@ macro_rules! proc_macro_api_err_seg_no_seg {
             "\n|\n|_^ expected path segments",
         ));
     };
-
-    ($($tt:tt)*) => {
-        $crate::proc_macro_api_err_unknown!(
-            mac: proc_macro_api_err_seg_no_seg,
-            tt: [ $($tt)* ],
-        );
-    };
 }
 
 #[doc(hidden)]
@@ -449,13 +407,6 @@ macro_rules! proc_macro_api_err_fn_no_proc {
             $("\n| as ", std::stringify!($al),)?
             "\n|_^",
         ));
-    };
-
-    ($($tt:tt)*) => {
-        $crate::proc_macro_api_err_unknown!(
-            mac: proc_macro_api_err_fn_no_proc,
-            tt: [ $($tt)* ],
-        );
     };
 }
 
