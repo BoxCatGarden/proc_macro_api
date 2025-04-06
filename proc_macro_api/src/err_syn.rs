@@ -6,7 +6,7 @@ macro_rules! proc_macro_api_err_unknown {
         tt: [ $($tt:tt)* ] $(,)?
     ) => {
         std::compile_error!(std::concat!(
-            "unknown error inside of `proc_macro_api!`",
+            "unknown error inside `proc_macro_api!`",
             "\n= inner macro: ", std::stringify!($mac),
             "\n= tokens: ",
             $("\n    ", std::stringify!($tt),)*
