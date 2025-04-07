@@ -1,5 +1,9 @@
 #![doc = include_str!("../README.md")]
 
+#[cfg(doc)]
+#[no_link]
+extern crate proc_macro;
+
 mod err_syn;
 mod fmt;
 
@@ -413,7 +417,7 @@ macro_rules! proc_macro_api_err_fn_no_proc {
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_parse_fn {
-    ([ _ ] $proc:tt $bag:tt $api:tt) => { /* wildcard alias */ };
+    ([ _ ] $proc:tt $bag:tt $api:tt) => { /* underscore alias */ };
 
     ($al:tt [] [ $_0:tt $_1:tt $cc:tt $prv:tt ] $api:tt) => {
         $crate::proc_macro_api_err_fn_no_proc!($cc $prv $al $api);
