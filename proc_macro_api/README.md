@@ -91,17 +91,17 @@ Input attributes are classed into two types:
 
 * **Global**. When a global attribute is applied to a path group,
   it is applied to all the paths in that group. That is, global
-  attributes inside curly braces will **_be appended after_** the global
+  attributes inside curly braces will _be appended after_ the global
   attributes from the outside.
 * **Local**. When a local attribute is applied to a path group,
   it is applied to all the paths that are in the group and
   don't have any local attribute applied to them inside
   the curly braces of that group. That is, local attributes
-  inside curly braces will **_override_** all the local attributes
+  inside curly braces will _override_ all the local attributes
   from the outside.
 
 After being parsed, all the input global attributes will always be placed
-**_before_** all the input local attributes.
+_before_ all the input local attributes.
 
 Only `#[doc]` is global, and all other attributes are local.
 Proc-macro attributes are local.
@@ -191,14 +191,31 @@ proc_macro_api! {
 
 # Extern requirement
 
-The macro requires some external _names_ available in the scope
+The macro requires some external _names_ to be available in the scope
 where it is used:
 
-* The name `proc_macro`. Optional if compiled successfully.
-  Most of the time, it is needed because of `proc_macro::TokenStream`.
-* The name `std`. Optional if compiled successfully.
-  Mainly for reporting `compile_err!`.
+* The name `proc_macro`, binding [`proc_macro`] or something else equivalent.
+  It is required only for [`proc_macro::TokenStream`].
+* The name `core`, binding [`core`] or something else equivalent.
+  `core` is required only for error reporting. If there is an error
+  caused by incorrect binding of `core` inside `proc_macro_api!`,
+  it will indicate an error of the input.
 
 # Depth of expansion
 
+For an input path, the depth of expansion depends on the number of
+the segments in the path and the number of the attributes applied to
+the path and the groups the path belongs to.
 
+Let `N` be the number of the segments of the path.
+Let `M` be the sum of the number of the attributes applied to the path
+and the groups the path belongs to.
+
+
+# Optional features
+
+* **`deny_shadow`** (enabled by default) - A feature for debugging.
+  Deny the shadowing of proc-macro attributes. The feature will check
+  whether a single path or a path group is annotated with multiple
+  proc-macro attribute, and will generate a compile error if it is.
+* **`deny_override`** - Deny the overriding of [local attributes](#attributes).
