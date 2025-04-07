@@ -1,14 +1,15 @@
-A crate helping with structuring the library crate of a proc_macro package.
+A crate helping with structuring the library crate of a proc-macro package.
 
-The major function of this crate is macro [`proc_macro_api!`],
-which can export functions in submodules of a proc_macro crate as
-the Application Programing Interfaces (APIs) of that proc_macro crate.
+The major of this crate is macro [`proc_macro_api!`],
+which can export functions in submodules of a proc-macro crate as
+the Application Programing Interfaces (APIs) of that proc-macro crate.
 
-For example, assuming there is a submodule `sub` of the root of
-a proc_macro crate, in order to export
+For example, assuming `sub` is a submodule of the root of
+a proc-macro crate, in order to export
 `pub fn proc_fn(input: TokenStream) -> TokenStream` in the `sub`
 as a function-like macro, [`proc_macro_api!`] can be used in the
 root of that crate like:
+
 ```ignore
 proc_macro_api! {
     sub::{
@@ -17,63 +18,132 @@ proc_macro_api! {
     },
 }
 ```
+
 Then, a function-like macro, `proc_fn!()`, is available from that
-proc_macro crate.
+proc-macro crate.
 
-The macro should be used at somewhere that the proc_macro annotation
-(i.e., `#[proc_macro]`, `#[proc_macro_attribute]`, etc.) is allowed.
+The macro should be used at somewhere that the proc-macro attributes
+(i.e., `#[proc_macro]`, `#[proc_macro_attribute]`, etc.) are allowed.
 
-# Input syntax
+# Input
 
-[`proc_macro_api!`] requires paths with proc_macro annotations as
-its input.
+>
+> **<small>Syntax</small>**  
+> Input:  
+> &nbsp;&nbsp;&nbsp;PathList
+>
+> PathList:  
+> &nbsp;&nbsp;
+> PathWithAttr<sup>?</sup> ( `,` PathWithAttr<sup>?</sup> )<sup>\*</sup>
+>
+> PathWithAttr:  
+> &nbsp;&nbsp;&nbsp;[InnerAttribute]<sup>\*</sup>  
+> &nbsp;&nbsp;&nbsp;PathTree
+>
+> PathTree:  
+> &nbsp;&nbsp;&nbsp;&nbsp;
+> ( [SimplePath]<sup>?</sup> `::` )<sup>?</sup> `{` PathList `}`  
+> &nbsp;&nbsp;&nbsp;|
+> [SimplePath] ( `as` ( [IDENTIFIER] | `_` ) )<sup>?</sup>
+>
 
-## Path and function
+[`proc_macro_api!`] requires paths with proc-macro attributes as
+its input. The syntax of the input paths is like the path syntax
+of [`use` declarations][use], but allows attributes and disallows
+asterisk (i.e., `*`).
 
-The syntax of the input paths is like the path syntax of _`use` declaration_,
-but always requires curly braces (i.e., `{}`) and denys the leading `::`.
+[SimplePath]: https://doc.rust-lang.org/reference/paths.html#simple-paths
 
-All the paths should be a path of a function. The function should have
-a signature required by the proc_macro annotation.
+[IDENTIFIER]: https://doc.rust-lang.org/reference/identifiers.html
 
-## Annotation and forwarding
+[InnerAttribute]: https://doc.rust-lang.org/reference/attributes.html
 
-A proc_macro annotation can be added to a path segment,
-and the annotation will be forwarded to all the sub-segments of that segment
-unless the annotation is overridden.
+[use]: https://doc.rust-lang.org/reference/items/use-declarations.html
 
-For a path segment `Seg`, the proc_macro annotation forwarded from a
-super-segment can be overridden by adding an annotation to segment `Seg`,
-and the new annotation will be forwarded then.
+## Paths
 
-## Annotation aliases
+All the input paths should be either a path of a function or
+a path renamed with the underscore alias.
+
+When a path is of a function and isn't renamed with the underscore alias,
+a proc-macro attribute should be applied to the path, and
+the function should have a signature required by the proc-macro attribute.
+
+When a path is renamed with the underscore alias,
+it is not required to be a path of function, and
+not required to be annotated with proc-macro attributes.
+The path is only required to be syntactically valid.
+
+## Brace syntax and path groups
+
+Braces can be used for grouping paths with a common prefix.
+
+When some paths are grouped by a pair of curly braces, they compose
+a path group.
+
+Braces can be nested, and nested braces create subgroups of paths.
+
+## Attributes
+
+Attributes can be applied to single paths and path groups.
+
+Input attributes are classed into two types:
+
+* **Global**. When a global attribute is applied to a path group,
+  it is applied to all the paths in that group. That is, global
+  attributes inside curly braces will **_be appended after_** the global
+  attributes from the outside.
+* **Local**. When a local attribute is applied to a path group,
+  it is applied to all the paths that are in the group and
+  don't have any local attribute applied to them inside
+  the curly braces of that group. That is, local attributes
+  inside curly braces will **_override_** all the local attributes
+  from the outside.
+
+After being parsed, all the input global attributes will always be placed
+**_before_** all the input local attributes.
+
+Only `#[doc]` is global, and all other attributes are local.
+Proc-macro attributes are local.
+
+## Attribute aliases
+
+Proc-macro attributes have aliases in the input:
 
 * `#[proc_macro]` => `#[fn]`
 * `#[proc_macro_attribute]` => `#[at]`
 * `#[proc_macro_derive]` => `#[dr]`
 
+If there is an imported attribute proc-macro having the same name as one
+of the aliases, in order to use it in the input, it will need
+to be renamed (e.g., rename it by using `use` declaration).
+
 # Expansion
 
-Each function path will be expanded to a `pub fn` annotated with the
-specific proc_macro annotation.
+When a path is not renamed with the underscore alias, it will be
+expanded to a `pub` function annotated with all the input attributes
+that are applied to that path.
 
-The expanded `pub fn` will have a name provided with by the path.
+* If the path doesn't have an alias, the expanded function will have
+  the same name as the name of the function in the path.
+* If the path has an alias, the expanded function will have the same
+  name as the alias.
 
-* If there isn't an `as`: the same name as the name of the function
-  supplied by the path.
-* If there is an `as`: the name after the `as`.
+The expanded function will and only will directly call the function
+in that path, with the arguments input to the expanded function.
 
-For the function supplied by a path, the expanded `pub fn` will
-and only will directly call the supplied
-function with the arguments that input to it. It is recommended
-to annotate the supplied function as `#[inline(always)]`.
+It is recommended to annotate the functions in input paths with
+`#[inline(always)]`.
+
+When a path is renamed with the underscore alias, it will be expanded
+to empty.
 
 # Examples
 
 ```ignore
-// doctest is ignored because the crate is not in a proc_macro context.
+// doctest is ignored because the crate is not in a proc-macro context.
 
-// in 'lib.rs'
+// in the crate root
 #[no_link]
 extern crate proc_macro_api;
 use proc_macro_api::proc_macro_api;
@@ -128,3 +198,7 @@ where it is used:
   Most of the time, it is needed because of `proc_macro::TokenStream`.
 * The name `std`. Optional if compiled successfully.
   Mainly for reporting `compile_err!`.
+
+# Depth of expansion
+
+
