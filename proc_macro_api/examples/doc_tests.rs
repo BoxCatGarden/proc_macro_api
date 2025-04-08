@@ -39,7 +39,7 @@ proc_macro_api! {
             // apply the local attributes from the outside:
             // #[allow(unused)]
             // #[proc_macro_attribute]
-            /// Documents won't override local attributes.
+            /// `#[doc]` won't override local attributes.
             /// This API is renamed `the_attr_api`.
             an_attr_api as the_attr_api,
 
