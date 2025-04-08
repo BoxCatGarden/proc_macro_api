@@ -93,12 +93,14 @@ Input attributes are classed into two types:
   it is applied to all the paths in that group. That is, global
   attributes inside curly braces will _be appended after_ the global
   attributes from the outside.
-* **Local**. When a local attribute is applied to a path group,
-  it is applied to all the paths that are in the group and
-  don't have any local attributes applied to them inside
-  the curly braces of that group. That is, local attributes
-  inside curly braces will _override_ all the local attributes
-  from the outside.
+* **Local**. For each path in a path group, inside the curly braces
+  of that group,
+    * if some local attributes are applied to the path, the local
+      attributes applied to the group won't be applied to the path;
+    * if no local attribute is applied to the path, the local
+      attributes applied to the group will be applied to the path.
+    * That is, local attributes inside curly braces will _override_
+      the local attributes from the outside.
 
 After being parsed, all the input global attributes will always be placed
 _before_ all the input local attributes.
@@ -185,7 +187,7 @@ proc_macro_api! {
         },
     },
 }
-// It will expand to three `pub fn` in 'lib.rs' naming
+// It will expand to three `pub fn` in the crate root named
 // `an_fn_api`, `the_attr_api`, and `a_derive_api`, respectively.
 ```
 
@@ -227,7 +229,7 @@ Let _D_ be the recursion depth of a macro call to `proc_macro_api!`.
 _D_ = max ( { _d<sub>p</sub>_ | _p_ in the input } &cup; { 1 } )
 
 > Note: In the input, the distinction between paths is not according to
-> their segments, but to their appearance. That is, for example, in the
+> their segments, but to their appearances. That is, for example, in the
 > input of `proc_macro_api!(a as _, a as _)`, there are two paths
 > (i.e., the first `a` and the second `a`), instead of one.
 
@@ -236,5 +238,5 @@ _D_ = max ( { _d<sub>p</sub>_ | _p_ in the input } &cup; { 1 } )
 * **`deny_shadow`** (enabled by default) - A feature for debugging.
   Deny the shadowing of proc-macro attributes. The feature will check
   whether a single path or a path group is annotated with multiple
-  proc-macro attribute, and will generate a compile error if it is.
+  proc-macro attributes, and will generate a compile error if it does.
 * **`deny_override`** - Deny the overriding of [local attributes](#attributes).
