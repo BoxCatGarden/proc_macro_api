@@ -37,7 +37,7 @@ The macro should be used at somewhere that the proc-macro attributes
 > PathWithAttr<sup>?</sup> ( `,` PathWithAttr<sup>?</sup> )<sup>\*</sup>
 >
 > PathWithAttr:  
-> &nbsp;&nbsp;&nbsp;[InnerAttribute]<sup>\*</sup>  
+> &nbsp;&nbsp;&nbsp;[OuterAttribute]<sup>\*</sup>  
 > &nbsp;&nbsp;&nbsp;PathTree
 >
 > PathTree:  
@@ -56,7 +56,7 @@ asterisk (i.e., `*`).
 
 [IDENTIFIER]: https://doc.rust-lang.org/reference/identifiers.html
 
-[InnerAttribute]: https://doc.rust-lang.org/reference/attributes.html
+[OuterAttribute]: https://doc.rust-lang.org/reference/attributes.html
 
 [use]: https://doc.rust-lang.org/reference/items/use-declarations.html
 
