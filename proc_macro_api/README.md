@@ -148,6 +148,8 @@ to empty.
 // This example can be found in the examples of the package.
 
 // in the crate root
+extern crate proc_macro;
+
 #[no_link]
 extern crate proc_macro_api;
 use proc_macro_api::proc_macro_api;
@@ -155,18 +157,18 @@ use proc_macro_api::proc_macro_api;
 mod mod_a {
     use proc_macro::TokenStream;
 
-    pub fn an_fn_api(input: TokenStream) -> TokenStream {
+    pub fn an_fn_api(_input: TokenStream) -> TokenStream {
         TokenStream::new()
     }
 
     pub mod mod_b {
         use proc_macro::TokenStream;
 
-        pub fn an_attr_api(args: TokenStream, item: TokenStream) -> TokenStream {
+        pub fn an_attr_api(_args: TokenStream, _item: TokenStream) -> TokenStream {
             TokenStream::new()
         }
 
-        pub fn a_derive_api(item: TokenStream) -> TokenStream {
+        pub fn a_derive_api(_item: TokenStream) -> TokenStream {
             TokenStream::new()
         }
     }

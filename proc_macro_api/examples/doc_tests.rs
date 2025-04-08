@@ -1,6 +1,6 @@
+// in the crate root
 extern crate proc_macro;
 
-// in the crate root
 #[no_link]
 extern crate proc_macro_api;
 use proc_macro_api::proc_macro_api;
