@@ -95,7 +95,7 @@ Input attributes are classed into two types:
   attributes from the outside.
 * **Local**. When a local attribute is applied to a path group,
   it is applied to all the paths that are in the group and
-  don't have any local attribute applied to them inside
+  don't have any local attributes applied to them inside
   the curly braces of that group. That is, local attributes
   inside curly braces will _override_ all the local attributes
   from the outside.
@@ -198,19 +198,38 @@ where it is used:
   It is required only for [`proc_macro::TokenStream`].
 * The name `core`, binding [`core`] or something else equivalent.
   `core` is required only for error reporting. If there is an error
-  caused by incorrect binding of `core` inside `proc_macro_api!`,
+  inside `proc_macro_api!` caused by incorrect binding of `core`,
   it will indicate an error of the input.
 
-# Depth of expansion
+# Depth of recursion
 
-For an input path, the depth of expansion depends on the number of
-the segments in the path and the number of the attributes applied to
-the path and the groups the path belongs to.
+For an input path, the depth of the recursion depends on the number of
+the segments in the path, the number of the groups it belongs to, and
+the number of the attributes applied to the path and the groups the
+path belongs to.
 
-Let `N` be the number of the segments of the path.
-Let `M` be the sum of the number of the attributes applied to the path
-and the groups the path belongs to.
+Let _N_ be the number of the segments of the path.  
+Let _G_ be the number of the groups the path belongs to.  
+Let _A_ be the number of the attributes applied to the groups
+the path belongs to.  
+Let _B_ be the number of the attributes that are applied directly
+to the path but not to the groups the path belongs to.  
+Let _d_ be the depth of the recursion.
 
+When there isn't an error:  
+_d_ <= max { _A_ + _B_, _N_ } + 2 _G_ + 6
+
+<!-- max { _A_ + _B_, _N_ } + (_G_ + 1) + (_G_ + 1) + 1 + (1 + 2) -->
+
+Let _d<sub>p</sub>_ be the recursion depth of input path _p_.  
+Let _D_ be the recursion depth of a macro call to `proc_macro_api!`.
+
+_D_ = max { _d<sub>p</sub>_ | _p_ in the input }
+
+> Note: In the input, the distinction between paths is not according to
+> their segments, but to their appearance. That is, for example, in the
+> input of `proc_macro_api!(a as _, a as _)`, there are two paths
+> (i.e., the first `a` and the second `a`), instead of one.
 
 # Optional features
 
