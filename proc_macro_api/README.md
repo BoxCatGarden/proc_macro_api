@@ -49,7 +49,7 @@ The macro should be used at somewhere that the proc-macro attributes
 
 [`proc_macro_api!`] requires paths with proc-macro attributes as
 its input. The syntax of the input paths is like the path syntax
-of [`use` declarations][use], but allows attributes and disallows
+of [`use` declarations][use], but allows attribute and disallows
 asterisk (i.e., `*`).
 
 [SimplePath]: https://doc.rust-lang.org/reference/paths.html#simple-paths
