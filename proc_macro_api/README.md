@@ -102,8 +102,9 @@ Input attributes are classed into two types:
     * That is, local attributes inside curly braces will _override_
       the local attributes from the outside.
 
-After being parsed, all the input global attributes will always be placed
-_before_ all the input local attributes.
+After being parsed by the macro, for the input attributes applied to
+an input path, all the global attributes will always be placed _before_
+all the local attributes.
 
 Only `#[doc]` is global, and all other attributes are local.
 Proc-macro attributes are local.
@@ -143,7 +144,8 @@ to empty.
 # Examples
 
 ```ignore
-// doctest is ignored because the crate is not in a proc-macro context.
+// Doctest is ignored because the crate is not in a proc-macro context.
+// This example can be found in the examples of the package.
 
 // in the crate root
 #[no_link]
@@ -171,23 +173,36 @@ mod mod_a {
 }
 
 proc_macro_api! {
+    // a path group
     mod_a::{
-        // alias and document
-        /// A function-like macro.
+        // use an alias of the proc-macro attributes
         #[fn] an_fn_api,
 
-        // forwarding
+        // a path subgroup;
+        // apply local attributes to this path group
+        #[allow(unused)]
         #[proc_macro_attribute]
         mod_b::{
-            // use the forwarded annotation
+            // apply the local attributes from the outside:
+            // #[allow(unused)]
+            // #[proc_macro_attribute]
+            /// Documents won't override local attributes.
+            /// This API is renamed `the_attr_api`.
             an_attr_api as the_attr_api,
 
-            // override
+            // override the local attributes from the outside:
+            // only `#[dr(Something)]` is applied to this path
             #[dr(Something)] a_derive_api,
+
+            // syntactically valid
+            nonexistent_api as _,
         },
     },
+
+    // syntactically valid
+    ::nonexistent_mod::nonexistent_api as _,
 }
-// It will expand to three `pub fn` in the crate root named
+// It will expand to three `pub` functions in the crate root, named
 // `an_fn_api`, `the_attr_api`, and `a_derive_api`, respectively.
 ```
 
@@ -218,7 +233,7 @@ Let _B_ be the number of the attributes that are applied directly
 to the path but not to the groups the path belongs to.  
 Let _d_ be the depth of the recursion.
 
-When there isn't an error:  
+When there isn't an error in the input:  
 _d_ <= max { _A_ + _B_, _N_ } + 2 _G_ + 6
 
 <!-- max { _A_ + _B_, _N_ } + (_G_ + 1) + (_G_ + 1) + 1 + (1 + 2) -->
