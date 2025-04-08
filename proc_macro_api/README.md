@@ -224,7 +224,7 @@ _d_ <= max { _A_ + _B_, _N_ } + 2 _G_ + 6
 Let _d<sub>p</sub>_ be the recursion depth of input path _p_.  
 Let _D_ be the recursion depth of a macro call to `proc_macro_api!`.
 
-_D_ = max { _d<sub>p</sub>_ | _p_ in the input }
+_D_ = max ( { _d<sub>p</sub>_ | _p_ in the input } &cup; { 1 } )
 
 > Note: In the input, the distinction between paths is not according to
 > their segments, but to their appearance. That is, for example, in the
