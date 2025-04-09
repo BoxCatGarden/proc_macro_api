@@ -222,6 +222,9 @@ where it is used:
 
 # Depth of recursion
 
+This section is provided as reference for errors about recursion depth.
+It is _NOT_ a stable guarantee about the macro.
+
 For an input path, the number of the recursive steps for parsing it
 depends on the number of the segments in the path, the number of the
 groups it belongs to, the number of the attributes applied to the path,
@@ -236,9 +239,34 @@ to the path but not to the groups the path belongs to.
 Let _d_ be the recursion depth of the path.
 
 When there isn't an error in the input:  
-_d_ <= max { _A_ + _B_, _N_ } + 2 _G_ + 6 .
+max { _A_ + _B_, _N_ + _G_ } + 2 _G_ + 6
+&le; _d_
+&le; _A_ + _B_ + _N_ + 4 _G_ + 7 .
 
-<!-- max { _A_ + _B_, _N_ } + (_G_ + 1) + (_G_ + 1) + 1 + (1 + 2) -->
+> Note:
+> * attribute one-by-one: _A_ + _B_ ;
+> * attribute output: _G_ + 1 ;
+> * segment & brace pair one-by-one: _N_ + _G_ ;
+> * segment & brace pair output: _G_ + 1 ;
+> * attribute + (segment & brace pair) parallel one-by-one:
+    max { _A_ + _B_, _N_ + _G_ } ;
+> * attribute + (segment & brace pair) output, where
+    attribute always outputs before segment & brace pair:
+>   * min = when attribute always outputs while s&b is still in one-by-one step,
+      output simultaneously with the one-by-one step:
+      _G_ + 1 ;
+>   * max = when attribute always outputs while s&b has finished one-by-one 
+      step, output one-by-one:
+      2 _G_ + 2 ;
+> * `call_attr!` + `parse_fn!` in `seg!`: _G_ + 1 ;
+> * `fn!`: 1 ;
+> * startup \[`api!`, `seg!`, `call_attr!`\]: 3 ;
+>
+> aggregate the above together:
+> _d_ &in; \[
+> max { _A_ + _B_, _N_ + _G_ } + 2 _G_ + 6,
+> _A_ + _B_ + _N_ + 4 _G_ + 7
+> \] ;
 
 When calling `proc_macro_api!`, the recursion depth of the macro call
 depends on the maximum recursion depth of all the input paths.
@@ -246,7 +274,7 @@ depends on the maximum recursion depth of all the input paths.
 Let _d<sub>p</sub>_ be the recursion depth of input path _p_.  
 Let _D_ be the recursion depth of the macro call.
 
-_D_ = max ( { _d<sub>p</sub>_ | _p_ is in the input } &cup; { 1 } ) .
+_D_ = max \( { _d<sub>p</sub>_ | _p_ is in the input } &cup; { 1 } \) .
 
 > Note: In the input, the distinction between paths is not according to
 > their segments, but to their appearances. That is, for example, in the
