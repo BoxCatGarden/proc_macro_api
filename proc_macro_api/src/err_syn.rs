@@ -5,11 +5,11 @@ macro_rules! proc_macro_api_err_unknown {
         mac: $mac:ident ,
         tt: [ $($tt:tt)* ] $(,)?
     ) => {
-        std::compile_error!(std::concat!(
+        core::compile_error!(core::concat!(
             "unknown error inside `proc_macro_api!`",
-            "\n= inner macro: ", std::stringify!($mac),
+            "\n= inner macro: ", core::stringify!($mac),
             "\n= tokens: ",
-            $("\n    ", std::stringify!($tt),)*
+            $("\n    ", core::stringify!($tt),)*
         ));
     };
 }
@@ -20,10 +20,10 @@ macro_rules! proc_macro_api_err_syn_gt_one {
     ($ddd:expr => $($_0:tt)?) => {};
 
     ($ddd:expr => [ $($first:tt)* ] [ $($err:tt)* ] $($_0:tt)*) => {
-        std::compile_error!(std::concat!(
-            "no rules expected `", $(std::stringify!($err),)* "`",
-            "\n/ ", $(std::stringify!($first),)* $ddd,
-            "\n| ", $(std::stringify!($err),)* $ddd,
+        core::compile_error!(core::concat!(
+            "no rules expected `", $(core::stringify!($err),)* "`",
+            "\n/ ", $(core::stringify!($first),)* $ddd,
+            "\n| ", $(core::stringify!($err),)* $ddd,
             "\n|_^ this is not expected",
         ));
     };

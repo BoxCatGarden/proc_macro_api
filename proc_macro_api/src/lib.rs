@@ -7,7 +7,7 @@ extern crate proc_macro;
 mod err_syn;
 mod fmt;
 
-/// See the [document at module level][self].
+/// See the [crate documentation][self].
 #[macro_export]
 macro_rules! proc_macro_api {
     ($($tt:tt)+) => {
@@ -30,14 +30,14 @@ macro_rules! proc_macro_api_err_attr_mul {
         [ $first_0:tt $($first:tt)* ] [ $second_0:tt $($second:tt)* ]
         $path:tt
     ) => {
-        std::compile_error!(std::concat!(
+        core::compile_error!(core::concat!(
             $msg,
-            "\n/ #", std::stringify!($first_0),
-            $("\n| #", std::stringify!($first),)*
+            "\n/ #", core::stringify!($first_0),
+            $("\n| #", core::stringify!($first),)*
             "\n|_^ the first attribute", $plural_s,
             "\n...",
-            "\n/ #", std::stringify!($second_0),
-            $("\n| #", std::stringify!($second),)*
+            "\n/ #", core::stringify!($second_0),
+            $("\n| #", core::stringify!($second),)*
             "\n|_^ the second attribute", $plural_s,
             "\n\n  ", $crate::proc_macro_api_fmt_path!($path),
             "\n  ^\n",
@@ -299,9 +299,9 @@ macro_rules! proc_macro_api_err_seg_blk_al {
     ([]) => {};
 
     ([ $al:tt ]) => {
-        std::compile_error!(std::concat!(
+        core::compile_error!(core::concat!(
             "no rules expected `as`",
-            "\n  {...} as ", std::stringify!($al),
+            "\n  {...} as ", core::stringify!($al),
             "\n        ^^",
         ));
     };
@@ -376,7 +376,7 @@ macro_rules! proc_macro_api_err_seg_inner_cc {
 
     // [path]
     ([ :: ] $_0:tt $_1:tt $path:tt) => {
-        std::compile_error!(std::concat!(
+        core::compile_error!(core::concat!(
             "leading `::` is in the middle of a path",
             "\n  :: ", $crate::proc_macro_api_fmt_path!($path),
             "\n  ^^",
@@ -389,11 +389,11 @@ macro_rules! proc_macro_api_err_seg_inner_cc {
 macro_rules! proc_macro_api_err_seg_no_seg {
     // [at] al
     ([ $($at:tt)* ] [ $($al:tt)? ]) => {
-        std::compile_error!(std::concat!(
+        core::compile_error!(core::concat!(
             "expected path segments",
             "\n/",
-            $("\n| #", std::stringify!($at),)*
-            $("\n| as ", std::stringify!($al),)?
+            $("\n| #", core::stringify!($at),)*
+            $("\n| as ", core::stringify!($al),)?
             "\n|\n|_^ expected path segments",
         ));
     };
@@ -403,12 +403,12 @@ macro_rules! proc_macro_api_err_seg_no_seg {
 #[macro_export]
 macro_rules! proc_macro_api_err_fn_no_proc {
     ([ $($cc:tt)? ] [ $($prv:tt)* ] [ $($al:tt)? ] $api:tt) => {
-        std::compile_error!(std::concat!(
+        core::compile_error!(core::concat!(
             "expected a proc-macro attribute",
-            "\n/ ", $(std::stringify!($cc),)?
-            $(std::stringify!($prv), "::",)*
-            std::stringify!($api),
-            $("\n| as ", std::stringify!($al),)?
+            "\n/ ", $(core::stringify!($cc),)?
+            $(core::stringify!($prv), "::",)*
+            core::stringify!($api),
+            $("\n| as ", core::stringify!($al),)?
             "\n|_^",
         ));
     };
