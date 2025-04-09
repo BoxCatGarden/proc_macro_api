@@ -57,3 +57,24 @@ proc_macro_api! {
 }
 // It will expand to three `pub` functions in the crate root, named
 // `an_fn_api`, `the_attr_api`, and `a_derive_api`, respectively.
+
+// ===============================================
+
+proc_macro_api! {
+    sub::{
+        #[proc_macro]
+        proc_fn,
+    },
+}
+
+mod sub {
+    use proc_macro::TokenStream;
+
+    pub fn proc_fn(_input: TokenStream) -> TokenStream {
+        TokenStream::new()
+    }
+}
+
+// ===============================================
+
+proc_macro_api!(a as _, a as _);

@@ -222,10 +222,10 @@ where it is used:
 
 # Depth of recursion
 
-For an input path, the depth of the recursion depends on the number of
-the segments in the path, the number of the groups it belongs to, and
-the number of the attributes applied to the path and the groups the
-path belongs to.
+For an input path, the number of the recursive steps for parsing it
+depends on the number of the segments in the path, the number of the
+groups it belongs to, the number of the attributes applied to the path,
+and the number of the attributes applied to the groups it belongs to.
 
 Let _N_ be the number of the segments of the path.  
 Let _G_ be the number of the groups the path belongs to.  
@@ -233,17 +233,20 @@ Let _A_ be the number of the attributes applied to the groups
 the path belongs to.  
 Let _B_ be the number of the attributes that are applied directly
 to the path but not to the groups the path belongs to.  
-Let _d_ be the depth of the recursion.
+Let _d_ be the recursion depth of the path.
 
 When there isn't an error in the input:  
-_d_ <= max { _A_ + _B_, _N_ } + 2 _G_ + 6
+_d_ <= max { _A_ + _B_, _N_ } + 2 _G_ + 6 .
 
 <!-- max { _A_ + _B_, _N_ } + (_G_ + 1) + (_G_ + 1) + 1 + (1 + 2) -->
 
-Let _d<sub>p</sub>_ be the recursion depth of input path _p_.  
-Let _D_ be the recursion depth of a macro call to `proc_macro_api!`.
+When calling `proc_macro_api!`, the recursion depth of the macro call
+depends on the maximum recursion depth of all the input paths.
 
-_D_ = max ( { _d<sub>p</sub>_ | _p_ is in the input } &cup; { 1 } )
+Let _d<sub>p</sub>_ be the recursion depth of input path _p_.  
+Let _D_ be the recursion depth of the macro call.
+
+_D_ = max ( { _d<sub>p</sub>_ | _p_ is in the input } &cup; { 1 } ) .
 
 > Note: In the input, the distinction between paths is not according to
 > their segments, but to their appearances. That is, for example, in the
