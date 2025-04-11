@@ -212,13 +212,13 @@ macro_rules! proc_macro_api_parse_attr {
     // [`any`]
     (
     [ $any:tt $(, $at:tt)* ]
-    $doc:tt [ $($other:tt)* ] $proc:tt
+    [ $($doc:tt)* ] $other:tt $proc:tt
     [ $($seg:tt $($rest:tt)*)? ]
     [ $($prv:tt)* ] [ $last:tt $($to_prv:tt)? ]
     $bag:tt
     ) => {
         $crate::proc_macro_api_parse_attr! {
-            [ $($at),* ] $doc [ $($other)* $any ] $proc
+            [ $($at),* ] [ $($doc)* $any ] $other $proc
             [ $($($rest)*)? ] [ $($prv)* $($to_prv)? ] [ $($seg)? $last ]
             $bag
         }
