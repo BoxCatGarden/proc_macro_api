@@ -95,9 +95,9 @@ Input attributes are classed into two types:
   attributes from the outside.
 * **Local**. For each path in a path group, inside the curly braces
   of that group,
-    * if some local attributes are applied to the path, the local
+    * if some local attributes are applied to the path, all the local
       attributes applied to the group won't be applied to the path;
-    * if no local attribute is applied to the path, the local
+    * if no local attribute is applied to the path, all the local
       attributes applied to the group will be applied to the path.
     * That is, local attributes inside curly braces will _override_
       the local attributes from the outside.
@@ -106,8 +106,7 @@ After being parsed by the macro, for the input attributes applied to
 an input path, all the global attributes will always be placed _before_
 all the local attributes.
 
-Only `#[doc]` is global, and all other attributes are local.
-Proc-macro attributes are local.
+Only proc-macro attributes are local, and all other attributes are global.
 
 ## Attribute aliases
 
@@ -180,20 +179,17 @@ proc_macro_api! {
         // use an alias of the proc-macro attributes
         #[fn] an_fn_api,
 
-        // a path subgroup;
-        // apply local attributes to this path group
-        #[allow(unused)]
-        #[proc_macro_attribute]
+        // a path subgroup
+        #[allow(unused)] // global attribute
+        #[proc_macro_attribute] // local attribute
         mod_b::{
-            // apply the local attributes from the outside:
             // #[allow(unused)]
-            // #[proc_macro_attribute]
-            /// `#[doc]` won't override local attributes.
+            /// `#[doc]` is global.
             /// This API is renamed `the_attr_api`.
+            // #[proc_macro_attribute]
             an_attr_api as the_attr_api,
 
-            // override the local attributes from the outside:
-            // only `#[dr(Something)]` is applied to this path
+            // #[allow(unused)]
             #[dr(Something)] a_derive_api,
 
             // syntactically valid
@@ -223,7 +219,6 @@ where it is used:
 # Depth of recursion
 
 This section is provided as reference for errors about recursion depth.
-It is _NOT_ a stable guarantee about the macro.
 
 ## Path recursion depth
 
@@ -241,7 +236,8 @@ to the path but not to the groups the path belongs to.
 Let _d_ be the recursion depth of the path.
 
 When there isn't an error in the input:  
-_N_ + 3 _G_ + 6 &le; _d_ &le; _A_ + _B_ + _N_ + 4 _G_ + 7 .
+max { _A_ + _B_, _N_ + _G_ } + 2 _G_ + 6 &le;
+_d_ &le; _A_ + _B_ + _N_ + 4 _G_ + 7 .
 
 ## Empty group recursion depth
 
@@ -254,7 +250,8 @@ the last curly braces.
 Let *d*<sup>emp</sup> be the recursion depth of the empty group.
 
 When there isn't an error in the input:  
-_N_ + 3 _G_ + 5 &le; *d*<sup>emp</sup> &le; _A_ + _B_ + _N_ + 4 _G_ + 6 .
+max { _A_ + _B_, _N_ + _G_ } + 2 _G_ + 5 &le;
+*d*<sup>emp</sup> &le; _A_ + _B_ + _N_ + 4 _G_ + 6 .
 
 ## Macro call recursion depth
 
@@ -271,10 +268,11 @@ _p_ is an input path, where input paths include empty groups
 } &cup; { 1 }
 \) .
 
-> Note: In the input, the distinction between paths is not according to
-> their segments, but to their appearances. That is, for example, in the
-> input of `proc_macro_api!(a as _, a as _)`, there are two paths
-> (i.e., the first `a` and the second `a`), instead of one.
+> Note: When counting the recursion depth, the distinction between paths
+> is not according to their segments, but to their appearances.
+> That is, for example, in the input of `proc_macro_api!(a as _, a as _)`,
+> there are two paths (i.e., the first `a` and the second `a`),
+> instead of one.
 
 # Optional features
 
