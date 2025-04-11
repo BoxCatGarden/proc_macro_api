@@ -5,7 +5,8 @@ edition = "2024"
 description = "A macro helping with exporting APIs in a proc_macro library crate."
 license = "MIT OR Apache-2.0"
 readme = "README.md"
-keywords = ["proc_macro", "api", "export", "submodule"]
+keywords = ["macros", "modules", "export", "proc-macro-api"]
+categories = ["development-tools::procedural-macro-helpers"]
 
 [dependencies]
 
@@ -13,6 +14,7 @@ keywords = ["proc_macro", "api", "export", "submodule"]
 default = ["deny_shadow"]
 deny_override = []
 deny_shadow = []
+deny_group_attr = []
 
 [[example]]
 name = "doc_tests"
