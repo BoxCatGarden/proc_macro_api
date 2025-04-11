@@ -33,20 +33,17 @@ proc_macro_api! {
         // use an alias of the proc-macro attributes
         #[fn] an_fn_api,
 
-        // a path subgroup;
-        // apply local attributes to this path group
-        #[allow(unused)]
-        #[proc_macro_attribute]
+        // a path subgroup
+        #[allow(unused)] // global attribute
+        #[proc_macro_attribute] // local attribute
         mod_b::{
-            // apply the local attributes from the outside:
             // #[allow(unused)]
-            // #[proc_macro_attribute]
-            /// `#[doc]` won't override local attributes.
+            /// `#[doc]` is global.
             /// This API is renamed `the_attr_api`.
+            // #[proc_macro_attribute]
             an_attr_api as the_attr_api,
 
-            // override the local attributes from the outside:
-            // only `#[dr(Something)]` is applied to this path
+            // #[allow(unused)]
             #[dr(Something)] a_derive_api,
 
             // syntactically valid
