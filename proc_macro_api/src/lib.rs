@@ -399,6 +399,32 @@ macro_rules! proc_macro_api_err_seg_no_seg {
     };
 }
 
+#[cfg(not(feature = "deny_group_attr"))]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_err_seg_gp_attr {
+    ($($tt:tt)*) => {};
+}
+
+#[cfg(feature = "deny_group_attr")]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_err_seg_gp_attr {
+    ([] $_:tt $path:tt) => {};
+    ($at:tt [ $(0)? $(1)? ] $path:tt) => {};
+
+    ([ $at_0:tt $(, $at:tt)* ] $_:tt $path:tt) => {
+        core::compile_error!(core::concat!(
+            "attributes are applied to a path group",
+            "\n/ #", core::stringify!($at_0),
+            $("\n| #", core::stringify!($at),)*
+            "\n| ", $crate::proc_macro_api_fmt_path!($path),
+            "\n|_^",
+            "\n= note: feature `deny_group_attr` is enabled",
+        ));
+    };
+}
+
 #[doc(hidden)]
 #[macro_export]
 macro_rules! proc_macro_api_err_fn_no_proc {
