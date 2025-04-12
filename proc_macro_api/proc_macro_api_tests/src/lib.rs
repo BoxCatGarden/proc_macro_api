@@ -3,7 +3,9 @@ extern crate proc_macro;
 #[no_link]
 extern crate proc_macro_api;
 use proc_macro_api::proc_macro_api;
-use proc_macro_api_test_base::dummy_api;
+
+extern crate proc_macro_api_test_base as base;
+use base::dummy_api;
 
 dummy_api!(mod ,,,,,,,,,,,);
 
@@ -74,3 +76,25 @@ proc_macro_api! {
 
     a::{a::{#[fn] b as no_trailing_comma_0}},
 }
+
+proc_macro_api! {
+    #[fn] ::base::b as cc_0,
+    #[fn] ::base::{b as cc_1},
+    #[fn] ::base::a::{b as cc_2},
+    #[fn] ::{base::b as cc_3},
+}
+
+mod no_as {
+    use proc_macro::TokenStream;
+    use quote::quote;
+
+    #[inline(always)]
+    pub fn no_as_0(_input: TokenStream) -> TokenStream {
+        quote! {
+            "no_as"
+        }
+        .into()
+    }
+}
+
+proc_macro_api!(#[fn] no_as::no_as_0);

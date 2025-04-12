@@ -81,7 +81,14 @@ macro_rules! dummy_api_inner {
     ($($tt:tt)*) => {};
 }
 
-extern crate proc_macro2 as proc_macro;
+pub mod pm2 {
+    extern crate proc_macro2 as proc_macro;
+
+    // 11 non-empty `mod`
+    dummy_api!(pub mod ,,,,,,,,,,,,);
+}
+
+extern crate proc_macro;
 
 // 11 non-empty `mod`
 dummy_api!(pub mod ,,,,,,,,,,,,);
