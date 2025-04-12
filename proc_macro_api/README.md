@@ -212,9 +212,12 @@ where it is used:
 * The name `proc_macro`, binding [`proc_macro`] or something else equivalent.
   It is required only for [`proc_macro::TokenStream`].
 * The name `core`, binding [`core`] or something else equivalent.
-  `core` is required only for error reporting. If there is an error
-  inside `proc_macro_api!` caused by incorrect binding of `core`,
-  it will indicate an error of the input.
+    * When feature `auto_transform` is not enabled, `core` is required
+      only for the error reporting. If there is an error inside
+      `proc_macro_api!` caused by incorrect binding of `core`, it will
+      indicate an error of the input.
+    * When feature `auto_transform` is enabled, `core` is also required
+      for [`core::convert::From`].
 
 # Depth of recursion
 
@@ -236,8 +239,8 @@ to the path but not to the groups the path belongs to.
 Let _d_ be the recursion depth of the path.
 
 When there isn't an error in the input:  
-max { _A_ + _B_, _N_ + _G_ } + 2 _G_ + 6 &le;
-_d_ &le; _A_ + _B_ + _N_ + 4 _G_ + 7 .
+max { _A_ + _B_, _N_ + _G_ } + 2 _G_ + 7 &le;
+_d_ &le; _A_ + _B_ + _N_ + 4 _G_ + 8 .
 
 ## Empty group recursion depth
 
@@ -281,3 +284,13 @@ _p_ is an input path, where input paths include empty groups
   whether a single path or a path group is annotated with multiple
   proc-macro attributes, and will generate a compile error if it does.
 * **`deny_override`** - Deny the overriding of [local attributes](#attributes).
+* **`deny_group_attr`** - Deny the applying of attributes to
+  [path groups](#brace-syntax-and-path-groups).
+* **`auto_transform`** - Transform the input [`TokenStream`] into the
+  input of the api-function, and transform the output of the api-function
+  into the output [`TokenStream`], by using [`core::convert::From`].
+  It is useful when re-exporting some extern functions as APIs of the
+  crate, where the functions can require `proc_macro2::TokenStream` as
+  their input and output values of `proc_macro2::TokenStream`.
+
+[`TokenStream`]: proc_macro::TokenStream
