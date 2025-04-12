@@ -4,38 +4,9 @@ extern crate proc_macro;
 extern crate proc_macro_api;
 use proc_macro_api::proc_macro_api;
 
-macro_rules! api {
-    ($($vis:ident)? => $tt:tt $($count_down:tt)*) => {
-        #[allow(dead_code)]
-        $($vis)? mod a {
-            use proc_macro::TokenStream;
-
-            pub fn b(_: TokenStream) -> TokenStream {
-                TokenStream::new()
-            }
-
-            pub fn c(_: TokenStream, _: TokenStream) -> TokenStream {
-                TokenStream::new()
-            }
-
-            api!(pub => $($count_down)*);
-        }
-    };
-
-    ($($vis:ident)? =>) => {};
-}
-
-#[allow(dead_code)]
-fn b(_: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    proc_macro::TokenStream::new()
-}
-
-#[allow(dead_code)]
-fn c(_: proc_macro::TokenStream, _: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    proc_macro::TokenStream::new()
-}
-
-api!(=> ,,,,,,,,,,);
+#[macro_use]
+mod test_base;
+dummy_api!(mod ,,,,,,,,,,,);
 
 proc_macro_api!();
 proc_macro_api!({});
