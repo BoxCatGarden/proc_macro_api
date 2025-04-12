@@ -1,0 +1,19 @@
+[package]
+name = "proc-macro-api-tests"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro-api = { workspace = true }
+proc-macro-api-test-base = { workspace = true }
+
+[features]
+with_default = ["proc-macro-api/default"]
+deny_override = ["proc-macro-api/deny_override"]
+deny_shadow = ["proc-macro-api/deny_shadow"]
+deny_group_attr = ["proc-macro-api/deny_group_attr"]
+auto_transform = ["proc-macro-api/auto_transform"]

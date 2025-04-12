@@ -16,11 +16,8 @@ default = ["deny_shadow"]
 deny_override = []
 deny_shadow = []
 deny_group_attr = []
+auto_transform = []
 
 [[example]]
 name = "doc_tests"
-crate-type = ["proc-macro"]
-
-[[example]]
-name = "tests"
 crate-type = ["proc-macro"]
