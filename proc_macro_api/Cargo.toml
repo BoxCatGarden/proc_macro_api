@@ -6,7 +6,8 @@ description = "A macro helping with exporting APIs in a proc_macro library crate
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 keywords = ["macros", "modules", "export", "proc-macro-api"]
-categories = ["development-tools::procedural-macro-helpers"]
+categories = ["development-tools::procedural-macro-helpers", "no-std"]
+publish = false
 
 [dependencies]
 
