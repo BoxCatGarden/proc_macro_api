@@ -8,8 +8,9 @@
 /// }
 /// ```
 /// Nesting the above `mod a`.
-/// The nested `mod` are as many as the input `tt`s.
+/// The number of the `mod`s equals the number of the input `tt`s minus one.
 /// The innermost `mod` doesn't have an inner `pub mod a`.
+#[macro_export]
 macro_rules! dummy_api {
     ($vis:vis mod $tt:tt $($($count_down:tt)+)?) => {
         #[allow(dead_code)]
@@ -25,7 +26,7 @@ macro_rules! dummy_api {
         $(
         #[allow(dead_code)]
         $vis mod a {
-            dummy_api!(pub mod $($count_down)+);
+            $crate::dummy_api!(pub mod $($count_down)+);
         }
         )?
     };
@@ -33,4 +34,7 @@ macro_rules! dummy_api {
     ($vis:vis mod) => {};
 }
 
-// dummy_api!(pub mod ,,,,,,,,,,,,);
+extern crate proc_macro2 as proc_macro;
+
+// 11 levels
+dummy_api!(pub mod ,,,,,,,,,,,,);

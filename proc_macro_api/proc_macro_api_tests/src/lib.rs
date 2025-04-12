@@ -3,9 +3,8 @@ extern crate proc_macro;
 #[no_link]
 extern crate proc_macro_api;
 use proc_macro_api::proc_macro_api;
+use proc_macro_api_test_base::dummy_api;
 
-#[macro_use]
-mod test_base;
 dummy_api!(mod ,,,,,,,,,,,);
 
 proc_macro_api!();
