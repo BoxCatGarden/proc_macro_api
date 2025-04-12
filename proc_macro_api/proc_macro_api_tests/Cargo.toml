@@ -8,6 +8,8 @@ publish = false
 proc-macro = true
 
 [dependencies]
+syn = { workspace = true }
+quote = { workspace = true }
 proc-macro-api = { workspace = true }
 proc-macro-api-test-base = { workspace = true }
 
