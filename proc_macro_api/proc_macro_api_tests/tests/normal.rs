@@ -1,4 +1,8 @@
-use proc_macro_api_tests::*;
+use proc_macro_api_tests::{
+    AliasDr0, AliasDr1, alias_at_0, alias_at_1, alias_fn_0, alias_fn_1, cc_0, cc_1, cc_2, cc_3,
+    empty_rest_0, full_seg_0, full_seg_1, full_seg_2, no_as_0, no_trailing_comma_0, one_prv_0,
+    one_rest_0, one_rest_1, one_rest_2, one_rest_out_0, seg_matcher_0,
+};
 
 #[test]
 fn output() {
