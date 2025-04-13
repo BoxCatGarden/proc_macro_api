@@ -483,7 +483,31 @@ macro_rules! proc_macro_api_fn {
         pub fn $name (
             $($args : proc_macro::TokenStream),*
         ) -> proc_macro::TokenStream {
-            $($cc)? $($prv ::)* $api ( $($args),* )
+            $crate::proc_macro_api_call! {
+                ( $($args),* ) $($cc)? $($prv ::)* $api
+            }
         }
+    };
+}
+
+#[cfg(not(feature = "auto_transform"))]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_call {
+    ($args:tt $($path:tt)*) => {
+        $($path)* $args
+    };
+}
+
+#[cfg(feature = "auto_transform")]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_call {
+    (( $($args:tt),* ) $($path:tt)*) => {
+        core::convert::From::from(
+            $($path)* (
+                $(core::convert::From::from($args),)*
+            ),
+        )
     };
 }

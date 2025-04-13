@@ -1,4 +1,4 @@
-#![recursion_limit = "18"]
+#![recursion_limit = "19"]
 
 // in the crate root
 extern crate proc_macro;
