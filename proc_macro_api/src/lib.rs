@@ -1,8 +1,17 @@
 #![doc = include_str!("../README.md")]
 
-#[cfg(doc)]
-#[no_link]
+/*
+checklist:
+ tt, ident, expr ;
+ doc_hidden macro_export `pma` ;
+ path $crate::`pma`! ;
+ path $crate::__private ;
+*/
+
 extern crate proc_macro;
+
+#[doc(hidden)]
+pub mod __private;
 
 mod err_syn;
 mod fmt;
@@ -30,14 +39,14 @@ macro_rules! proc_macro_api_err_attr_mul {
         [ $first_0:tt $($first:tt)* ] [ $second_0:tt $($second:tt)* ]
         $path:tt
     ) => {
-        core::compile_error!(core::concat!(
+        $crate::__private::compile_error!($crate::__private::concat!(
             $msg,
-            "\n/ #", core::stringify!($first_0),
-            $("\n| #", core::stringify!($first),)*
+            "\n/ #", $crate::__private::stringify!($first_0),
+            $("\n| #", $crate::__private::stringify!($first),)*
             "\n|_^ the first attribute", $plural_s,
             "\n...",
-            "\n/ #", core::stringify!($second_0),
-            $("\n| #", core::stringify!($second),)*
+            "\n/ #", $crate::__private::stringify!($second_0),
+            $("\n| #", $crate::__private::stringify!($second),)*
             "\n|_^ the second attribute", $plural_s,
             "\n\n  ", $crate::proc_macro_api_fmt_path!($path),
             "\n  ^\n",
@@ -299,9 +308,10 @@ macro_rules! proc_macro_api_err_seg_blk_al {
     ([]) => {};
 
     ([ $al:tt ]) => {
-        core::compile_error!(core::concat!(
+        $crate::__private::compile_error!($crate::__private::concat!(
             "no rules expected `as`",
-            "\n  {...} as ", core::stringify!($al),
+            "\n  {...} as ",
+            $crate::__private::stringify!($al),
             "\n        ^^",
         ));
     };
@@ -376,9 +386,10 @@ macro_rules! proc_macro_api_err_seg_inner_cc {
 
     // [path]
     ([ :: ] $_0:tt $_1:tt $path:tt) => {
-        core::compile_error!(core::concat!(
+        $crate::__private::compile_error!($crate::__private::concat!(
             "leading `::` is in the middle of a path",
-            "\n  :: ", $crate::proc_macro_api_fmt_path!($path),
+            "\n  :: ",
+            $crate::proc_macro_api_fmt_path!($path),
             "\n  ^^",
         ));
     };
@@ -389,11 +400,11 @@ macro_rules! proc_macro_api_err_seg_inner_cc {
 macro_rules! proc_macro_api_err_seg_no_seg {
     // [at] al
     ([ $($at:tt)* ] [ $($al:tt)? ]) => {
-        core::compile_error!(core::concat!(
+        $crate::__private::compile_error!($crate::__private::concat!(
             "expected path segments",
             "\n/",
-            $("\n| #", core::stringify!($at),)*
-            $("\n| as ", core::stringify!($al),)?
+            $("\n| #", $crate::__private::stringify!($at),)*
+            $("\n| as ", $crate::__private::stringify!($al),)?
             "\n|\n|_^ expected path segments",
         ));
     };
@@ -414,10 +425,10 @@ macro_rules! proc_macro_api_err_seg_gp_attr {
     ($at:tt [ $(0)? $(1)? ] $path:tt) => {};
 
     ([ $at_0:tt $(, $at:tt)* ] $_:tt $path:tt) => {
-        core::compile_error!(core::concat!(
+        $crate::__private::compile_error!($crate::__private::concat!(
             "attributes are applied to a path group",
-            "\n/ #", core::stringify!($at_0),
-            $("\n| #", core::stringify!($at),)*
+            "\n/ #", $crate::__private::stringify!($at_0),
+            $("\n| #", $crate::__private::stringify!($at),)*
             "\n| ", $crate::proc_macro_api_fmt_path!($path),
             "\n|_^",
             "\n= note: feature `deny_group_attr` is enabled",
@@ -429,12 +440,12 @@ macro_rules! proc_macro_api_err_seg_gp_attr {
 #[macro_export]
 macro_rules! proc_macro_api_err_fn_no_proc {
     ([ $($cc:tt)? ] [ $($prv:tt)* ] [ $($al:tt)? ] $api:tt) => {
-        core::compile_error!(core::concat!(
+        $crate::__private::compile_error!($crate::__private::concat!(
             "expected a proc-macro attribute",
-            "\n/ ", $(core::stringify!($cc),)?
-            $(core::stringify!($prv), "::",)*
-            core::stringify!($api),
-            $("\n| as ", core::stringify!($al),)?
+            "\n/ ", $($crate::__private::stringify!($cc),)?
+            $($crate::__private::stringify!($prv), "::",)*
+            $crate::__private::stringify!($api),
+            $("\n| as ", $crate::__private::stringify!($al),)?
             "\n|_^",
         ));
     };
@@ -481,8 +492,8 @@ macro_rules! proc_macro_api_fn {
         $(# $doc)*
         $(# $other)*
         pub fn $name (
-            $($args : proc_macro::TokenStream),*
-        ) -> proc_macro::TokenStream {
+            $($args : $crate::__private::TokenStream),*
+        ) -> $crate::__private::TokenStream {
             $crate::proc_macro_api_call! {
                 ( $($args),* ) $($cc)? $($prv ::)* $api
             }
@@ -504,9 +515,9 @@ macro_rules! proc_macro_api_call {
 #[macro_export]
 macro_rules! proc_macro_api_call {
     (( $($args:tt),* ) $($path:tt)*) => {
-        core::convert::From::from(
+        $crate::__private::From::from(
             $($path)* (
-                $(core::convert::From::from($args),)*
+                $($crate::__private::From::from($args),)*
             ),
         )
     };
