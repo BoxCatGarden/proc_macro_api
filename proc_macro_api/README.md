@@ -10,7 +10,10 @@ a proc-macro crate, in order to export
 as a function-like macro, [`proc_macro_api!`] can be used in the
 root of that crate like:
 
-```ignore
+```no_run
+# macro_rules! proc_macro_api {
+#     ($($_:tt)*) => {};
+# }
 proc_macro_api! {
     sub::{
         #[proc_macro]
@@ -142,8 +145,11 @@ to empty.
 
 # Examples
 
-```ignore
-// Doctest is ignored because the crate is not in a proc-macro context.
+```no_run
+# fn main() {}
+# macro_rules! proc_macro_api {
+#     ($($_:tt)*) => {};
+# }
 // This example can be found in the examples of the package.
 
 // in the crate root
@@ -203,21 +209,6 @@ proc_macro_api! {
 // It will expand to three `pub` functions in the crate root, named
 // `an_fn_api`, `the_attr_api`, and `a_derive_api`, respectively.
 ```
-
-# Extern requirement
-
-The macro requires some external _names_ to be available in the scope
-where it is used:
-
-* The name `proc_macro`, binding [`proc_macro`] or something else equivalent.
-  It is required only for [`proc_macro::TokenStream`].
-* The name `core`, binding [`core`] or something else equivalent.
-    * When feature `auto_transform` is not enabled, `core` is required
-      only for the error reporting. If there is an error inside
-      `proc_macro_api!` caused by incorrect binding of `core`, it will
-      indicate an error of the input.
-    * When feature `auto_transform` is enabled, `core` is also required
-      for [`core::convert::From`].
 
 # Depth of recursion
 
@@ -288,9 +279,11 @@ _p_ is an input path, where input paths include empty groups
   [path groups](#brace-syntax-and-path-groups).
 * **`auto_transform`** - Transform the input [`TokenStream`] into the
   input of the api-function, and transform the output of the api-function
-  into the output [`TokenStream`], by using [`core::convert::From`].
+  into the output [`TokenStream`], by using [`From`].
   It is useful when re-exporting some extern functions as APIs of the
   crate, where the functions can require `proc_macro2::TokenStream` as
   their input and output values of `proc_macro2::TokenStream`.
 
 [`TokenStream`]: proc_macro::TokenStream
+
+[`From`]: core::convert::From

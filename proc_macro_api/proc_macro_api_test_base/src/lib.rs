@@ -1,4 +1,6 @@
-/// ```ignore
+/// ```no_run
+/// # macro_rules! a {
+/// #     ($vis:vis) => {
 /// $vis fn b(_) -> _ {}
 /// $vis fn c(_, _) -> _ {}
 /// $vis mod a {
@@ -6,6 +8,8 @@
 ///     pub fn c(_, _) -> _ {}
 ///     pub mod a { ... }
 /// }
+/// #     };
+/// # }
 /// ```
 /// Nesting the above `mod a`.
 /// The number of the `mod`s equals the number of the input `tt`s.
