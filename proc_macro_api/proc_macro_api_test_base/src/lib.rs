@@ -1,3 +1,5 @@
+#![no_implicit_prelude]
+
 /// ```no_run
 /// # macro_rules! a {
 /// #     ($vis:vis) => {
@@ -25,24 +27,31 @@
 /// function is 0.
 #[macro_export]
 macro_rules! dummy_api {
-    ($vis:vis mod $tt:tt $($count_down:tt)*) => {
+    ($vis:vis mod $($count_down:tt)*) => {
         $crate::dummy_api_inner! {
-            [] $vis mod $tt $($count_down)*
+            proc_macro [] $vis mod $($count_down)*
         }
     };
 
-    ($vis:vis mod) => {};
+    ($vis:vis pm2 mod $($count_down:tt)*) => {
+        $crate::dummy_api_inner! {
+            proc_macro2 [] $vis mod $($count_down)*
+        }
+    };
 }
 
 #[doc(hidden)]
 #[macro_export]
 macro_rules! dummy_api_inner {
-    ([ $($count:tt)* ] $vis:vis mod $tt:tt $($count_down:tt)*) => {
+    ($pm:ident [ $($count:tt)* ] $vis:vis mod $tt:tt $($count_down:tt)*) => {
         #[allow(dead_code)]
         #[inline(always)]
-        $vis fn b(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-            use quote::quote;
-            use syn::parse::{Parse, Parser};
+        $vis fn b(input: ::$pm::TokenStream) -> ::$pm::TokenStream {
+            use ::quote::quote;
+            use ::syn;
+            use ::syn::parse::{Parse, Parser};
+            use ::core::result::Result::Ok;
+            use ::core::convert::Into as _;
 
             let num = (&[ $($count),* ] as &[u8]).len();
 
@@ -62,10 +71,11 @@ macro_rules! dummy_api_inner {
         #[allow(dead_code)]
         #[inline(always)]
         $vis fn c(
-            _: proc_macro::TokenStream,
-            _: proc_macro::TokenStream,
-        ) -> proc_macro::TokenStream {
-            use quote::quote;
+            _: ::$pm::TokenStream,
+            _: ::$pm::TokenStream,
+        ) -> ::$pm::TokenStream {
+            use ::quote::quote;
+            use ::core::convert::Into as _;
 
             let num = (&[ $($count),* ] as &[u8]).len();
 
@@ -77,7 +87,7 @@ macro_rules! dummy_api_inner {
         #[allow(dead_code)]
         $vis mod a {
             $crate::dummy_api_inner! {
-                [ $($count)* 0u8 ] pub mod $($count_down)*
+                $pm [ $($count)* 0u8 ] pub mod $($count_down)*
             }
         }
     };
@@ -86,10 +96,8 @@ macro_rules! dummy_api_inner {
 }
 
 pub mod pm2 {
-    extern crate proc_macro2 as proc_macro;
-
     // 11 non-empty `mod`
-    dummy_api!(pub mod ,,,,,,,,,,,,);
+    dummy_api!(pub pm2 mod ,,,,,,,,,,,,);
 }
 
 extern crate proc_macro;
