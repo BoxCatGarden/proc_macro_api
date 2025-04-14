@@ -8,3 +8,13 @@ macro_rules! proc_macro_api_fmt_path {
         )
     };
 }
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_fmt_str_tt {
+    ($($tt:tt)*) => {
+        $crate::__private::concat!(
+            $($crate::__private::stringify!($tt),)*
+        )
+    };
+}

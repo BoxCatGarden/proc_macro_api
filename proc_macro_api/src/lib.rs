@@ -337,6 +337,11 @@ macro_rules! proc_macro_api_parse_seg_call_attr {
         $crate::proc_macro_api_err_seg_inner_cc! {
             $cc_tag $bg_cc $prv [ $seg ]
         }
+        $crate::proc_macro_api_err_seg_gp_attr! {
+            $at [ $_i $($seg_blk_cc)? ] [
+                $cc_tag $_i $seg $(1 $seg_cc)? $(2 [ $($rest)* ])?
+            ]
+        }
         $crate::proc_macro_api_parse_attr! {
             $at [/*[doc]*/] [/*[other]+[proc]*/] [/*[proc]*/]
             [ $($seg_cc)? $($($rest)*)? $($seg_blk_cc)? ] [/*prv*/] [ $seg ]
@@ -424,12 +429,25 @@ macro_rules! proc_macro_api_err_seg_gp_attr {
     ([] $_:tt $path:tt) => {};
     ($at:tt [ $(0)? $(1)? ] $path:tt) => {};
 
-    ([ $at_0:tt $(, $at:tt)* ] $_:tt $path:tt) => {
+    (
+        [ $at_0:tt $(, $at:tt)* ] $_:tt
+        [
+            [ $($cc:tt)? ]
+            $(0 $seg:tt)?
+            $(1 $seg_cc:tt)?
+            $(2 [ $($rest:tt)* ])?
+            $(3 $seg_blk_cc:tt)?
+            $(4 $seg_blk:tt)?
+        ]
+    ) => {
         $crate::__private::compile_error!($crate::__private::concat!(
             "attributes are applied to a path group",
             "\n/ #", $crate::__private::stringify!($at_0),
             $("\n| #", $crate::__private::stringify!($at),)*
-            "\n| ", $crate::proc_macro_api_fmt_path!($path),
+            "\n| ",
+            $crate::proc_macro_api_fmt_str_tt! {
+                $($cc)? $($seg ::)? $($seg_cc ::)? $($($rest ::)*)? { ... }
+            },
             "\n|_^",
             "\n= note: feature `deny_group_attr` is enabled",
         ));
