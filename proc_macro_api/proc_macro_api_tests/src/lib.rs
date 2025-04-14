@@ -1,4 +1,4 @@
-extern crate proc_macro;
+#![no_implicit_prelude]
 
 #[no_link]
 extern crate proc_macro_api;
@@ -79,14 +79,15 @@ proc_macro_api! {
 
 proc_macro_api! {
     #[fn] ::base::b as cc_0,
-    #[fn] ::base::{b as cc_1},
-    #[fn] ::base::a::{b as cc_2},
-    #[fn] ::{base::b as cc_3},
+    ::base::{#[fn] b as cc_1},
+    ::base::a::{#[fn] b as cc_2},
+    ::{#[fn] base::b as cc_3},
 }
 
 mod no_as {
-    use proc_macro::TokenStream;
-    use quote::quote;
+    use ::proc_macro::TokenStream;
+    use ::quote::quote;
+    use ::core::convert::Into as _;
 
     #[inline(always)]
     pub fn no_as_0(_input: TokenStream) -> TokenStream {
@@ -98,3 +99,7 @@ mod no_as {
 }
 
 proc_macro_api!(#[fn] no_as::no_as_0);
+
+// attr
+// trans: local & extern
+// error
