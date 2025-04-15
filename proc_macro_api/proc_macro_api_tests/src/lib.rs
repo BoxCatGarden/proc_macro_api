@@ -85,9 +85,9 @@ proc_macro_api! {
 }
 
 mod no_as {
+    use ::core::convert::Into as _;
     use ::proc_macro::TokenStream;
     use ::quote::quote;
-    use ::core::convert::Into as _;
 
     #[inline(always)]
     pub fn no_as_0(_input: TokenStream) -> TokenStream {
@@ -100,6 +100,37 @@ mod no_as {
 
 proc_macro_api!(#[fn] no_as::no_as_0);
 
+#[cfg(feature = "auto_transform")]
+mod pm2 {
+    use ::proc_macro_api_test_base::dummy_api;
+
+    dummy_api!(pub pm2 mod ,,,,,,,,,,,);
+}
+
+#[cfg(feature = "auto_transform")]
+const PM2_B: fn(::proc_macro2::TokenStream) -> ::proc_macro2::TokenStream = pm2::b;
+
+#[cfg(feature = "auto_transform")]
+const PM2_C: fn(
+    ::proc_macro2::TokenStream,
+    ::proc_macro2::TokenStream,
+) -> ::proc_macro2::TokenStream = pm2::c;
+
+#[cfg(feature = "auto_transform")]
+proc_macro_api! {
+    #[fn] pm2::b as trans_0,
+    #[at] pm2::c as trans_1,
+    #[fn] PM2_B as trans_2,
+    #[at] PM2_C as trans_3,
+    #[fn] ::base::pm2::b as cc_trans_0,
+    #[at] ::base::pm2::c as cc_trans_1,
+}
+
+#[cfg(not(any(feature = "deny_group_attr", feature = "deny_override")))]
+proc_macro_api! {}
+
+// call_attr
+// fn
+// {{}}
 // attr
-// trans: local & extern
 // error
