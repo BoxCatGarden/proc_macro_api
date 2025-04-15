@@ -127,7 +127,82 @@ proc_macro_api! {
 }
 
 #[cfg(not(any(feature = "deny_group_attr", feature = "deny_override")))]
-proc_macro_api! {}
+#[cfg(all(feature = "allow_group_attr", feature = "allow_override"))]
+proc_macro_api! {
+    /// ```
+    #[cfg(feature = "allow_group_attr")]
+    /// let ok: i32;
+    #[cfg(not(feature = "allow_group_attr"))]
+    #[at]
+    {
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        #[cfg(feature = "allow_override")]
+        /// ```
+        /// ```
+        #[fn] b as global_local_0,
+    },
+
+    #[cfg(feature = "allow_group_attr")]
+    /// ```
+    #[cfg(feature = "allow_group_attr")]
+    /// let ok: i32;
+    #[at]
+    {
+        #[cfg(feature = "allow_override")]
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        /// ```
+        /// ```
+        #[fn] b as global_local_0,
+    },
+
+    /// ```
+    #[cfg(feature = "allow_group_attr")]
+    /// let ok: i32;
+    #[cfg(not(feature = "allow_group_attr"))]
+    #[at]
+    {
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        #[cfg(feature = "allow_override")]
+        /// ```
+        /// ```
+        c as global_local_0,
+    },
+
+    #[cfg(feature = "allow_group_attr")]
+    /// ```
+    #[cfg(feature = "allow_group_attr")]
+    /// let ok: i32;
+    #[at]
+    {
+        #[cfg(feature = "allow_override")]
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        /// ```
+        /// ```
+        c as global_local_1,
+    },
+
+    #[at] {#[fn] b as override_0},
+    #[at] {#[dr(Override1)] b as override_1},
+    #[fn] {#[at] c as override_2},
+
+
+
+}
+
+#[cfg(not(any(feature = "deny_group_attr", feature = "deny_override")))]
+#[cfg(all(feature = "allow_group_attr", feature = "allow_override"))]
+#[cfg(all(not(feature = "deny_shadow"), feature = "allow_shadow"))]
+proc_macro_api! {
+    #[at]#[at]#[at]#[at] {#[fn] b as oth_proc_0},
+}
 
 // call_attr
 // fn
