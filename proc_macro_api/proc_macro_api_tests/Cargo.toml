@@ -20,3 +20,22 @@ deny_override = ["proc-macro-api/deny_override"]
 deny_shadow = ["proc-macro-api/deny_shadow"]
 deny_group_attr = ["proc-macro-api/deny_group_attr"]
 auto_transform = ["proc-macro-api/auto_transform"]
+allow_override = []
+allow_shadow = []
+allow_group_attr = []
+
+[[test]]
+name = "trans"
+required-features = ["auto_transform"]
+
+[[test]]
+name = "attr_gp"
+required-features = ["allow_group_attr"]
+
+[[test]]
+name = "attr_gp_ov"
+required-features = ["allow_group_attr", "allow_override"]
+
+[[test]]
+name = "attr_gp_ov_sh"
+required-features = ["allow_group_attr", "allow_override", "allow_shadow"]
