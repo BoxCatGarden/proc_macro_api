@@ -68,6 +68,7 @@ proc_macro_api! {
     #[proc_macro_derive(AliasDr1)] b as alias_dr_1,
 
     a::a::a::{#[fn] b as seg_matcher_0},
+    {#[fn] b as seg_matcher_1},
     ::a as _,
     ::a::a as _,
     ::a::a::{},
@@ -193,8 +194,7 @@ proc_macro_api! {
     #[at] {#[dr(Override1)] b as override_1},
     #[fn] {#[at] c as override_2},
 
-
-
+    #[at] {#[fn] {b as bg_proc_oth_0}},
 }
 
 #[cfg(not(any(feature = "deny_group_attr", feature = "deny_override")))]
@@ -202,10 +202,21 @@ proc_macro_api! {
 #[cfg(all(not(feature = "deny_shadow"), feature = "allow_shadow"))]
 proc_macro_api! {
     #[at]#[at]#[at]#[at] {#[fn] b as oth_proc_0},
+
+    #[at]#[at] {#[fn] b as bg_proc_oth_1},
+}
+
+#[cfg(all(not(feature = "deny_group_attr"), feature = "allow_group_attr"))]
+proc_macro_api! {
+    /// a
+    {
+        #[fn] b as bg_proc_doc_oth_0,
+
+        /// a
+        #[fn] {b as bg_proc_doc_oth_1},
+    },
 }
 
 // call_attr
 // fn
-// {{}}
-// attr
 // error
