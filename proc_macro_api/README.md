@@ -280,7 +280,7 @@ _p_ is an input path, where input paths include empty groups
 * **`auto_transform`** - Transform the input [`TokenStream`] into the
   input of the api-function, and transform the output of the api-function
   into the output [`TokenStream`], by using [`From`].
-  It is useful when re-exporting some extern functions as APIs of the
+  It is useful when re-exporting some extern functions as the APIs of the
   crate, where the functions can require `proc_macro2::TokenStream` as
   their input and output values of `proc_macro2::TokenStream`.
 
