@@ -195,6 +195,10 @@ proc_macro_api! {
     #[fn] {#[at] c as override_2},
 
     #[at] {#[fn] {b as bg_proc_oth_0}},
+
+    #[at] {#[dr] {#[fn] {b as call_at_bg_0}}},
+
+    #[at] {#[dr] {#[fn] b as prs_fn_bg_0}},
 }
 
 #[cfg(not(any(feature = "deny_group_attr", feature = "deny_override")))]
@@ -215,8 +219,8 @@ proc_macro_api! {
         /// a
         #[fn] {b as bg_proc_doc_oth_1},
     },
+
+    #[fn] {{b as call_at_bg_1}},
 }
 
-// call_attr
-// fn
 // error

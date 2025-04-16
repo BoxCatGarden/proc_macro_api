@@ -1,9 +1,7 @@
 use proc_macro_api_tests::{
-    Override1, bg_proc_oth_0, global_local_0, global_local_1, override_0, override_2,
+    Override1, bg_proc_oth_0, call_at_bg_0, global_local_0, global_local_1, override_0, override_2,
+    prs_fn_bg_0,
 };
-
-#[path = "./attr_gp.rs"]
-mod attr_gp;
 
 #[test]
 fn output() {
@@ -27,4 +25,8 @@ fn output() {
     }
 
     assert_eq!(0, bg_proc_oth_0!());
+
+    assert_eq!(0, call_at_bg_0!());
+
+    assert_eq!(0, prs_fn_bg_0!());
 }
