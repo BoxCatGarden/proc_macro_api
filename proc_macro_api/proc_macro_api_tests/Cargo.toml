@@ -12,7 +12,7 @@ proc-macro2 = { workspace = true }
 syn = { workspace = true }
 quote = { workspace = true }
 proc-macro-api = { workspace = true }
-proc-macro-api-test-base = { workspace = true }
+base = { version = "0.1", path = "../proc_macro_api_test_base", package = "proc-macro-api-test-base" }
 
 [features]
 with_default = ["proc-macro-api/default"]
@@ -23,6 +23,7 @@ auto_transform = ["proc-macro-api/auto_transform"]
 allow_override = []
 allow_shadow = []
 allow_group_attr = []
+non_optional_err = []
 
 [[test]]
 name = "trans"

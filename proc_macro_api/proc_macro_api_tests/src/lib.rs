@@ -4,8 +4,7 @@
 extern crate proc_macro_api;
 use proc_macro_api::proc_macro_api;
 
-extern crate proc_macro_api_test_base as base;
-use base::dummy_api;
+use ::base::dummy_api;
 
 dummy_api!(mod ,,,,,,,,,,,);
 
@@ -73,7 +72,7 @@ proc_macro_api! {
     ::a::a as _,
     ::a::a::{},
     ::{},
-    {},
+    {},,,,,,,,,
 
     a::{a::{#[fn] b as no_trailing_comma_0}},
 }
@@ -103,7 +102,7 @@ proc_macro_api!(#[fn] no_as::no_as_0);
 
 #[cfg(feature = "auto_transform")]
 mod pm2 {
-    use ::proc_macro_api_test_base::dummy_api;
+    use ::base::dummy_api;
 
     dummy_api!(pub pm2 mod ,,,,,,,,,,,);
 }
@@ -221,6 +220,52 @@ proc_macro_api! {
     },
 
     #[fn] {{b as call_at_bg_1}},
+}
+
+#[cfg(feature = "non_optional_err")]
+proc_macro_api! {
+    // blk_al
+    {} as _,
+
+    // inner_cc
+    ::{::b as _},
+    a::{::b as _},
+
+    // no_seg
+    #[fn],
+
+    // mul_seg
+    a {},
+    a::a {},
+    a::a::a {},
+    a::a::a::{} {},
+    a::a::{} {},
+    a::{} {},
+    ::a {},
+    ::a::a {},
+    ::a::a::{} {},
+    ::a::{} {},
+    ::{} {},
+
+    // no_proc
+    b,
+    ::a::b as b,
+    a::a::b,
+
+    // err_seg
+    {;},
+    {#[fn];},
+    {a;},
+    {::;},
+    {::a;},
+    {::a::a;},
+    {::a::a::;},
+    {::{};},
+    {{};},
+    {#[fn] b as ;},
+
+    // no_path
+    #[fn] nonexistent_api,
 }
 
 // error
