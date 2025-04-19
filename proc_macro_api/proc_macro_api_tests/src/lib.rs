@@ -188,9 +188,9 @@ proc_macro_api! {
     #[at]
     {
         /// ```
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "allow_group_attr")]
         /// let MisMatchCausedByOverride: () = 0;
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "allow_group_attr")]
         /// ```
         /// ```
         c as global_local_1,
@@ -202,9 +202,9 @@ proc_macro_api! {
     /// let ok: i32;
     #[at]
     {
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "allow_group_attr")]
         /// ```
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "allow_group_attr")]
         /// let MisMatchCausedByOverride: () = 0;
         /// ```
         /// ```
@@ -222,6 +222,7 @@ proc_macro_api! {
     #[fn] {{b as call_at_bg_1}},
 }
 
+#[allow(unused)]
 macro_rules! error {
     ($($name:ident : { $($tt:tt)* }),* $(,)?) => {$(
         /// ```
@@ -236,6 +237,7 @@ macro_rules! error {
     )*};
 }
 
+#[allow(unused)]
 macro_rules! api {
     ($($name:ident : { $($tt:tt)* }),* $(,)?) => {$(
         proc_macro_api! {
@@ -280,13 +282,34 @@ error_sh! {
     err_sh_3: { #[fn]#[proc_macro_attribute] c as _ },
     err_sh_4: { #[fn]#[dr(ErrSh4)] b as _ },
     err_sh_5: { #[fn]#[proc_macro_derive(ErrSh5)] b as _ },
+
+    err_sh_6: { #[fn]#[fn] a::{} },
+    err_sh_7: { #[fn]#[doc=""]#[fn] a::b as _ },
+    err_sh_8: { #[fn]#[doc=""]#[doc=""]#[fn] a::a::b as _ },
+    err_sh_9: { #[fn]#[doc=""]#[fn] a::a::{} },
+    err_sh_10: { #[fn]#[doc=""]#[doc=""]#[fn] a::a::a::{} },
+    err_sh_11: { #[fn]#[fn] a::a::b as _ },
+    err_sh_12: { #[fn]#[fn] a::a::a::b as _ },
+    err_sh_13: { #[fn]#[fn] a::a::a::a::b as _ },
 }
 
 error_ov! {
     err_ov_0: { #[fn] {#[fn] b as _} },
-    err_ov_1: { #[at] {#[fn] b as _} },
+    err_ov_1: { #[at] {#[fn] a::{}} },
+    err_ov_2: { #[fn] {#[fn]#[doc=""] a::b as _} },
+    err_ov_3: { #[fn] {#[fn]#[doc=""]#[doc=""] a::a::b as _} },
+    err_ov_4: { #[fn] {#[fn]#[doc=""] a::a::{}} },
+    err_ov_5: { #[fn] {#[fn]#[doc=""]#[doc=""] a::a::a::{}} },
+    err_ov_6: { #[fn] {#[fn] a::a::b as _} },
+    err_ov_7: { #[fn] {#[fn] a::a::a::b as _} },
 }
 
 error_gp! {
     err_gp_0: { #[fn] {b as _} },
+    err_gp_1: { #[fn]#[doc=""] ::{b as _} },
+    err_gp_2: { #[fn]#[doc=""]#[doc=""] a::{b as _} },
+    err_gp_3: { #[fn] a::a::{b as _} },
+    err_gp_4: { #[fn] a::a::a::{b as _} },
+    err_gp_5: { #[fn] ::a::{b as _} },
+    err_gp_6: { #[fn] ::a::a::{b as _} },
 }
