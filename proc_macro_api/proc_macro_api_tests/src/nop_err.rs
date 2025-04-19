@@ -1,17 +1,3 @@
-macro_rules! error {
-    ($($name:ident : { $($tt:tt)* }),* $(,)?) => {$(
-        /// ```
-        /// use ::proc_macro_api::proc_macro_api;
-        #[doc = concat!("proc_macro_api!\n{ ",
-            $(stringify!($tt), " ",)*
-        "}")]
-        /// fn main() {}
-        /// ```
-        #[allow(dead_code)]
-        fn $name() {}
-    )*};
-}
-
 error! {
     blk_al: { {} as _ },
 

@@ -222,7 +222,42 @@ proc_macro_api! {
     #[fn] {{b as call_at_bg_1}},
 }
 
+macro_rules! error {
+    ($($name:ident : { $($tt:tt)* }),* $(,)?) => {$(
+        /// ```
+        /// use ::proc_macro_api::proc_macro_api;
+        #[doc = concat!("proc_macro_api!\n{ ",
+            $(stringify!($tt), " ",)*
+        "}")]
+        /// fn main() {}
+        /// ```
+        #[allow(dead_code)]
+        fn $name() {}
+    )*};
+}
+
+macro_rules! api {
+    ($($name:ident : { $($tt:tt)* }),* $(,)?) => {$(
+        proc_macro_api! {
+            $($tt)*
+        }
+    )*};
+}
+
 #[cfg(feature = "non_optional_err")]
 mod nop_err;
+
+#[cfg(any(feature = "deny_shadow", feature = "with_default"))]
+use error as error_sh;
+#[cfg(not(any(feature = "deny_shadow", feature = "with_default")))]
+use api as error_sh;
+#[cfg(any(feature = "deny_override", feature = "with_default"))]
+use error as error_ov;
+#[cfg(not(any(feature = "deny_override", feature = "with_default")))]
+use api as error_ov;
+#[cfg(any(feature = "deny_group_attr", feature = "with_default"))]
+use error as error_gp;
+#[cfg(not(any(feature = "deny_group_attr", feature = "with_default")))]
+use api as error_gp;
 
 // error
