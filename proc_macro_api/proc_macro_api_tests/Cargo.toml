@@ -24,6 +24,7 @@ allow_override = []
 allow_shadow = []
 allow_group_attr = []
 non_optional_err = []
+err_nonexistent_fn = []
 
 [[test]]
 name = "trans"

@@ -159,36 +159,6 @@ proc_macro_api! {
         #[fn] b as global_local_0,
     },
 
-    /// ```
-    #[cfg(feature = "allow_group_attr")]
-    /// let ok: i32;
-    #[cfg(not(feature = "allow_group_attr"))]
-    #[at]
-    {
-        /// ```
-        #[cfg(feature = "allow_override")]
-        /// let MisMatchCausedByOverride: () = 0;
-        #[cfg(feature = "allow_override")]
-        /// ```
-        /// ```
-        c as global_local_0,
-    },
-
-    #[cfg(feature = "allow_group_attr")]
-    /// ```
-    #[cfg(feature = "allow_group_attr")]
-    /// let ok: i32;
-    #[at]
-    {
-        #[cfg(feature = "allow_override")]
-        /// ```
-        #[cfg(feature = "allow_override")]
-        /// let MisMatchCausedByOverride: () = 0;
-        /// ```
-        /// ```
-        c as global_local_1,
-    },
-
     #[at] {#[fn] b as override_0},
     #[at] {#[dr(Override1)] b as override_1},
     #[fn] {#[at] c as override_2},
@@ -211,6 +181,36 @@ proc_macro_api! {
 
 #[cfg(all(not(feature = "deny_group_attr"), feature = "allow_group_attr"))]
 proc_macro_api! {
+    /// ```
+    #[cfg(feature = "allow_group_attr")]
+    /// let ok: i32;
+    #[cfg(not(feature = "allow_group_attr"))]
+    #[at]
+    {
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        #[cfg(feature = "allow_override")]
+        /// ```
+        /// ```
+        c as global_local_1,
+    },
+
+    #[cfg(feature = "allow_group_attr")]
+    /// ```
+    #[cfg(feature = "allow_group_attr")]
+    /// let ok: i32;
+    #[at]
+    {
+        #[cfg(feature = "allow_override")]
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        /// ```
+        /// ```
+        c as global_local_1,
+    },
+
     /// a
     {
         #[fn] b as bg_proc_doc_oth_0,
@@ -247,17 +247,46 @@ macro_rules! api {
 #[cfg(feature = "non_optional_err")]
 mod nop_err;
 
-#[cfg(any(feature = "deny_shadow", feature = "with_default"))]
-use error as error_sh;
+#[cfg(feature = "err_nonexistent_fn")]
+proc_macro_api! {
+    #[fn] nonexistent_fn as err_nonexistent_fn_0,
+}
+
 #[cfg(not(any(feature = "deny_shadow", feature = "with_default")))]
 use api as error_sh;
-#[cfg(any(feature = "deny_override", feature = "with_default"))]
-use error as error_ov;
-#[cfg(not(any(feature = "deny_override", feature = "with_default")))]
+#[cfg(not(any(
+    feature = "deny_override",
+    feature = "deny_group_attr",
+    feature = "with_default"
+)))]
 use api as error_ov;
-#[cfg(any(feature = "deny_group_attr", feature = "with_default"))]
-use error as error_gp;
 #[cfg(not(any(feature = "deny_group_attr", feature = "with_default")))]
 use api as error_gp;
+#[cfg(any(feature = "deny_shadow", feature = "with_default"))]
+use error as error_sh;
+#[cfg(any(
+    feature = "deny_override",
+    feature = "deny_group_attr",
+    feature = "with_default"
+))]
+use error as error_ov;
+#[cfg(any(feature = "deny_group_attr", feature = "with_default"))]
+use error as error_gp;
 
-// error
+error_sh! {
+    err_sh_0: { #[fn]#[fn] b as _ },
+    err_sh_1: { #[fn]#[proc_macro] b as _ },
+    err_sh_2: { #[fn]#[at] c as _ },
+    err_sh_3: { #[fn]#[proc_macro_attribute] c as _ },
+    err_sh_4: { #[fn]#[dr(ErrSh4)] b as _ },
+    err_sh_5: { #[fn]#[proc_macro_derive(ErrSh5)] b as _ },
+}
+
+error_ov! {
+    err_ov_0: { #[fn] {#[fn] b as _} },
+    err_ov_1: { #[at] {#[fn] b as _} },
+}
+
+error_gp! {
+    err_gp_0: { #[fn] {b as _} },
+}
