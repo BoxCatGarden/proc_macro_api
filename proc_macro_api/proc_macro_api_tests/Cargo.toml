@@ -25,6 +25,23 @@ allow_shadow = []
 allow_group_attr = []
 non_optional_err = []
 err_nonexistent_fn = []
+# test option
+# `attr_*` cannot be combined with `err_attr_*` or `default`
+# `err_attr_*`
+test_trans = ["auto_transform"]
+test_attr_gp = ["allow_group_attr"]
+test_attr_gp_ov = ["test_attr_gp", "allow_override"]
+test_attr_gp_ov_sh = ["test_attr_gp_ov", "allow_shadow"]
+test_err_nex_fn = ["err_nonexistent_fn"]
+test_err_nop = ["non_optional_err"]
+test_err_attr_sh = ["deny_shadow", "allow_override", "allow_group_attr"]
+test_err_attr_ov = ["allow_shadow", "deny_override", "allow_group_attr"]
+test_err_attr_gp = ["allow_shadow", "allow_override", "deny_group_attr"]
+test_err_attr_sh_ov = ["deny_shadow", "deny_override", "allow_group_attr"]
+test_err_attr_sh_gp = ["deny_shadow", "allow_override", "deny_group_attr"]
+test_err_attr_ov_gp = ["allow_shadow", "deny_override", "deny_group_attr"]
+test_err_attr_sh_ov_gp = ["deny_shadow", "deny_override", "deny_group_attr"]
+test_err_default = ["with_default"]
 
 [[test]]
 name = "trans"
