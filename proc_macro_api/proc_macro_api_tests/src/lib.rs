@@ -89,10 +89,6 @@ proc_macro_api! {
 }
 
 mod no_as {
-    use ::core::convert::Into as _;
-    use ::proc_macro::TokenStream;
-    use ::quote::quote;
-
     macro_rules! no_as {
         ($name:ident) => {
             #[inline(always)]
@@ -107,13 +103,49 @@ mod no_as {
         };
     }
 
-    no_as!(no_as_0);
-    no_as!(no_as_1);
+    macro_rules! no_as_mod {
+        ($name_0:ident, $name_1:ident $(; $($tt:tt)*)?) => {
+            use ::core::convert::Into as _;
+            use ::proc_macro::TokenStream;
+            use ::quote::quote;
+            no_as!($name_0);
+            no_as!($name_1);
+
+            $(
+            pub mod a {
+                no_as_mod!($($tt)*);
+            }
+            )?
+        };
+
+        () => {};
+    }
+
+    no_as_mod! {
+        no_as_0, no_as_1;
+        no_as_2, no_as_3;
+        no_as_4, no_as_5;
+        no_as_6, no_as_7;
+    }
 }
 
 proc_macro_api! {
-    #[fn] no_as::no_as_0,
-    #[fn] no_as::no_as_1,
+    {
+        #[fn] no_as::no_as_0,
+        #[fn] no_as::no_as_1,
+    },
+    {
+        #[fn] no_as::a::no_as_2,
+        #[fn] no_as::a::no_as_3,
+    },
+    {
+        #[fn] no_as::a::a::no_as_4,
+        #[fn] no_as::a::a::no_as_5,
+    },
+    no_as::a::a::a::{
+        #[fn] no_as_6,
+        #[fn] no_as_7,
+    },
 }
 
 proc_macro_api! {
@@ -221,6 +253,14 @@ proc_macro_api! {
         /// ```
         /// ```
         #[fn] b as global_local_0,
+
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        #[cfg(feature = "allow_override")]
+        /// ```
+        /// ```
+        a::c as global_local_1,
     },
 
     #[cfg(feature = "allow_group_attr")]
@@ -236,6 +276,60 @@ proc_macro_api! {
         /// ```
         /// ```
         #[fn] b as global_local_0,
+
+        #[cfg(feature = "allow_override")]
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        /// ```
+        /// ```
+        a::c as global_local_1,
+    },
+
+    /// ```
+    #[cfg(feature = "allow_group_attr")]
+    /// let ok: i32;
+    #[cfg(not(feature = "allow_group_attr"))]
+    #[at]
+    {
+        #[cfg(feature = "allow_override")]
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        /// ```
+        /// ```
+        c as global_local_2,
+
+        #[cfg(feature = "allow_override")]
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        /// ```
+        /// ```
+        #[fn] a::b as global_local_3,
+    },
+
+    #[cfg(feature = "allow_group_attr")]
+    /// ```
+    #[cfg(feature = "allow_group_attr")]
+    /// let ok: i32;
+    #[at]
+    {
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        #[cfg(feature = "allow_override")]
+        /// ```
+        /// ```
+        c as global_local_2,
+
+        /// ```
+        #[cfg(feature = "allow_override")]
+        /// let MisMatchCausedByOverride: () = 0;
+        #[cfg(feature = "allow_override")]
+        /// ```
+        /// ```
+        #[fn] a::b as global_local_3,
     },
 
     #[at] {#[fn] b as override_0},
@@ -264,7 +358,7 @@ proc_macro_api! {
     #[cfg(feature = "allow_group_attr")]
     /// let ok: i32;
     #[cfg(not(feature = "allow_group_attr"))]
-    #[at]
+    #[fn]
     {
         /// ```
         #[cfg(feature = "allow_group_attr")]
@@ -272,14 +366,22 @@ proc_macro_api! {
         #[cfg(feature = "allow_group_attr")]
         /// ```
         /// ```
-        c as global_local_1,
+        b as global_local_gp_0,
+
+        /// ```
+        #[cfg(feature = "allow_group_attr")]
+        /// let MisMatchCausedByOverride: () = 0;
+        #[cfg(feature = "allow_group_attr")]
+        /// ```
+        /// ```
+        a::b as global_local_gp_1,
     },
 
     #[cfg(feature = "allow_group_attr")]
     /// ```
     #[cfg(feature = "allow_group_attr")]
     /// let ok: i32;
-    #[at]
+    #[fn]
     {
         #[cfg(feature = "allow_group_attr")]
         /// ```
@@ -287,7 +389,15 @@ proc_macro_api! {
         /// let MisMatchCausedByOverride: () = 0;
         /// ```
         /// ```
-        c as global_local_1,
+        b as global_local_gp_0,
+
+        #[cfg(feature = "allow_group_attr")]
+        /// ```
+        #[cfg(feature = "allow_group_attr")]
+        /// let MisMatchCausedByOverride: () = 0;
+        /// ```
+        /// ```
+        a::b as global_local_gp_1,
     },
 
     /// a
@@ -333,6 +443,11 @@ proc_macro_api! {
     #[fn] nonexistent_fn as err_nonexistent_fn_0,
 }
 
+#[cfg(feature = "attr_tests")]
 mod err_gp;
+
+#[cfg(feature = "attr_tests")]
 mod err_ov;
+
+#[cfg(feature = "attr_tests")]
 mod err_sh;
