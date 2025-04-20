@@ -26,8 +26,7 @@ allow_group_attr = []
 non_optional_err = []
 err_nonexistent_fn = []
 # test option
-# `attr_*` cannot be combined with `err_attr_*` or `default`
-# `err_attr_*`
+test_normal = []
 test_trans = ["auto_transform"]
 test_attr_gp = ["allow_group_attr"]
 test_attr_gp_ov = ["test_attr_gp", "allow_override"]

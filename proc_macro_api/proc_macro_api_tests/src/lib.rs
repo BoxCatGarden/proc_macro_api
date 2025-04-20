@@ -1,5 +1,7 @@
 #![no_implicit_prelude]
 
+mod test_invalid_combination;
+
 #[no_link]
 extern crate proc_macro_api;
 use proc_macro_api::proc_macro_api;
