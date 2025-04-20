@@ -1,5 +1,6 @@
 error! {
-    blk_al: { {} as _ },
+    blk_al_0: { {} as _ },
+    blk_al_1: { ::{} as _ },
 
     inner_cc_0: { ::{::a::b as _} },
     inner_cc_1: { a::{::b as _} },

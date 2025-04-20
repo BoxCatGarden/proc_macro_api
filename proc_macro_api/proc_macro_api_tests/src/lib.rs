@@ -19,6 +19,7 @@ proc_macro_api!(a::a::{});
 proc_macro_api!(::a::a::{});
 
 proc_macro_api! {
+    ,,,,,,,,,
     /// a
     /// b
     #[allow(unused)]
@@ -80,6 +81,7 @@ proc_macro_api! {
 }
 
 proc_macro_api! {
+    ,,,,,,,,,
     #[fn] ::base::b as cc_0,
     ::base::{#[fn] b as cc_1},
     ::base::a::{#[fn] b as cc_2},
@@ -91,16 +93,91 @@ mod no_as {
     use ::proc_macro::TokenStream;
     use ::quote::quote;
 
-    #[inline(always)]
-    pub fn no_as_0(_input: TokenStream) -> TokenStream {
-        quote! {
-            "no_as"
-        }
-        .into()
+    macro_rules! no_as {
+        ($name:ident) => {
+            #[inline(always)]
+            pub fn $name(_input: TokenStream) -> TokenStream {
+                let name = stringify!($name);
+
+                quote! {
+                    #name
+                }
+                .into()
+            }
+        };
     }
+
+    no_as!(no_as_0);
+    no_as!(no_as_1);
 }
 
-proc_macro_api!(#[fn] no_as::no_as_0);
+proc_macro_api! {
+    #[fn] no_as::no_as_0,
+    #[fn] no_as::no_as_1,
+}
+
+proc_macro_api! {
+    {
+        #[fn]#[doc=""] b as seg_matcher_2_0,
+        #[fn]#[doc=""] b as seg_matcher_2_1,
+    },
+    {
+        #[fn] a::b as seg_matcher_3_0,
+        #[fn] a::b as seg_matcher_3_1,
+    },
+    {
+        #[fn] a::a::b as seg_matcher_4_0,
+        #[fn] a::a::b as seg_matcher_4_1,
+    },
+    {
+        #[fn] a::a::a::b as seg_matcher_5_0,
+        #[fn] a::a::a::b as seg_matcher_5_1,
+    },
+    {
+        a::{#[fn] a::a::a::b as seg_matcher_6_0},
+        a::{#[fn] a::a::a::b as seg_matcher_6_1},
+    },
+    {
+        a::a::{#[fn] a::a::a::b as seg_matcher_7_0},
+        a::a::{#[fn] a::a::a::b as seg_matcher_7_1},
+    },
+    {
+        a::a::a::{#[fn] a::a::a::b as seg_matcher_8_0},
+        a::a::a::{#[fn] a::a::a::b as seg_matcher_8_1},
+    },
+    {
+        a::a::a::a::{#[fn] a::a::a::b as seg_matcher_9_0},
+        a::a::a::a::{#[fn] a::a::a::b as seg_matcher_9_1},
+    },
+    {
+        #[fn]#[doc=""] ::b as _,
+        #[fn]#[doc=""] ::b as _,
+    },
+    {
+        #[fn] ::base::b as seg_matcher_10_0,
+        #[fn] ::base::b as seg_matcher_10_1,
+    },
+    {
+        #[fn] ::base::a::b as seg_matcher_11_0,
+        #[fn] ::base::a::b as seg_matcher_11_1,
+    },
+    {
+        ::base::{#[fn] a::a::b as seg_matcher_12_0},
+        ::base::{#[fn] a::a::b as seg_matcher_12_1},
+    },
+    {
+        ::base::a::{#[fn] a::a::b as seg_matcher_13_0},
+        ::base::a::{#[fn] a::a::b as seg_matcher_13_1},
+    },
+    {
+        ::base::a::a::{#[fn] a::a::b as seg_matcher_14_0},
+        ::base::a::a::{#[fn] a::a::b as seg_matcher_14_1},
+    },
+    {
+        ::{#[fn] base::a::a::a::a::a::b as seg_matcher_15_0},
+        ::{#[fn] base::a::a::a::a::a::b as seg_matcher_15_1},
+    },
+}
 
 #[cfg(feature = "auto_transform")]
 mod pm2 {
