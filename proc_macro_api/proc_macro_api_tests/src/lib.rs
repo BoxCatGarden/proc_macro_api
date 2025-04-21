@@ -24,68 +24,68 @@ proc_macro_api! {
     /// b
     #[allow(unused)]
     #[proc_macro]
-    a::a::a::a::a::a::a::a::a::a::b as full_seg_0,
+    a::a::a::a::a::a::a::a::a::a::b as norm_t_full_seg_0,
 
     /// a
     #[allow(unused)]
     #[proc_macro]
     /// b
-    a::a::a::a::a::a::a::a::a::a::b as full_seg_1,
+    a::a::a::a::a::a::a::a::a::a::b as norm_t_full_seg_1,
 
     /// a
     #[proc_macro]
     /// b
     #[allow(unused)]
-    a::a::a::a::a::a::a::a::a::a::b as full_seg_2,
+    a::a::a::a::a::a::a::a::a::a::b as norm_t_full_seg_2,
 
     /// b
     #[allow(unused)]
     #[proc_macro]
-    b as empty_rest_0,
+    b as norm_t_empty_rest_0,
 
     /// b
     #[allow(unused)]
     #[proc_macro]
-    a::b as one_rest_0,
+    a::b as norm_t_one_rest_0,
 
     #[allow(unused)]
     #[proc_macro]
     /// b
-    a::b as one_rest_1,
+    a::b as norm_t_one_rest_1,
 
     #[proc_macro]
     /// b
     #[allow(unused)]
-    a::b as one_rest_2,
+    a::b as norm_t_one_rest_2,
 
-    a::{#[fn] b as one_rest_out_0},
+    a::{#[fn] b as norm_t_one_rest_out_0},
 
-    a::a::{#[fn] b as one_prv_0},
+    a::a::{#[fn] b as norm_t_one_prv_0},
 
-    #[fn] b as alias_fn_0,
-    #[proc_macro] b as alias_fn_1,
-    #[at] c as alias_at_0,
-    #[proc_macro_attribute] c as alias_at_1,
-    #[dr(AliasDr0)] b as alias_dr_0,
-    #[proc_macro_derive(AliasDr1)] b as alias_dr_1,
+    #[fn] b as norm_t_alias_fn_0,
+    #[proc_macro] b as norm_t_alias_fn_1,
+    #[at] c as norm_t_alias_at_0,
+    #[proc_macro_attribute] c as norm_t_alias_at_1,
+    #[dr(norm_t_AliasDr0)] b as norm_t_alias_dr_0,
+    #[proc_macro_derive(norm_t_AliasDr1)] b as norm_t_alias_dr_1,
 
-    a::a::a::{#[fn] b as seg_matcher_0},
-    {#[fn] b as seg_matcher_1},
+    a::a::a::{#[fn] b as norm_t_seg_matcher_0},
+    {#[fn] b as norm_t_seg_matcher_1},
     ::a as _,
     ::a::a as _,
     ::a::a::{},
     ::{},
     {},,,,,,,,,
 
-    a::{a::{#[fn] b as no_trailing_comma_0}},
+    a::{a::{#[fn] b as norm_t_no_trailing_comma_0}},
 }
 
 proc_macro_api! {
     ,,,,,,,,,
-    #[fn] ::base::b as cc_0,
-    ::base::{#[fn] b as cc_1},
-    ::base::a::{#[fn] b as cc_2},
-    ::{#[fn] base::b as cc_3},
+    #[fn] ::base::b as norm_t_cc_0,
+    ::base::{#[fn] b as norm_t_cc_1},
+    ::base::a::{#[fn] b as norm_t_cc_2},
+    ::{#[fn] base::b as norm_t_cc_3},
 }
 
 mod no_as {
@@ -122,92 +122,92 @@ mod no_as {
     }
 
     no_as_mod! {
-        no_as_0, no_as_1;
-        no_as_2, no_as_3;
-        no_as_4, no_as_5;
-        no_as_6, no_as_7;
+        norm_t_no_as_0, norm_t_no_as_1;
+        norm_t_no_as_2, norm_t_no_as_3;
+        norm_t_no_as_4, norm_t_no_as_5;
+        norm_t_no_as_6, norm_t_no_as_7;
     }
 }
 
 proc_macro_api! {
     {
-        #[fn] no_as::no_as_0,
-        #[fn] no_as::no_as_1,
+        #[fn] no_as::norm_t_no_as_0,
+        #[fn] no_as::norm_t_no_as_1,
     },
     {
-        #[fn] no_as::a::no_as_2,
-        #[fn] no_as::a::no_as_3,
+        #[fn] no_as::a::norm_t_no_as_2,
+        #[fn] no_as::a::norm_t_no_as_3,
     },
     {
-        #[fn] no_as::a::a::no_as_4,
-        #[fn] no_as::a::a::no_as_5,
+        #[fn] no_as::a::a::norm_t_no_as_4,
+        #[fn] no_as::a::a::norm_t_no_as_5,
     },
     no_as::a::a::a::{
-        #[fn] no_as_6,
-        #[fn] no_as_7,
+        #[fn] norm_t_no_as_6,
+        #[fn] norm_t_no_as_7,
     },
 }
 
 proc_macro_api! {
     {
-        #[fn]#[doc=""] b as seg_matcher_2_0,
-        #[fn]#[doc=""] b as seg_matcher_2_1,
+        #[fn]#[doc=""] b as norm_t_seg_matcher_2_0,
+        #[fn]#[doc=""] b as norm_t_seg_matcher_2_1,
     },
     {
-        #[fn] a::b as seg_matcher_3_0,
-        #[fn] a::b as seg_matcher_3_1,
+        #[fn] a::b as norm_t_seg_matcher_3_0,
+        #[fn] a::b as norm_t_seg_matcher_3_1,
     },
     {
-        #[fn] a::a::b as seg_matcher_4_0,
-        #[fn] a::a::b as seg_matcher_4_1,
+        #[fn] a::a::b as norm_t_seg_matcher_4_0,
+        #[fn] a::a::b as norm_t_seg_matcher_4_1,
     },
     {
-        #[fn] a::a::a::b as seg_matcher_5_0,
-        #[fn] a::a::a::b as seg_matcher_5_1,
+        #[fn] a::a::a::b as norm_t_seg_matcher_5_0,
+        #[fn] a::a::a::b as norm_t_seg_matcher_5_1,
     },
     {
-        a::{#[fn] a::a::a::b as seg_matcher_6_0},
-        a::{#[fn] a::a::a::b as seg_matcher_6_1},
+        a::{#[fn] a::a::a::b as norm_t_seg_matcher_6_0},
+        a::{#[fn] a::a::a::b as norm_t_seg_matcher_6_1},
     },
     {
-        a::a::{#[fn] a::a::a::b as seg_matcher_7_0},
-        a::a::{#[fn] a::a::a::b as seg_matcher_7_1},
+        a::a::{#[fn] a::a::a::b as norm_t_seg_matcher_7_0},
+        a::a::{#[fn] a::a::a::b as norm_t_seg_matcher_7_1},
     },
     {
-        a::a::a::{#[fn] a::a::a::b as seg_matcher_8_0},
-        a::a::a::{#[fn] a::a::a::b as seg_matcher_8_1},
+        a::a::a::{#[fn] a::a::a::b as norm_t_seg_matcher_8_0},
+        a::a::a::{#[fn] a::a::a::b as norm_t_seg_matcher_8_1},
     },
     {
-        a::a::a::a::{#[fn] a::a::a::b as seg_matcher_9_0},
-        a::a::a::a::{#[fn] a::a::a::b as seg_matcher_9_1},
+        a::a::a::a::{#[fn] a::a::a::b as norm_t_seg_matcher_9_0},
+        a::a::a::a::{#[fn] a::a::a::b as norm_t_seg_matcher_9_1},
     },
     {
         #[fn]#[doc=""] ::b as _,
         #[fn]#[doc=""] ::b as _,
     },
     {
-        #[fn] ::base::b as seg_matcher_10_0,
-        #[fn] ::base::b as seg_matcher_10_1,
+        #[fn] ::base::b as norm_t_seg_matcher_10_0,
+        #[fn] ::base::b as norm_t_seg_matcher_10_1,
     },
     {
-        #[fn] ::base::a::b as seg_matcher_11_0,
-        #[fn] ::base::a::b as seg_matcher_11_1,
+        #[fn] ::base::a::b as norm_t_seg_matcher_11_0,
+        #[fn] ::base::a::b as norm_t_seg_matcher_11_1,
     },
     {
-        ::base::{#[fn] a::a::b as seg_matcher_12_0},
-        ::base::{#[fn] a::a::b as seg_matcher_12_1},
+        ::base::{#[fn] a::a::b as norm_t_seg_matcher_12_0},
+        ::base::{#[fn] a::a::b as norm_t_seg_matcher_12_1},
     },
     {
-        ::base::a::{#[fn] a::a::b as seg_matcher_13_0},
-        ::base::a::{#[fn] a::a::b as seg_matcher_13_1},
+        ::base::a::{#[fn] a::a::b as norm_t_seg_matcher_13_0},
+        ::base::a::{#[fn] a::a::b as norm_t_seg_matcher_13_1},
     },
     {
-        ::base::a::a::{#[fn] a::a::b as seg_matcher_14_0},
-        ::base::a::a::{#[fn] a::a::b as seg_matcher_14_1},
+        ::base::a::a::{#[fn] a::a::b as norm_t_seg_matcher_14_0},
+        ::base::a::a::{#[fn] a::a::b as norm_t_seg_matcher_14_1},
     },
     {
-        ::{#[fn] base::a::a::a::a::a::b as seg_matcher_15_0},
-        ::{#[fn] base::a::a::a::a::a::b as seg_matcher_15_1},
+        ::{#[fn] base::a::a::a::a::a::b as norm_t_seg_matcher_15_0},
+        ::{#[fn] base::a::a::a::a::a::b as norm_t_seg_matcher_15_1},
     },
 }
 
@@ -229,12 +229,12 @@ const PM2_C: fn(
 
 #[cfg(feature = "auto_transform")]
 proc_macro_api! {
-    #[fn] pm2::b as trans_0,
-    #[at] pm2::c as trans_1,
-    #[fn] PM2_B as trans_2,
-    #[at] PM2_C as trans_3,
-    #[fn] ::base::pm2::b as cc_trans_0,
-    #[at] ::base::pm2::c as cc_trans_1,
+    #[fn] pm2::b as trans_t_trans_0,
+    #[at] pm2::c as trans_t_trans_1,
+    #[fn] PM2_B as trans_t_trans_2,
+    #[at] PM2_C as trans_t_trans_3,
+    #[fn] ::base::pm2::b as trans_t_cc_trans_0,
+    #[at] ::base::pm2::c as trans_t_cc_trans_1,
 }
 
 #[cfg(not(any(feature = "deny_group_attr", feature = "deny_override")))]
@@ -252,7 +252,7 @@ proc_macro_api! {
         #[cfg(feature = "allow_override")]
         /// ```
         /// ```
-        #[fn] b as global_local_0,
+        #[fn] b as attr_gp_ov_t_global_local_0,
 
         /// ```
         #[cfg(feature = "allow_override")]
@@ -260,7 +260,7 @@ proc_macro_api! {
         #[cfg(feature = "allow_override")]
         /// ```
         /// ```
-        a::c as global_local_1,
+        a::c as attr_gp_ov_t_global_local_1,
     },
 
     #[cfg(feature = "allow_group_attr")]
@@ -275,7 +275,7 @@ proc_macro_api! {
         /// let MisMatchCausedByOverride: () = 0;
         /// ```
         /// ```
-        #[fn] b as global_local_0,
+        #[fn] b as attr_gp_ov_t_global_local_0,
 
         #[cfg(feature = "allow_override")]
         /// ```
@@ -283,7 +283,7 @@ proc_macro_api! {
         /// let MisMatchCausedByOverride: () = 0;
         /// ```
         /// ```
-        a::c as global_local_1,
+        a::c as attr_gp_ov_t_global_local_1,
     },
 
     /// ```
@@ -298,7 +298,7 @@ proc_macro_api! {
         /// let MisMatchCausedByOverride: () = 0;
         /// ```
         /// ```
-        c as global_local_2,
+        c as attr_gp_ov_t_global_local_2,
 
         #[cfg(feature = "allow_override")]
         /// ```
@@ -306,7 +306,7 @@ proc_macro_api! {
         /// let MisMatchCausedByOverride: () = 0;
         /// ```
         /// ```
-        #[fn] a::b as global_local_3,
+        #[fn] a::b as attr_gp_ov_t_global_local_3,
     },
 
     #[cfg(feature = "allow_group_attr")]
@@ -321,7 +321,7 @@ proc_macro_api! {
         #[cfg(feature = "allow_override")]
         /// ```
         /// ```
-        c as global_local_2,
+        c as attr_gp_ov_t_global_local_2,
 
         /// ```
         #[cfg(feature = "allow_override")]
@@ -329,27 +329,27 @@ proc_macro_api! {
         #[cfg(feature = "allow_override")]
         /// ```
         /// ```
-        #[fn] a::b as global_local_3,
+        #[fn] a::b as attr_gp_ov_t_global_local_3,
     },
 
-    #[at] {#[fn] b as override_0},
-    #[at] {#[dr(Override1)] b as override_1},
-    #[fn] {#[at] c as override_2},
+    #[at] {#[fn] b as attr_gp_ov_t_override_0},
+    #[at] {#[dr(attr_gp_ov_t_Override1)] b as attr_gp_ov_t_override_1},
+    #[fn] {#[at] c as attr_gp_ov_t_override_2},
 
-    #[at] {#[fn] {b as bg_proc_oth_0}},
+    #[at] {#[fn] {b as attr_gp_ov_t_bg_proc_oth_0}},
 
-    #[at] {#[dr] {#[fn] {b as call_at_bg_0}}},
+    #[at] {#[dr] {#[fn] {b as attr_gp_ov_t_call_at_bg_0}}},
 
-    #[at] {#[dr] {#[fn] b as prs_fn_bg_0}},
+    #[at] {#[dr] {#[fn] b as attr_gp_ov_t_prs_fn_bg_0}},
 }
 
 #[cfg(not(any(feature = "deny_group_attr", feature = "deny_override")))]
 #[cfg(all(feature = "allow_group_attr", feature = "allow_override"))]
 #[cfg(all(not(feature = "deny_shadow"), feature = "allow_shadow"))]
 proc_macro_api! {
-    #[at]#[at]#[at]#[at] {#[fn] b as oth_proc_0},
+    #[at]#[at]#[at]#[at] {#[fn] b as attr_gp_ov_sh_t_oth_proc_0},
 
-    #[at]#[at] {#[fn] b as bg_proc_oth_1},
+    #[at]#[at] {#[fn] b as attr_gp_ov_sh_t_bg_proc_oth_1},
 }
 
 #[cfg(all(not(feature = "deny_group_attr"), feature = "allow_group_attr"))]
@@ -366,7 +366,7 @@ proc_macro_api! {
         #[cfg(feature = "allow_group_attr")]
         /// ```
         /// ```
-        b as global_local_gp_0,
+        b as attr_gp_t_global_local_gp_0,
 
         /// ```
         #[cfg(feature = "allow_group_attr")]
@@ -374,7 +374,7 @@ proc_macro_api! {
         #[cfg(feature = "allow_group_attr")]
         /// ```
         /// ```
-        a::b as global_local_gp_1,
+        a::b as attr_gp_t_global_local_gp_1,
     },
 
     #[cfg(feature = "allow_group_attr")]
@@ -389,7 +389,7 @@ proc_macro_api! {
         /// let MisMatchCausedByOverride: () = 0;
         /// ```
         /// ```
-        b as global_local_gp_0,
+        b as attr_gp_t_global_local_gp_0,
 
         #[cfg(feature = "allow_group_attr")]
         /// ```
@@ -397,18 +397,18 @@ proc_macro_api! {
         /// let MisMatchCausedByOverride: () = 0;
         /// ```
         /// ```
-        a::b as global_local_gp_1,
+        a::b as attr_gp_t_global_local_gp_1,
     },
 
     /// a
     {
-        #[fn] b as bg_proc_doc_oth_0,
+        #[fn] b as attr_gp_t_bg_proc_doc_oth_0,
 
         /// a
-        #[fn] {b as bg_proc_doc_oth_1},
+        #[fn] {b as attr_gp_t_bg_proc_doc_oth_1},
     },
 
-    #[fn] {{b as call_at_bg_1}},
+    #[fn] {{b as attr_gp_t_call_at_bg_1}},
 }
 
 #[allow(unused)]
