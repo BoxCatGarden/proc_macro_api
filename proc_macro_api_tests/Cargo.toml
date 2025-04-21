@@ -2,6 +2,10 @@
 name = "proc-macro-api-tests"
 version = "0.1.0"
 edition = "2024"
+description = "Tests for `proc-macro-api`."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/BoxCatGarden/proc_macro_api"
+readme = "README.md"
 publish = false
 
 [lib]
@@ -12,7 +16,7 @@ proc-macro2 = { workspace = true }
 syn = { workspace = true }
 quote = { workspace = true }
 proc-macro-api = { workspace = true }
-base = { version = "0.1", path = "../proc_macro_api_test_base", package = "proc-macro-api-test-base" }
+base = { workspace = true }
 
 [features]
 with_default = ["proc-macro-api/default"]
@@ -32,7 +36,7 @@ test_trans = ["auto_transform"]
 test_attr_gp = ["allow_group_attr", "attr_tests"]
 test_attr_gp_ov = ["test_attr_gp", "allow_override"]
 test_attr_gp_ov_sh = ["test_attr_gp_ov", "allow_shadow"]
-test_err_nex_fn = ["err_nonexistent_fn"]
+test_comp_err_nex_fn = ["err_nonexistent_fn"]
 test_err_nop = ["non_optional_err"]
 test_err_attr_sh = ["deny_shadow", "allow_override", "allow_group_attr", "attr_tests"]
 test_err_attr_ov = ["allow_shadow", "deny_override", "allow_group_attr", "attr_tests"]
