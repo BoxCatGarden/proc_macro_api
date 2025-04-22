@@ -1,3 +1,4 @@
+#![doc = include_str!("../README.md")]
 #![no_implicit_prelude]
 
 mod test_invalid_combination;
