@@ -10,13 +10,13 @@ Use `cargo test` to run the tests.
 for enabling optional tests. In order to enable an optional test, enable
 the corresponding test-option features.
 
-`test_normal` is provided for exhaustiveness, and normal-tests are not optional.
-
-`test_comp_err_*` will cause a compiling error. It is used for testing the
-error detecting and the error message, manually.
-
-`test_err_*` will be compiled successfully, but tests in it will always fail.
-It is used for testing the error detecting and the error message, manually.
+* `test_normal` is provided for exhaustiveness, and the tests in it are
+  not optional.
+* `test_comp_err_*` will cause a compiling error. It is used for testing the
+  error detecting and the error message, manually.
+* `test_err_*` will be compiled successfully, but the doc-tests in it will
+  always fail to be compiled. It is used for testing the error detecting
+  and the error message, manually.
 
 See *Cargo.toml* for the list of the test-option features.
 

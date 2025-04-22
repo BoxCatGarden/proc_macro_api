@@ -20,4 +20,5 @@ error_ov! {
     err_ov_5: { #[fn] {#[fn]#[doc=""]#[doc=""] a::a::a::{}} },
     err_ov_6: { #[fn] {#[fn] a::a::b as _} },
     err_ov_7: { #[fn] {#[fn] a::a::a::b as _} },
+    err_ov_8: { #[fn] {#[fn] {}} },
 }
