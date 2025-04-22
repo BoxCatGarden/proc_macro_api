@@ -22,4 +22,4 @@ proc_macro_api! {
 Then, a function-like macro, `proc_fn!()`, is available from that
 proc-macro crate.
 
-> Note: See the package documentation for more details.
+> Note: See the crate documentation for more details.
