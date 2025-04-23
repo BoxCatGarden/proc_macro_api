@@ -1,8 +1,7 @@
 #![no_implicit_prelude]
 #![no_std]
 
-#[doc(no_inline)]
-pub use ::core;
+extern crate proc_macro;
 
 /// ```no_run
 /// # macro_rules! a {
@@ -53,7 +52,7 @@ macro_rules! dummy_api_inner {
         #[inline(always)]
         $vis fn b(input: ::$pm::TokenStream) -> ::$pm::TokenStream {
             use ::quote::quote;
-            use $crate::core::convert::Into as _;
+            use ::core::convert::Into as _;
 
             let num = (&[ $($count),* ] as &[u8]).len();
 
@@ -73,7 +72,7 @@ macro_rules! dummy_api_inner {
             _: ::$pm::TokenStream,
         ) -> ::$pm::TokenStream {
             use ::quote::quote;
-            use $crate::core::convert::Into as _;
+            use ::core::convert::Into as _;
 
             let num = (&[ $($count),* ] as &[u8]).len();
 
@@ -97,8 +96,6 @@ pub mod pm2 {
     // 11 non-empty `mod`
     dummy_api!(pub pm2 mod ,,,,,,,,,,,,);
 }
-
-extern crate proc_macro;
 
 // 11 non-empty `mod`
 dummy_api!(pub mod ,,,,,,,,,,,,);
