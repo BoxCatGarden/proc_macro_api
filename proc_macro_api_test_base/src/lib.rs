@@ -27,11 +27,9 @@ pub use ::core;
 /// it always returns a `usize`.
 /// * `c()` always replaces the input item with a `const NUM: usize`.
 ///
-///
-///
-/// The value of the `const NUM: usize` and the returned `usize` equals
-/// the nest-depth of the function. The nest-depth of the outermost
-/// function is 0.
+/// Those `usize` values are respectively equal to the
+/// nest-depths of the functions that output them.
+/// The nest-depth of the outermost function is 0.
 #[macro_export]
 macro_rules! dummy_api {
     ($vis:vis mod $($count_down:tt)*) => {
