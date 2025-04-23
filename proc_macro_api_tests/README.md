@@ -13,17 +13,17 @@ the corresponding test-option features.
 * `test_normal` is provided for exhaustiveness, and the tests in it are
   not optional.
 * `test_comp_err_*` will cause a compiling error. It is used for testing the
-  error detecting and the error message, manually.
-* `test_err_*` will be compiled successfully, but the doc-tests in it will
+  error detecting and the error messages, manually.
+* `test_err_*` will be compiled successfully, but specific doc-tests in it will
   always fail to be compiled. It is used for testing the error detecting
-  and the error message, manually.
+  and the error messages, manually.
 
 See *Cargo.toml* for the list of the test-option features.
 
 # Combination of test-options
 
-Some test-option features can be enabled together.
-Incompatible test-options will cause a compiling error.
+Compatible test-option features can be enabled together.
+Incompatible test-option features will cause a compiling error.
 
 A `test_comp_err_*` feature should not be enabled together with other
 test-option features.
