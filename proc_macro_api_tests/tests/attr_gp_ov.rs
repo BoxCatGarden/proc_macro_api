@@ -27,7 +27,7 @@ fn output() {
     {
         #[derive(attr_gp_ov_t_Override1)]
         struct A;
-        assert_eq!(0, A::NUM);
+        assert_eq!(0, D_NUM);
     }
     {
         #[attr_gp_ov_t_override_2]

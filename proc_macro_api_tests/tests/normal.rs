@@ -53,12 +53,12 @@ fn output() {
     {
         #[derive(norm_t_AliasDr0)]
         struct A;
-        assert_eq!(0, A::NUM);
+        assert_eq!(0, D_NUM);
     }
     {
         #[derive(norm_t_AliasDr1)]
         struct A;
-        assert_eq!(0, A::NUM);
+        assert_eq!(0, D_NUM);
     }
 
     assert_eq!(3, norm_t_seg_matcher_0!());
