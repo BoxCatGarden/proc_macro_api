@@ -1,6 +1,6 @@
 [package]
 name = "proc-macro-api"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2024"
 description = "A macro helping with exporting APIs in a proc-macro library crate."
 license = "MIT OR Apache-2.0"
