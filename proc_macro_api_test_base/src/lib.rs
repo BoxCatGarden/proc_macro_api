@@ -54,13 +54,13 @@ macro_rules! dummy_api_inner {
             use ::quote::quote;
             use ::core::convert::Into as _;
 
-            let num = (&[ $($count),* ] as &[u8]).len();
+            const NUM: usize = const { (&[ $($count),* ] as &[u8]).len() };
 
             if input.is_empty() {
-                quote! { #num }.into()
+                quote! { #NUM }.into()
             } else {
                 quote! {
-                    const D_NUM: usize = #num;
+                    const D_NUM: usize = #NUM;
                 }.into()
             }
         }
@@ -74,10 +74,10 @@ macro_rules! dummy_api_inner {
             use ::quote::quote;
             use ::core::convert::Into as _;
 
-            let num = (&[ $($count),* ] as &[u8]).len();
+            const NUM: usize = const { (&[ $($count),* ] as &[u8]).len() };
 
             quote! {
-                const NUM: usize = #num;
+                const NUM: usize = #NUM;
             }.into()
         }
 
