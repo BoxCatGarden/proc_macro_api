@@ -404,11 +404,14 @@ macro_rules! proc_macro_api_err_seg_inner_cc {
 #[macro_export]
 macro_rules! proc_macro_api_err_seg_no_seg {
     // [at] al
-    ([ $($at:tt)* ] [ $($al:tt)? ]) => {
+    ([ $($at_0:tt $(, $at:tt)*)? ] [ $($al:tt)? ]) => {
         $crate::__private::compile_error!($crate::__private::concat!(
             "expected path segments",
             "\n/",
+            $(
+            "\n| #", $crate::__private::stringify!($at_0),
             $("\n| #", $crate::__private::stringify!($at),)*
+            )?
             $("\n| as ", $crate::__private::stringify!($al),)?
             "\n|\n|_^ expected path segments",
         ));
