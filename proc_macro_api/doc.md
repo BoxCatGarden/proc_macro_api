@@ -33,19 +33,19 @@ The macro should be used at somewhere that the proc-macro attributes
 >
 > **<small>Syntax</small>**  
 > Input:  
-> &nbsp;&nbsp;&nbsp;PathList
+> &nbsp;&nbsp;&nbsp;PathTreeList
 >
-> PathList:  
+> PathTreeList:  
 > &nbsp;&nbsp;
-> PathWithAttr<sup>?</sup> ( `,` PathWithAttr<sup>?</sup> )<sup>\*</sup>
+> PathTreeWithAttr<sup>?</sup> ( `,` PathTreeWithAttr<sup>?</sup> )<sup>\*</sup>
 >
-> PathWithAttr:  
+> PathTreeWithAttr:  
 > &nbsp;&nbsp;&nbsp;[OuterAttribute]<sup>\*</sup>  
 > &nbsp;&nbsp;&nbsp;PathTree
 >
 > PathTree:  
 > &nbsp;&nbsp;&nbsp;&nbsp;
-> ( [SimplePath]<sup>?</sup> `::` )<sup>?</sup> `{` PathList `}`  
+> ( [SimplePath]<sup>?</sup> `::` )<sup>?</sup> `{` PathTreeList `}`  
 > &nbsp;&nbsp;&nbsp;|
 > [SimplePath] ( `as` ( [IDENTIFIER] | `_` ) )<sup>?</sup>
 >
