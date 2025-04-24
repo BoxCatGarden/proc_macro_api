@@ -51,11 +51,13 @@ fn output() {
         assert_eq!(0, NUM);
     }
     {
+        #[allow(unused)]
         #[derive(norm_t_AliasDr0)]
         struct A;
         assert_eq!(0, D_NUM);
     }
     {
+        #[allow(unused)]
         #[derive(norm_t_AliasDr1)]
         struct A;
         assert_eq!(0, D_NUM);
