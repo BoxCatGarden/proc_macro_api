@@ -5,7 +5,7 @@ which can export functions in submodules of a proc-macro crate as
 the Application Programing Interfaces (APIs) of that proc-macro crate.
 
 For example, assuming `sub` is a submodule of the root of
-a proc-macro crate and has a function
+a proc-macro crate and has a function,
 `pub fn proc_fn(input: TokenStream) -> TokenStream`, in order to export
 `proc_fn` as a function-like macro, [`proc_macro_api!`] can be used in the
 root of the crate like:
@@ -86,7 +86,7 @@ a path group.
 
 Braces can be nested, and nested braces create subgroups of paths.
 
-For example, in the following code, there is a path
+For example, in the following code, there is a path,
 `group_a::subgroup_of_a::path_of_fn`. The path is renamed with the
 underscore alias, and belongs to path group `group_a` and `subgroup_of_a`.
 
@@ -130,13 +130,13 @@ Only proc-macro attributes are local, and all other attributes are global.
 
 ## Attribute aliases
 
-Proc-macro attributes have aliases in the input:
+Proc-macro attributes have aliases in the input scope:
 
 * `#[proc_macro]` => `#[fn]`
 * `#[proc_macro_attribute]` => `#[at]`
 * `#[proc_macro_derive]` => `#[dr]`
 
-If there is an imported attribute proc-macro having the same name as one
+If there is an imported attribute macro having the same name as one
 of the aliases, in order to use it in the input, it will need
 to be renamed (e.g., rename it by using `use` declaration).
 
@@ -246,7 +246,7 @@ Let _B_ be the number of the attributes that are applied directly
 to the path but not to the groups the path belongs to.  
 Let _d_ be the recursion depth of the path.
 
-When there isn't an error in the input:  
+When there is no error in the input:  
 max { _A_ + _B_, _N_ + _G_ } + 2 _G_ + 7 &le;
 _d_ &le; _A_ + _B_ + _N_ + 4 _G_ + 8 .
 
@@ -260,13 +260,13 @@ the last empty curly brace pair.
 
 Let *d*<sup>emp</sup> be the recursion depth of the empty group.
 
-When there isn't an error in the input:  
+When there is no error in the input:  
 max { _A_ + _B_, _N_ + _G_ } + 2 _G_ + 5 &le;
 *d*<sup>emp</sup> &le; _A_ + _B_ + _N_ + 4 _G_ + 6 .
 
 ## Macro call recursion depth
 
-When calling `proc_macro_api!`, the recursion depth of the macro call
+When calling [`proc_macro_api!`], the recursion depth of the macro call
 depends on the maximum recursion depth of all the input paths.
 
 Let _d<sub>p</sub>_ be the recursion depth of input path _p_,
