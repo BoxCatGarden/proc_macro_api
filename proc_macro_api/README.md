@@ -5,10 +5,10 @@ which can export functions in submodules of a proc-macro crate as
 the Application Programing Interfaces (APIs) of that proc-macro crate.
 
 For example, assuming `sub` is a submodule of the root of
-a proc-macro crate, in order to export
-`pub fn proc_fn(input: TokenStream) -> TokenStream` in the `sub`
-as a function-like macro, `proc_macro_api!` can be used in the
-root of that crate like:
+a proc-macro crate and has a function
+`pub fn proc_fn(input: TokenStream) -> TokenStream`, in order to export
+`proc_fn` as a function-like macro, `proc_macro_api!` can be used in the
+root of the crate like:
 
 ```rust
 proc_macro_api! {

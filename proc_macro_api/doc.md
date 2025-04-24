@@ -5,10 +5,10 @@ which can export functions in submodules of a proc-macro crate as
 the Application Programing Interfaces (APIs) of that proc-macro crate.
 
 For example, assuming `sub` is a submodule of the root of
-a proc-macro crate, in order to export
-`pub fn proc_fn(input: TokenStream) -> TokenStream` in the `sub`
-as a function-like macro, [`proc_macro_api!`] can be used in the
-root of that crate like:
+a proc-macro crate and has a function
+`pub fn proc_fn(input: TokenStream) -> TokenStream`, in order to export
+`proc_fn` as a function-like macro, [`proc_macro_api!`] can be used in the
+root of the crate like:
 
 ```no_run
 # macro_rules! proc_macro_api {
@@ -73,7 +73,7 @@ a proc-macro attribute should be applied to the path, and
 the function should have a signature required by the proc-macro attribute.
 
 When a path is renamed with the underscore alias,
-it is not required to be a path of function, and
+it is not required to be a path of a function, and
 not required to be annotated with proc-macro attributes.
 The path is only required to be syntactically valid.
 
@@ -85,6 +85,23 @@ When some paths are grouped by a pair of curly braces, they compose
 a path group.
 
 Braces can be nested, and nested braces create subgroups of paths.
+
+For example, in the following code, there is a path
+`group_a::subgroup_of_a::path_of_fn`. The path is renamed with the
+underscore alias, and belongs to path group `group_a` and `subgroup_of_a`.
+
+```no_run
+# macro_rules! proc_macro_api {
+#     ($($_:tt)*) => {};
+# }
+proc_macro_api! {
+    group_a::{
+        subgroup_of_a::{
+            path_of_fn as _,
+        },
+    },
+}
+```
 
 ## Attributes
 
@@ -239,7 +256,7 @@ When a group doesn't contain any paths or path groups, it is empty.
 
 For an empty group, it can be treated as a path that ends with curly braces,
 where _G_ doesn't include the last empty group and _N_ includes
-the last curly braces.
+the last empty curly brace pair.
 
 Let *d*<sup>emp</sup> be the recursion depth of the empty group.
 
