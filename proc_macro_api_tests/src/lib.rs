@@ -290,7 +290,10 @@ proc_macro_api! {
 
     /// ```no_run
     #[cfg(feature = "allow_group_attr")]
+    /// #![no_implicit_prelude]
+    /// fn main() {
     /// let err: MissingTheInnerDoc;
+    /// }
     #[cfg(feature = "allow_group_attr")]
     #[at]
     {
@@ -310,7 +313,10 @@ proc_macro_api! {
     #[cfg(feature = "allow_group_attr")]
     /// ```no_run
     #[cfg(feature = "allow_group_attr")]
+    /// #![no_implicit_prelude]
+    /// fn main() {
     /// let err: MissingTheInnerDoc;
+    /// }
     #[at]
     {
         /// struct MissingTheInnerDoc;
