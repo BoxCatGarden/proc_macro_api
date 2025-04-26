@@ -1,5 +1,6 @@
 #![doc = include_str!("../README.md")]
 #![no_implicit_prelude]
+#![no_std]
 
 mod test_invalid_combination;
 
@@ -241,7 +242,7 @@ proc_macro_api! {
 #[cfg(not(any(feature = "deny_group_attr", feature = "deny_override")))]
 #[cfg(all(feature = "allow_group_attr", feature = "allow_override"))]
 proc_macro_api! {
-    /// ```
+    /// ```no_run
     #[cfg(feature = "allow_group_attr")]
     /// let ok: i32;
     #[cfg(not(feature = "allow_group_attr"))]
@@ -249,23 +250,23 @@ proc_macro_api! {
     {
         /// ```
         #[cfg(feature = "allow_override")]
-        /// let MisMatchCausedByOverride: () = 0;
+        /// let MissingTheOuterDoc: () = 0;
         #[cfg(feature = "allow_override")]
-        /// ```
+        /// ```no_run
         /// ```
         #[fn] b as attr_gp_ov_t_global_local_0,
 
         /// ```
         #[cfg(feature = "allow_override")]
-        /// let MisMatchCausedByOverride: () = 0;
+        /// let MissingTheOuterDoc: () = 0;
         #[cfg(feature = "allow_override")]
-        /// ```
+        /// ```no_run
         /// ```
         a::c as attr_gp_ov_t_global_local_1,
     },
 
     #[cfg(feature = "allow_group_attr")]
-    /// ```
+    /// ```no_run
     #[cfg(feature = "allow_group_attr")]
     /// let ok: i32;
     #[at]
@@ -273,63 +274,55 @@ proc_macro_api! {
         #[cfg(feature = "allow_override")]
         /// ```
         #[cfg(feature = "allow_override")]
-        /// let MisMatchCausedByOverride: () = 0;
-        /// ```
+        /// let MissingTheOuterDoc: () = 0;
+        /// ```no_run
         /// ```
         #[fn] b as attr_gp_ov_t_global_local_0,
 
         #[cfg(feature = "allow_override")]
         /// ```
         #[cfg(feature = "allow_override")]
-        /// let MisMatchCausedByOverride: () = 0;
-        /// ```
+        /// let MissingTheOuterDoc: () = 0;
+        /// ```no_run
         /// ```
         a::c as attr_gp_ov_t_global_local_1,
     },
 
-    /// ```
+    /// ```no_run
     #[cfg(feature = "allow_group_attr")]
-    /// let ok: i32;
-    #[cfg(not(feature = "allow_group_attr"))]
+    /// let ok: MissingTheInnerDoc;
+    #[cfg(feature = "allow_group_attr")]
     #[at]
     {
         #[cfg(feature = "allow_override")]
-        /// ```
-        #[cfg(feature = "allow_override")]
-        /// let MisMatchCausedByOverride: () = 0;
-        /// ```
+        /// struct MissingTheInnerDoc;
+        #[cfg(not(feature = "allow_override"))]
         /// ```
         c as attr_gp_ov_t_global_local_2,
 
         #[cfg(feature = "allow_override")]
-        /// ```
+        /// struct MissingTheInnerDoc;
         #[cfg(feature = "allow_override")]
-        /// let MisMatchCausedByOverride: () = 0;
-        /// ```
         /// ```
         #[fn] a::b as attr_gp_ov_t_global_local_3,
     },
 
     #[cfg(feature = "allow_group_attr")]
-    /// ```
+    /// ```no_run
     #[cfg(feature = "allow_group_attr")]
-    /// let ok: i32;
+    /// let ok: MissingTheInnerDoc;
     #[at]
     {
-        /// ```
-        #[cfg(feature = "allow_override")]
-        /// let MisMatchCausedByOverride: () = 0;
+        /// struct MissingTheInnerDoc;
         #[cfg(feature = "allow_override")]
         /// ```
-        /// ```
+        #[cfg(feature = "allow_override")]
         c as attr_gp_ov_t_global_local_2,
 
+        /// struct MissingTheInnerDoc;
+        #[cfg(not(feature = "allow_override"))]
         /// ```
         #[cfg(feature = "allow_override")]
-        /// let MisMatchCausedByOverride: () = 0;
-        #[cfg(feature = "allow_override")]
-        /// ```
-        /// ```
         #[fn] a::b as attr_gp_ov_t_global_local_3,
     },
 
@@ -355,7 +348,7 @@ proc_macro_api! {
 
 #[cfg(all(not(feature = "deny_group_attr"), feature = "allow_group_attr"))]
 proc_macro_api! {
-    /// ```
+    /// ```no_run
     #[cfg(feature = "allow_group_attr")]
     /// let ok: i32;
     #[cfg(not(feature = "allow_group_attr"))]
@@ -363,23 +356,23 @@ proc_macro_api! {
     {
         /// ```
         #[cfg(feature = "allow_group_attr")]
-        /// let MisMatchCausedByOverride: () = 0;
+        /// let MissingTheOuterDoc: () = 0;
         #[cfg(feature = "allow_group_attr")]
-        /// ```
+        /// ```no_run
         /// ```
         b as attr_gp_t_global_local_gp_0,
 
         /// ```
         #[cfg(feature = "allow_group_attr")]
-        /// let MisMatchCausedByOverride: () = 0;
+        /// let MissingTheOuterDoc: () = 0;
         #[cfg(feature = "allow_group_attr")]
-        /// ```
+        /// ```no_run
         /// ```
         a::b as attr_gp_t_global_local_gp_1,
     },
 
     #[cfg(feature = "allow_group_attr")]
-    /// ```
+    /// ```no_run
     #[cfg(feature = "allow_group_attr")]
     /// let ok: i32;
     #[fn]
@@ -387,16 +380,16 @@ proc_macro_api! {
         #[cfg(feature = "allow_group_attr")]
         /// ```
         #[cfg(feature = "allow_group_attr")]
-        /// let MisMatchCausedByOverride: () = 0;
-        /// ```
+        /// let MissingTheOuterDoc: () = 0;
+        /// ```no_run
         /// ```
         b as attr_gp_t_global_local_gp_0,
 
         #[cfg(feature = "allow_group_attr")]
         /// ```
         #[cfg(feature = "allow_group_attr")]
-        /// let MisMatchCausedByOverride: () = 0;
-        /// ```
+        /// let MissingTheOuterDoc: () = 0;
+        /// ```no_run
         /// ```
         a::b as attr_gp_t_global_local_gp_1,
     },
@@ -416,10 +409,12 @@ proc_macro_api! {
 macro_rules! error {
     ($($name:ident : { $($tt:tt)* }),* $(,)?) => {$(
         /// ```
+        /// mod _a {
         /// use ::proc_macro_api::proc_macro_api;
         #[doc = concat!("proc_macro_api!\n{ ",
             $(stringify!($tt), " ",)*
         "}")]
+        /// }
         /// fn main() {}
         /// ```
         #[allow(dead_code)]
@@ -439,10 +434,11 @@ macro_rules! api {
 #[cfg(feature = "non_optional_err")]
 mod nop_err;
 
-#[cfg(feature = "err_nonexistent_fn")]
-proc_macro_api! {
-    #[fn] nonexistent_fn as err_nonexistent_fn_0,
-}
+#[cfg(not(feature = "comp_err"))]
+mod comp_err;
+
+#[cfg(feature = "comp_err")]
+include!("./comp_err.rs");
 
 #[cfg(feature = "attr_tests")]
 mod err_gp;
@@ -452,3 +448,9 @@ mod err_ov;
 
 #[cfg(feature = "attr_tests")]
 mod err_sh;
+
+#[cfg(not(feature = "playground"))]
+mod playground;
+
+#[cfg(feature = "playground")]
+include!("./playground.rs");

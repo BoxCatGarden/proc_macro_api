@@ -1,6 +1,6 @@
 [package]
 name = "proc-macro-api-tests"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "Tests for `proc-macro-api`."
 license = "MIT OR Apache-2.0"
@@ -29,13 +29,16 @@ allow_group_attr = []
 non_optional_err = []
 err_nonexistent_fn = []
 attr_tests = []
+comp_err = []
+playground = []
 # test option
+test_playground = ["playground"]
 test_normal = []
 test_trans = ["auto_transform"]
 test_attr_gp = ["allow_group_attr", "attr_tests"]
 test_attr_gp_ov = ["test_attr_gp", "allow_override"]
 test_attr_gp_ov_sh = ["test_attr_gp_ov", "allow_shadow"]
-test_comp_err_nex_fn = ["err_nonexistent_fn"]
+test_comp_err_nex_fn = ["err_nonexistent_fn", "comp_err"]
 test_err_nop = ["non_optional_err"]
 test_err_attr_sh = ["deny_shadow", "allow_override", "allow_group_attr", "attr_tests"]
 test_err_attr_ov = ["allow_shadow", "deny_override", "allow_group_attr", "attr_tests"]
@@ -61,3 +64,7 @@ required-features = ["allow_group_attr", "allow_override"]
 [[test]]
 name = "attr_gp_ov_sh"
 required-features = ["allow_group_attr", "allow_override", "allow_shadow"]
+
+[[test]]
+name = "playground"
+required-features = ["playground"]
