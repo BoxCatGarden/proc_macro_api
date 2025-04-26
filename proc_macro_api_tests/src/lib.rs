@@ -449,8 +449,9 @@ mod err_ov;
 #[cfg(feature = "attr_tests")]
 mod err_sh;
 
-#[cfg(not(feature = "playground"))]
+#[cfg(feature = "playground")]
+#[macro_use]
 mod playground;
 
 #[cfg(feature = "playground")]
-include!("./playground.rs");
+playground!();
