@@ -408,7 +408,7 @@ proc_macro_api! {
 #[allow(unused)]
 macro_rules! error {
     ($($name:ident : { $($tt:tt)* }),* $(,)?) => {$(
-        /// ```
+        /// ```no_run
         /// mod _a {
         /// use ::proc_macro_api::proc_macro_api;
         #[doc = concat!("proc_macro_api!\n{ ",
