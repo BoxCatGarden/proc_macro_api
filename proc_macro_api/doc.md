@@ -290,7 +290,7 @@ _p_ is an input path, where input paths include empty groups
 * **`deny_shadow`** (enabled by default) - A feature for debugging.
   Deny the shadowing of proc-macro attributes. The feature will check
   whether a single path or a path group is annotated with multiple
-  proc-macro attributes, and will generate a compile error if it does.
+  proc-macro attributes, and will generate a compile-error if it does.
 * **`deny_override`** - Deny the overriding of [local attributes](#attributes).
 * **`deny_group_attr`** - Deny the applying of attributes to
   [path groups](#brace-syntax-and-path-groups).
