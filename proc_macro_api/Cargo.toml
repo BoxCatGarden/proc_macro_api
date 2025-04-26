@@ -8,7 +8,7 @@ repository = "https://github.com/BoxCatGarden/proc_macro_api"
 readme = "README.md"
 keywords = ["macro", "module", "export", "proc-macro-export"]
 categories = ["development-tools::procedural-macro-helpers", "no-std"]
-publish = false
+publish = true
 
 [dependencies]
 

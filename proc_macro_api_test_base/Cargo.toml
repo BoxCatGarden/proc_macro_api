@@ -5,7 +5,7 @@ edition = "2024"
 description = "The base of `proc-macro-api-tests`."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/BoxCatGarden/proc_macro_api"
-publish = false
+publish = true
 
 [dependencies]
 proc-macro2 = { workspace = true }
