@@ -54,7 +54,7 @@ macro_rules! dummy_api_inner {
             use ::quote::quote;
             use ::core::convert::Into as _;
 
-            const NUM: usize = const { 0 $($count 1)* };
+            const NUM: usize = const { 0usize $($count 1usize)* };
 
             if input.is_empty() {
                 quote! { #NUM }.into()
@@ -74,7 +74,7 @@ macro_rules! dummy_api_inner {
             use ::quote::quote;
             use ::core::convert::Into as _;
 
-            const NUM: usize = const { 0 $($count 1)* };
+            const NUM: usize = const { 0usize $($count 1usize)* };
 
             quote! {
                 const NUM: usize = #NUM;
