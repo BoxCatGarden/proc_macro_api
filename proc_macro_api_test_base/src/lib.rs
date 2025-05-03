@@ -54,7 +54,7 @@ macro_rules! dummy_api_inner {
             use ::quote::quote;
             use ::core::convert::Into as _;
 
-            const NUM: usize = const { (&[ $($count),* ] as &[u8]).len() };
+            const NUM: usize = const { 0 $($count 1)* };
 
             if input.is_empty() {
                 quote! { #NUM }.into()
@@ -74,7 +74,7 @@ macro_rules! dummy_api_inner {
             use ::quote::quote;
             use ::core::convert::Into as _;
 
-            const NUM: usize = const { (&[ $($count),* ] as &[u8]).len() };
+            const NUM: usize = const { 0 $($count 1)* };
 
             quote! {
                 const NUM: usize = #NUM;
@@ -84,7 +84,7 @@ macro_rules! dummy_api_inner {
         #[allow(dead_code)]
         $vis mod a {
             $crate::dummy_api_inner! {
-                $pm [ $($count)* 0u8 ] pub mod $($count_down)*
+                $pm [ $($count)* + ] pub mod $($count_down)*
             }
         }
     };

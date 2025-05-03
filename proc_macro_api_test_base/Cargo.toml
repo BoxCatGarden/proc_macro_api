@@ -1,11 +1,11 @@
 [package]
 name = "proc-macro-api-test-base"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2024"
 description = "The base of `proc-macro-api-tests`."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/BoxCatGarden/proc_macro_api"
-publish = false
+publish = true
 
 [dependencies]
 proc-macro2 = { workspace = true }
