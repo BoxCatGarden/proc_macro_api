@@ -1,3 +1,7 @@
+#![cfg(not(feature = "deny_group_attr"))]
+#![cfg(not(feature = "deny_override"))]
+#![cfg(not(feature = "deny_shadow"))]
+
 use proc_macro_api_tests::{attr_gp_ov_sh_t_bg_proc_oth_1, attr_gp_ov_sh_t_oth_proc_0};
 
 #[test]

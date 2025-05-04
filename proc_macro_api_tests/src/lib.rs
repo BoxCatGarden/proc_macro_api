@@ -239,49 +239,51 @@ proc_macro_api! {
     #[at] ::base::pm2::c as trans_t_cc_trans_1,
 }
 
-#[cfg(not(any(feature = "deny_group_attr", feature = "deny_override")))]
-#[cfg(all(feature = "allow_group_attr", feature = "allow_override"))]
+#[cfg(feature = "attr_tests")]
+#[cfg(not(feature = "deny_group_attr"))]
+#[cfg(not(feature = "deny_append"))]
+#[cfg(not(feature = "deny_override"))]
 proc_macro_api! {
     /// ```no_run
-    #[cfg(feature = "allow_group_attr")]
+    #[cfg(feature = "attr_tests")]
     /// let ok: i32;
-    #[cfg(not(feature = "allow_group_attr"))]
+    #[cfg(not(feature = "attr_tests"))]
     #[at]
     {
         /// ```
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// let MissingTheOuterDoc: () = 0;
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// ```no_run
         /// ```
         #[fn] b as attr_gp_ov_t_global_local_0,
 
         /// ```
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// let MissingTheOuterDoc: () = 0;
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// ```no_run
         /// ```
         a::c as attr_gp_ov_t_global_local_1,
     },
 
-    #[cfg(feature = "allow_group_attr")]
+    #[cfg(feature = "attr_tests")]
     /// ```no_run
-    #[cfg(feature = "allow_group_attr")]
+    #[cfg(feature = "attr_tests")]
     /// let ok: i32;
     #[at]
     {
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// ```
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// let MissingTheOuterDoc: () = 0;
         /// ```no_run
         /// ```
         #[fn] b as attr_gp_ov_t_global_local_0,
 
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// ```
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// let MissingTheOuterDoc: () = 0;
         /// ```no_run
         /// ```
@@ -289,30 +291,30 @@ proc_macro_api! {
     },
 
     /// ```no_run
-    #[cfg(feature = "allow_group_attr")]
+    #[cfg(feature = "attr_tests")]
     /// #![no_implicit_prelude]
     /// fn main() {
     /// let err: MissingTheInnerDoc;
     /// }
-    #[cfg(feature = "allow_group_attr")]
+    #[cfg(feature = "attr_tests")]
     #[at]
     {
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// struct MissingTheInnerDoc;
-        #[cfg(not(feature = "allow_override"))]
+        #[cfg(not(feature = "attr_tests"))]
         /// ```
         c as attr_gp_ov_t_global_local_2,
 
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// struct MissingTheInnerDoc;
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// ```
         #[fn] a::b as attr_gp_ov_t_global_local_3,
     },
 
-    #[cfg(feature = "allow_group_attr")]
+    #[cfg(feature = "attr_tests")]
     /// ```no_run
-    #[cfg(feature = "allow_group_attr")]
+    #[cfg(feature = "attr_tests")]
     /// #![no_implicit_prelude]
     /// fn main() {
     /// let err: MissingTheInnerDoc;
@@ -320,15 +322,15 @@ proc_macro_api! {
     #[at]
     {
         /// struct MissingTheInnerDoc;
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         /// ```
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         c as attr_gp_ov_t_global_local_2,
 
         /// struct MissingTheInnerDoc;
-        #[cfg(not(feature = "allow_override"))]
+        #[cfg(not(feature = "attr_tests"))]
         /// ```
-        #[cfg(feature = "allow_override")]
+        #[cfg(feature = "attr_tests")]
         #[fn] a::b as attr_gp_ov_t_global_local_3,
     },
 
@@ -343,57 +345,60 @@ proc_macro_api! {
     #[at] {#[dr] {#[fn] b as attr_gp_ov_t_prs_fn_bg_0}},
 }
 
-#[cfg(not(any(feature = "deny_group_attr", feature = "deny_override")))]
-#[cfg(all(feature = "allow_group_attr", feature = "allow_override"))]
-#[cfg(all(not(feature = "deny_shadow"), feature = "allow_shadow"))]
+#[cfg(feature = "attr_tests")]
+#[cfg(not(feature = "deny_group_attr"))]
+#[cfg(not(feature = "deny_override"))]
+#[cfg(not(feature = "deny_shadow"))]
 proc_macro_api! {
     #[at]#[at]#[at]#[at] {#[fn] b as attr_gp_ov_sh_t_oth_proc_0},
 
     #[at]#[at] {#[fn] b as attr_gp_ov_sh_t_bg_proc_oth_1},
 }
 
-#[cfg(all(not(feature = "deny_group_attr"), feature = "allow_group_attr"))]
+#[cfg(feature = "attr_tests")]
+#[cfg(not(feature = "deny_group_attr"))]
+#[cfg(not(feature = "deny_append"))]
 proc_macro_api! {
     /// ```no_run
-    #[cfg(feature = "allow_group_attr")]
+    #[cfg(feature = "attr_tests")]
     /// let ok: i32;
-    #[cfg(not(feature = "allow_group_attr"))]
+    #[cfg(not(feature = "attr_tests"))]
     #[fn]
     {
         /// ```
-        #[cfg(feature = "allow_group_attr")]
+        #[cfg(feature = "attr_tests")]
         /// let MissingTheOuterDoc: () = 0;
-        #[cfg(feature = "allow_group_attr")]
+        #[cfg(feature = "attr_tests")]
         /// ```no_run
         /// ```
         b as attr_gp_t_global_local_gp_0,
 
         /// ```
-        #[cfg(feature = "allow_group_attr")]
+        #[cfg(feature = "attr_tests")]
         /// let MissingTheOuterDoc: () = 0;
-        #[cfg(feature = "allow_group_attr")]
+        #[cfg(feature = "attr_tests")]
         /// ```no_run
         /// ```
         a::b as attr_gp_t_global_local_gp_1,
     },
 
-    #[cfg(feature = "allow_group_attr")]
+    #[cfg(feature = "attr_tests")]
     /// ```no_run
-    #[cfg(feature = "allow_group_attr")]
+    #[cfg(feature = "attr_tests")]
     /// let ok: i32;
     #[fn]
     {
-        #[cfg(feature = "allow_group_attr")]
+        #[cfg(feature = "attr_tests")]
         /// ```
-        #[cfg(feature = "allow_group_attr")]
+        #[cfg(feature = "attr_tests")]
         /// let MissingTheOuterDoc: () = 0;
         /// ```no_run
         /// ```
         b as attr_gp_t_global_local_gp_0,
 
-        #[cfg(feature = "allow_group_attr")]
+        #[cfg(feature = "attr_tests")]
         /// ```
-        #[cfg(feature = "allow_group_attr")]
+        #[cfg(feature = "attr_tests")]
         /// let MissingTheOuterDoc: () = 0;
         /// ```no_run
         /// ```
@@ -448,6 +453,9 @@ include!("./comp_err.rs");
 
 #[cfg(feature = "attr_tests")]
 mod err_gp;
+
+#[cfg(feature = "attr_tests")]
+mod err_ap;
 
 #[cfg(feature = "attr_tests")]
 mod err_ov;
