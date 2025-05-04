@@ -1,6 +1,6 @@
 [package]
 name = "proc-macro-api-tests"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
 description = "Tests for `proc-macro-api`."
 license = "MIT OR Apache-2.0"
@@ -20,12 +20,10 @@ base = { workspace = true }
 [features]
 with_default = ["proc-macro-api/default"]
 deny_override = ["proc-macro-api/deny_override"]
+deny_append = ["proc-macro-api/deny_append"]
 deny_shadow = ["proc-macro-api/deny_shadow"]
 deny_group_attr = ["proc-macro-api/deny_group_attr"]
 auto_transform = ["proc-macro-api/auto_transform"]
-allow_override = []
-allow_shadow = []
-allow_group_attr = []
 non_optional_err = []
 err_nonexistent_fn = []
 attr_tests = []
@@ -35,18 +33,24 @@ playground = []
 test_playground = ["playground"]
 test_normal = []
 test_trans = ["auto_transform"]
-test_attr_gp = ["allow_group_attr", "attr_tests"]
-test_attr_gp_ov = ["test_attr_gp", "allow_override"]
-test_attr_gp_ov_sh = ["test_attr_gp_ov", "allow_shadow"]
+test_attr = ["attr_tests"]
 test_comp_err_nex_fn = ["err_nonexistent_fn", "comp_err"]
 test_err_nop = ["non_optional_err"]
-test_err_attr_sh = ["deny_shadow", "allow_override", "allow_group_attr", "attr_tests"]
-test_err_attr_ov = ["allow_shadow", "deny_override", "allow_group_attr", "attr_tests"]
-test_err_attr_gp = ["allow_shadow", "allow_override", "deny_group_attr", "attr_tests"]
-test_err_attr_sh_ov = ["deny_shadow", "deny_override", "allow_group_attr", "attr_tests"]
-test_err_attr_sh_gp = ["deny_shadow", "allow_override", "deny_group_attr", "attr_tests"]
-test_err_attr_ov_gp = ["allow_shadow", "deny_override", "deny_group_attr", "attr_tests"]
-test_err_attr_sh_ov_gp = ["deny_shadow", "deny_override", "deny_group_attr", "attr_tests"]
+test_err_attr_sh = ["deny_shadow", "attr_tests"]
+test_err_attr_ov = ["deny_override", "attr_tests"]
+test_err_attr_ap = ["deny_append", "attr_tests"]
+test_err_attr_gp = ["deny_group_attr", "attr_tests"]
+test_err_attr_sh_ov = ["test_err_attr_sh", "test_err_attr_ov"]
+test_err_attr_sh_ap = ["test_err_attr_sh", "test_err_attr_ap"]
+test_err_attr_sh_gp = ["test_err_attr_sh", "test_err_attr_gp"]
+test_err_attr_ov_ap = ["test_err_attr_ov", "test_err_attr_ap"]
+test_err_attr_ov_gp = ["test_err_attr_ov", "test_err_attr_gp"]
+test_err_attr_ap_gp = ["test_err_attr_ap", "test_err_attr_gp"]
+test_err_attr_sh_ov_ap = ["test_err_attr_sh_ov", "test_err_attr_ap"]
+test_err_attr_sh_ov_gp = ["test_err_attr_sh_ov", "test_err_attr_gp"]
+test_err_attr_sh_ap_gp = ["test_err_attr_sh_ap", "test_err_attr_gp"]
+test_err_attr_ov_ap_gp = ["test_err_attr_ov_ap", "test_err_attr_gp"]
+test_err_attr_sh_ov_ap_gp = ["test_err_attr_sh_ov_ap", "test_err_attr_gp"]
 test_err_default = ["with_default", "attr_tests"]
 
 [[test]]
@@ -55,15 +59,23 @@ required-features = ["auto_transform"]
 
 [[test]]
 name = "attr_gp"
-required-features = ["allow_group_attr"]
+required-features = ["attr_tests"]
+
+[[test]]
+name = "attr_gp_ap"
+required-features = ["attr_tests"]
+
+[[test]]
+name = "attr_gp_ap_ov"
+required-features = ["attr_tests"]
 
 [[test]]
 name = "attr_gp_ov"
-required-features = ["allow_group_attr", "allow_override"]
+required-features = ["attr_tests"]
 
 [[test]]
 name = "attr_gp_ov_sh"
-required-features = ["allow_group_attr", "allow_override", "allow_shadow"]
+required-features = ["attr_tests"]
 
 [[test]]
 name = "playground"
