@@ -1,4 +1,5 @@
 #![doc = include_str!("../doc.md")]
+#![no_std]
 
 /*
 checklist:
@@ -99,10 +100,35 @@ macro_rules! proc_macro_api_err_attr_override {
     // [[old]] [[new]] [path]
     ($old:tt $new:tt $path:tt) => {
         $crate::proc_macro_api_err_attr_mul! {
-            "attributes are overridden inside one path",
+            "cannot override attributes",
             [ "feature `deny_override` is enabled" ],
-            "(s)" =>
+            "s" =>
             $old $new $path
+        }
+    };
+}
+
+#[cfg(not(feature = "deny_append"))]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_err_attr_append {
+    ($($tt:tt)*) => {};
+}
+
+#[cfg(feature = "deny_append")]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! proc_macro_api_err_attr_append {
+    ([] $_0:tt $_1:tt) => {};
+    ($_0:tt [] $_1:tt) => {};
+
+    // [[doc]] [[bg_doc]] [path]
+    ($doc:tt $bg_doc:tt $path:tt) => {
+        $crate::proc_macro_api_err_attr_mul! {
+            "cannot append attributes",
+            [ "feature `deny_append` is enabled" ],
+            "s" =>
+            $bg_doc $doc $path
         }
     };
 }
@@ -142,6 +168,10 @@ macro_rules! proc_macro_api_parse_attr {
         [ $($bg_prv:tt)* ] $path:tt
     ]
     ) => {
+        $crate::proc_macro_api_err_attr_append! {
+            [ $($doc)* ] [ $($bg_doc)* ]
+            [ $($prv)* $($to_prv)? $last $($seg)* ]
+        }
         $crate::proc_macro_api_err_attr_override! {
             $($bg_oth)? $([ $($other)+ ])?
             [ $($prv)* $($to_prv)? $last $($seg)* ]
@@ -406,7 +436,7 @@ macro_rules! proc_macro_api_err_seg_no_seg {
     // [at] al
     ([ $($at_0:tt $(, $at:tt)*)? ] [ $($al:tt)? ]) => {
         $crate::__private::compile_error!($crate::__private::concat!(
-            "expected path segments",
+            "expected path segments or a path group",
             "\n/",
             $(
             "\n| #", $crate::__private::stringify!($at_0),

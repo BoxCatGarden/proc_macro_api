@@ -9,5 +9,5 @@ members = [
 [workspace.dependencies]
 proc-macro2 = { version = "1.0", default-features = false }
 quote = { version = "1.0" }
-proc-macro-api = { version = "0.1", path = "./proc_macro_api", default-features = false }
+proc-macro-api = { version = "0.1.4", path = "./proc_macro_api", default-features = false }
 base = { version = "0.2", path = "./proc_macro_api_test_base", package = "proc-macro-api-test-base" }

@@ -292,6 +292,7 @@ _p_ is an input path, where input paths include empty groups
   whether a single path or a path group is annotated with multiple
   proc-macro attributes, and will generate a compile-error if it does.
 * **`deny_override`** - Deny the overriding of [local attributes](#attributes).
+* **`deny_append`** - Deny the appending of [global attributes](#attributes).
 * **`deny_group_attr`** - Deny the applying of attributes to
   [path groups](#brace-syntax-and-path-groups).
 * **`auto_transform`** - Transform the input [`TokenStream`] into the
