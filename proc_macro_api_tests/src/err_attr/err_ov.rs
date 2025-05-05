@@ -1,10 +1,4 @@
-#[cfg(not(feature = "deny_group_attr"))]
-#[cfg(not(feature = "deny_override"))]
-use super::api as error_ov;
-#[cfg(any(feature = "deny_group_attr", feature = "deny_override"))]
-use error as error_ov;
-
-error_ov! {
+error! {
     err_ov_0: { #[fn] {#[fn] b as _} },
     err_ov_1: { #[at] {#[fn] a::{}} },
     err_ov_2: { #[fn] {#[fn]#[doc=""] a::b as _} },

@@ -1,9 +1,4 @@
-#[cfg(not(feature = "deny_group_attr"))]
-use super::api as error_gp;
-#[cfg(feature = "deny_group_attr")]
-use error as error_gp;
-
-error_gp! {
+error! {
     err_gp_0: { #[fn] {b as _} },
     err_gp_1: { #[fn]#[doc=""] ::{b as _} },
     err_gp_2: { #[fn]#[doc=""]#[doc=""] a::{b as _} },

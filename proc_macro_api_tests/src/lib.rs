@@ -436,15 +436,6 @@ macro_rules! error {
     )*};
 }
 
-#[allow(unused)]
-macro_rules! api {
-    ($($name:ident : { $($tt:tt)* }),* $(,)?) => {$(
-        ::proc_macro_api::proc_macro_api! {
-            $($tt)*
-        }
-    )*};
-}
-
 #[cfg(feature = "non_optional_err")]
 mod nop_err;
 
@@ -454,7 +445,7 @@ mod comp_err;
 #[cfg(feature = "comp_err")]
 include!("./comp_err.rs");
 
-#[cfg(feature = "attr_tests")]
+#[cfg(feature = "err_attr_tests")]
 mod err_attr;
 
 #[cfg(feature = "playground")]

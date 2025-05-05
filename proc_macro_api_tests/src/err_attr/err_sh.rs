@@ -1,9 +1,4 @@
-#[cfg(not(feature = "deny_shadow"))]
-use super::api as error_sh;
-#[cfg(feature = "deny_shadow")]
-use error as error_sh;
-
-error_sh! {
+error! {
     err_sh_0: { #[fn]#[fn] b as _ },
     err_sh_1: { #[fn]#[proc_macro] b as _ },
     err_sh_2: { #[fn]#[at] c as _ },
