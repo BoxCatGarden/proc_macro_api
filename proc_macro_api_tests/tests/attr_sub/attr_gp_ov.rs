@@ -1,6 +1,3 @@
-#![cfg(not(feature = "deny_group_attr"))]
-#![cfg(not(feature = "deny_override"))]
-
 use proc_macro_api_tests::{
     attr_gp_ov_t_Override1, attr_gp_ov_t_bg_proc_oth_0, attr_gp_ov_t_call_at_bg_0,
     attr_gp_ov_t_override_0, attr_gp_ov_t_override_2, attr_gp_ov_t_prs_fn_bg_0,

@@ -1,6 +1,6 @@
-#[cfg(not(any(feature = "deny_shadow", feature = "with_default")))]
-use api as error_sh;
-#[cfg(any(feature = "deny_shadow", feature = "with_default"))]
+#[cfg(not(feature = "deny_shadow"))]
+use super::api as error_sh;
+#[cfg(feature = "deny_shadow")]
 use error as error_sh;
 
 error_sh! {

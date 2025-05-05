@@ -58,23 +58,7 @@ name = "trans"
 required-features = ["auto_transform"]
 
 [[test]]
-name = "attr_gp"
-required-features = ["attr_tests"]
-
-[[test]]
-name = "attr_gp_ap"
-required-features = ["attr_tests"]
-
-[[test]]
-name = "attr_gp_ap_ov"
-required-features = ["attr_tests"]
-
-[[test]]
-name = "attr_gp_ov"
-required-features = ["attr_tests"]
-
-[[test]]
-name = "attr_gp_ov_sh"
+name = "attr"
 required-features = ["attr_tests"]
 
 [[test]]

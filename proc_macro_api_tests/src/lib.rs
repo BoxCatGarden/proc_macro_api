@@ -243,6 +243,7 @@ proc_macro_api! {
 #[cfg(not(feature = "deny_group_attr"))]
 #[cfg(not(feature = "deny_append"))]
 #[cfg(not(feature = "deny_override"))]
+#[cfg(not(feature = "with_default"))]
 proc_macro_api! {
     /// ```no_run
     #[cfg(feature = "attr_tests")]
@@ -349,6 +350,7 @@ proc_macro_api! {
 #[cfg(not(feature = "deny_group_attr"))]
 #[cfg(not(feature = "deny_override"))]
 #[cfg(not(feature = "deny_shadow"))]
+#[cfg(not(feature = "with_default"))]
 proc_macro_api! {
     #[at]#[at]#[at]#[at] {#[fn] b as attr_gp_ov_sh_t_oth_proc_0},
 
@@ -358,6 +360,7 @@ proc_macro_api! {
 #[cfg(feature = "attr_tests")]
 #[cfg(not(feature = "deny_group_attr"))]
 #[cfg(not(feature = "deny_append"))]
+#[cfg(not(feature = "with_default"))]
 proc_macro_api! {
     /// ```no_run
     #[cfg(feature = "attr_tests")]
@@ -452,16 +455,7 @@ mod comp_err;
 include!("./comp_err.rs");
 
 #[cfg(feature = "attr_tests")]
-mod err_gp;
-
-#[cfg(feature = "attr_tests")]
-mod err_ap;
-
-#[cfg(feature = "attr_tests")]
-mod err_ov;
-
-#[cfg(feature = "attr_tests")]
-mod err_sh;
+mod err_attr;
 
 #[cfg(feature = "playground")]
 #[macro_use]

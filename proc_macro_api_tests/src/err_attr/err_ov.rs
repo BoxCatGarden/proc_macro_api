@@ -1,14 +1,7 @@
-#[cfg(not(any(
-    feature = "deny_override",
-    feature = "deny_group_attr",
-    feature = "with_default"
-)))]
-use api as error_ov;
-#[cfg(any(
-    feature = "deny_override",
-    feature = "deny_group_attr",
-    feature = "with_default"
-))]
+#[cfg(not(feature = "deny_group_attr"))]
+#[cfg(not(feature = "deny_override"))]
+use super::api as error_ov;
+#[cfg(any(feature = "deny_group_attr", feature = "deny_override"))]
 use error as error_ov;
 
 error_ov! {

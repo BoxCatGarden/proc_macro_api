@@ -1,5 +1,3 @@
-#![cfg(not(feature = "deny_group_attr"))]
-
 use proc_macro_api_tests::{
     attr_gp_t_bg_proc_doc_oth_0, attr_gp_t_bg_proc_doc_oth_1, attr_gp_t_call_at_bg_1,
 };

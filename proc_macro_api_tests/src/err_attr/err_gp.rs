@@ -1,6 +1,6 @@
-#[cfg(not(any(feature = "deny_group_attr", feature = "with_default")))]
-use api as error_gp;
-#[cfg(any(feature = "deny_group_attr", feature = "with_default"))]
+#[cfg(not(feature = "deny_group_attr"))]
+use super::api as error_gp;
+#[cfg(feature = "deny_group_attr")]
 use error as error_gp;
 
 error_gp! {
