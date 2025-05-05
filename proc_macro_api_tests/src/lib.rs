@@ -428,6 +428,9 @@ proc_macro_api! {
 #[cfg(not(feature = "with_default"))]
 proc_macro_api! {
     #[fn] {{b as attr_gp_t_call_at_bg_1}},
+
+    #[doc=""] {#[fn] a::b as attr_gp_t_err_ap_0},
+    #[fn] {#[doc=""] a::a::b as attr_gp_t_err_ov_0},
 }
 
 #[allow(unused)]
