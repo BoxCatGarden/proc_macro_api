@@ -257,7 +257,7 @@ proc_macro_api! {
         #[cfg(feature = "attr_tests")]
         /// ```no_run
         /// ```
-        #[fn] b as attr_gp_ov_t_global_local_0,
+        #[fn] b as attr_gp_ap_ov_t_global_local_0,
 
         /// ```
         #[cfg(feature = "attr_tests")]
@@ -265,7 +265,7 @@ proc_macro_api! {
         #[cfg(feature = "attr_tests")]
         /// ```no_run
         /// ```
-        a::c as attr_gp_ov_t_global_local_1,
+        a::c as attr_gp_ap_ov_t_global_local_1,
     },
 
     #[cfg(feature = "attr_tests")]
@@ -280,7 +280,7 @@ proc_macro_api! {
         /// let MissingTheOuterDoc: () = 0;
         /// ```no_run
         /// ```
-        #[fn] b as attr_gp_ov_t_global_local_0,
+        #[fn] b as attr_gp_ap_ov_t_global_local_0,
 
         #[cfg(feature = "attr_tests")]
         /// ```
@@ -288,7 +288,7 @@ proc_macro_api! {
         /// let MissingTheOuterDoc: () = 0;
         /// ```no_run
         /// ```
-        a::c as attr_gp_ov_t_global_local_1,
+        a::c as attr_gp_ap_ov_t_global_local_1,
     },
 
     /// ```no_run
@@ -304,13 +304,13 @@ proc_macro_api! {
         /// struct MissingTheInnerDoc;
         #[cfg(not(feature = "attr_tests"))]
         /// ```
-        c as attr_gp_ov_t_global_local_2,
+        c as attr_gp_ap_ov_t_global_local_2,
 
         #[cfg(feature = "attr_tests")]
         /// struct MissingTheInnerDoc;
         #[cfg(feature = "attr_tests")]
         /// ```
-        #[fn] a::b as attr_gp_ov_t_global_local_3,
+        #[fn] a::b as attr_gp_ap_ov_t_global_local_3,
     },
 
     #[cfg(feature = "attr_tests")]
@@ -326,15 +326,21 @@ proc_macro_api! {
         #[cfg(feature = "attr_tests")]
         /// ```
         #[cfg(feature = "attr_tests")]
-        c as attr_gp_ov_t_global_local_2,
+        c as attr_gp_ap_ov_t_global_local_2,
 
         /// struct MissingTheInnerDoc;
         #[cfg(not(feature = "attr_tests"))]
         /// ```
         #[cfg(feature = "attr_tests")]
-        #[fn] a::b as attr_gp_ov_t_global_local_3,
+        #[fn] a::b as attr_gp_ap_ov_t_global_local_3,
     },
+}
 
+#[cfg(feature = "attr_tests")]
+#[cfg(not(feature = "deny_group_attr"))]
+#[cfg(not(feature = "deny_override"))]
+#[cfg(not(feature = "with_default"))]
+proc_macro_api! {
     #[at] {#[fn] b as attr_gp_ov_t_override_0},
     #[at] {#[dr(attr_gp_ov_t_Override1)] b as attr_gp_ov_t_override_1},
     #[fn] {#[at] c as attr_gp_ov_t_override_2},
@@ -374,7 +380,7 @@ proc_macro_api! {
         #[cfg(feature = "attr_tests")]
         /// ```no_run
         /// ```
-        b as attr_gp_t_global_local_gp_0,
+        b as attr_gp_ap_t_global_local_0,
 
         /// ```
         #[cfg(feature = "attr_tests")]
@@ -382,7 +388,7 @@ proc_macro_api! {
         #[cfg(feature = "attr_tests")]
         /// ```no_run
         /// ```
-        a::b as attr_gp_t_global_local_gp_1,
+        a::b as attr_gp_ap_t_global_local_1,
     },
 
     #[cfg(feature = "attr_tests")]
@@ -397,7 +403,7 @@ proc_macro_api! {
         /// let MissingTheOuterDoc: () = 0;
         /// ```no_run
         /// ```
-        b as attr_gp_t_global_local_gp_0,
+        b as attr_gp_ap_t_global_local_0,
 
         #[cfg(feature = "attr_tests")]
         /// ```
@@ -405,17 +411,22 @@ proc_macro_api! {
         /// let MissingTheOuterDoc: () = 0;
         /// ```no_run
         /// ```
-        a::b as attr_gp_t_global_local_gp_1,
+        a::b as attr_gp_ap_t_global_local_1,
     },
 
     /// a
     {
-        #[fn] b as attr_gp_t_bg_proc_doc_oth_0,
+        #[fn] b as attr_gp_ap_t_bg_proc_doc_oth_0,
 
         /// a
-        #[fn] {b as attr_gp_t_bg_proc_doc_oth_1},
+        #[fn] {b as attr_gp_ap_t_bg_proc_doc_oth_1},
     },
+}
 
+#[cfg(feature = "attr_tests")]
+#[cfg(not(feature = "deny_group_attr"))]
+#[cfg(not(feature = "with_default"))]
+proc_macro_api! {
     #[fn] {{b as attr_gp_t_call_at_bg_1}},
 }
 
