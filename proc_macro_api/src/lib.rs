@@ -75,7 +75,7 @@ macro_rules! proc_macro_api_err_attr_shadow {
             "multiple proc-macro attributes are applied together",
             [
                 "feature `deny_shadow` is enabled",
-                "disabling the feature to \
+                "disabling the feature can \
 leave the possible error to the compiler",
             ],
             "" =>
