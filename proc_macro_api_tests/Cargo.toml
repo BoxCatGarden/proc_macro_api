@@ -1,12 +1,12 @@
 [package]
 name = "proc-macro-api-tests"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2024"
 description = "Tests for `proc-macro-api`."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/BoxCatGarden/proc_macro_api"
 readme = "README.md"
-publish = true
+publish = false
 
 [lib]
 proc-macro = true
@@ -25,7 +25,8 @@ deny_shadow = ["proc-macro-api/deny_shadow"]
 deny_group_attr = ["proc-macro-api/deny_group_attr"]
 auto_transform = ["proc-macro-api/auto_transform"]
 non_optional_err = []
-err_nonexistent_fn = []
+comp_err_nonexistent_fn = []
+comp_err_mul_pm_attr = []
 attr_tests = []
 err_attr_tests = []
 comp_err = []
@@ -35,7 +36,8 @@ test_playground = ["playground"]
 test_normal = []
 test_trans = ["auto_transform"]
 test_attr = ["attr_tests"]
-test_comp_err_nex_fn = ["err_nonexistent_fn", "comp_err"]
+test_comp_err_nex_fn = ["comp_err_nonexistent_fn", "comp_err"]
+test_comp_err_mul_pm_attr = ["comp_err_mul_pm_attr", "comp_err"]
 test_err_nop = ["non_optional_err"]
 test_err_attr_none = ["err_attr_tests", "test_attr"]
 test_err_attr_sh = ["deny_shadow", "test_err_attr_none"]
