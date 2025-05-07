@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/proc_macro_api_test_base/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/proc_macro_api_tests/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/proc_macro_api_tests/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/proc_macro_api_test_base/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
