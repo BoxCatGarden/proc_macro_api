@@ -1,6 +1,6 @@
 [package]
 name = "proc-macro-api"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2024"
 description = "A macro helping with exporting APIs in a proc-macro library crate."
 license = "MIT OR Apache-2.0"
@@ -8,7 +8,7 @@ repository = "https://github.com/BoxCatGarden/proc_macro_api"
 readme = "README.md"
 keywords = ["macro", "module", "export", "proc-macro-export"]
 categories = ["development-tools::procedural-macro-helpers", "no-std"]
-publish = true
+publish = false
 
 [dependencies]
 
