@@ -437,6 +437,8 @@ proc_macro_api! {
 macro_rules! error {
     ($($name:ident : { $($tt:tt)* }),* $(,)?) => {$(
         /// ```no_run
+        /// #![no_implicit_prelude]
+        /// #![no_std]
         /// mod _a {
         /// use ::proc_macro_api::proc_macro_api;
         #[doc = concat!("proc_macro_api!\n{ ",

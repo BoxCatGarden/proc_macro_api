@@ -5,8 +5,10 @@
 checklist:
  tt, ident, expr ;
  doc_hidden macro_export `pma` ;
+ comma attr `#,` matcher: "$($at:tt),*" | "$(, $at:tt)*" | ...
  path $crate::`pma`! ;
  path $crate::__private ;
+ path "\$crate::(\w+::)*\w+!\s*(?=[\(\{\[])", "\w+\s*!\s*(?=[\(\{\[])"
 */
 
 extern crate proc_macro;
