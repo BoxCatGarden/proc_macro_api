@@ -37,7 +37,7 @@ cargo test --package proc-macro-api-tests --features test_normal
 # SemVer compatibility
 
 The public APIs of the library crate are the test-option features.
-`pub` items from the library crate should be treated as a private part of
+The `pub` items from the library crate should be treated as a private part of
 the crate.
-The features annotated as "private" should be treated as a private part of
+The non-test-option features should be treated as a private part of
 the crate.
