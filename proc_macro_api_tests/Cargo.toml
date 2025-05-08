@@ -18,6 +18,7 @@ proc-macro-api = { workspace = true }
 base = { workspace = true }
 
 [features]
+# private features
 with_default = ["proc-macro-api/default"]
 deny_override = ["proc-macro-api/deny_override"]
 deny_append = ["proc-macro-api/deny_append"]
@@ -31,7 +32,7 @@ attr_tests = []
 err_attr_tests = []
 comp_err = []
 playground = []
-# test option
+# pub test-option features
 test_playground = ["playground"]
 test_normal = []
 test_trans = ["auto_transform"]
