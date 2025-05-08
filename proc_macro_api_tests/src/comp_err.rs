@@ -18,3 +18,8 @@ proc_macro_api! {
 proc_macro_api! {
     #[fn]#[at] c as comp_err_mul_pm_attr_1,
 }
+
+#[cfg(feature = "comp_err_mul_pm_attr")]
+proc_macro_api! {
+    #[fn]#[dr(comp_err_MulPmAttr2)] b as comp_err_mul_pm_attr_2,
+}
