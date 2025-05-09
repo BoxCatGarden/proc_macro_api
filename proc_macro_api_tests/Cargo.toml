@@ -6,7 +6,7 @@ description = "Tests for `proc-macro-api`."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/BoxCatGarden/proc_macro_api"
 readme = "README.md"
-publish = false
+publish = true
 
 [lib]
 proc-macro = true
