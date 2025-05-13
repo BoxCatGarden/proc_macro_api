@@ -3,21 +3,23 @@ extern crate proc_macro;
 use proc_macro_api_test_base::*;
 use quote::quote;
 
+type PmFnB = fn(proc_macro::TokenStream) -> proc_macro::TokenStream;
+type PmFnC = fn(proc_macro::TokenStream, proc_macro::TokenStream) -> proc_macro::TokenStream;
+type PmTwoFnB = fn(proc_macro2::TokenStream) -> proc_macro2::TokenStream;
+type PmTwoFnC = fn(proc_macro2::TokenStream, proc_macro2::TokenStream) -> proc_macro2::TokenStream;
+
 macro_rules! assert_signature {
     ($([ $($prv:tt),* $(,)? ]),* $(,)?) => {{
-        let t: proc_macro::TokenStream = proc_macro::TokenStream::new();
-        let t2: proc_macro2::TokenStream = proc_macro2::TokenStream::new();
         $({
-            let _: proc_macro::TokenStream = $($prv::)*b(t.clone());
-            let _: proc_macro::TokenStream = $($prv::)*c(t.clone(), t.clone());
-            let _: proc_macro2::TokenStream = pm2::$($prv::)*b(t2.clone());
-            let _: proc_macro2::TokenStream = pm2::$($prv::)*c(t2.clone(), t2.clone());
+            let _: PmFnB = $($prv::)*b;
+            let _: PmFnC = $($prv::)*c;
+            let _: PmTwoFnB = pm2::$($prv::)*b;
+            let _: PmTwoFnC = pm2::$($prv::)*c;
         })*
     }};
 }
 
 #[test]
-#[should_panic(expected = "procedural macro")]
 fn signature() {
     assert_signature!([], [a], [a, a]);
 }
