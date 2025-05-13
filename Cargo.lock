@@ -8,7 +8,7 @@ version = "0.1.5"
 
 [[package]]
 name = "proc-macro-api-test-base"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "proc-macro2",
  "quote",
